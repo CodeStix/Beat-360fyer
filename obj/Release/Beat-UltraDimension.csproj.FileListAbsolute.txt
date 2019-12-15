@@ -1,0 +1,14 @@
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-UltraDimension\bin\Release\Newtonsoft.Json.dll
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-UltraDimension\bin\Release\Ookii.Dialogs.Wpf.dll
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-UltraDimension\bin\Release\Newtonsoft.Json.xml
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-UltraDimension\bin\Release\Ookii.Dialogs.Wpf.xml
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-UltraDimension\obj\Release\Stx.UltraDimension.FormMain.resources
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-UltraDimension\obj\Release\Stx.UltraDimension.Properties.Resources.resources
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-UltraDimension\obj\Release\Beat-UltraDimension.csproj.GenerateResource.cache
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-UltraDimension\obj\Release\Beat-UltraDimension.csproj.CoreCompileInputs.cache
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-UltraDimension\obj\Release\Beat-UltraDimension.csproj.CopyComplete
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-UltraDimension\bin\Release\Beat-360fyer.exe.config
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-UltraDimension\bin\Release\Beat-360fyer.exe
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-UltraDimension\bin\Release\Beat-360fyer.pdb
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-UltraDimension\obj\Release\Beat-360fyer.exe
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-UltraDimension\obj\Release\Beat-360fyer.pdb

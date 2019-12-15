@@ -1,0 +1,149 @@
+{
+	"_version": "2.0.0",
+	"_songName": "Beat Saber",
+	"_songSubName": "",
+	"_songAuthorName": "Jaroslav Beck",
+	"_levelAuthorName": "",
+	"_beatsPerMinute": 166.0,
+	"_songTimeOffset": 0.0,
+	"_shuffle": 0.0,
+	"_shufflePeriod": 1.0,
+	"_previewStartTime": 26.0,
+	"_previewDuration": 12.0,
+	"_songFilename": "song.ogg",
+	"_coverImageFilename": "cover.png",
+	"_environmentName": "DefaultEnvironment",
+	"_allDirectionsEnvironmentName": "GlassDesertEnvironment",
+	"_difficultyBeatmapSets": [
+		{
+			"_beatmapCharacteristicName": "Standard",
+			"_difficultyBeatmaps": [
+				{
+					"_difficulty": "Easy",
+					"_difficultyRank": 1,
+					"_beatmapFilename": "Easy.dat",
+					"_noteJumpMovementSpeed": 0.0,
+					"_noteJumpStartBeatOffset": 0.0
+				},
+				{
+					"_difficulty": "Normal",
+					"_difficultyRank": 3,
+					"_beatmapFilename": "Normal.dat",
+					"_noteJumpMovementSpeed": 0.0,
+					"_noteJumpStartBeatOffset": 0.0
+				},
+				{
+					"_difficulty": "Hard",
+					"_difficultyRank": 5,
+					"_beatmapFilename": "Hard.dat",
+					"_noteJumpMovementSpeed": 0.0,
+					"_noteJumpStartBeatOffset": 0.0
+				},
+				{
+					"_difficulty": "Expert",
+					"_difficultyRank": 7,
+					"_beatmapFilename": "Expert.dat",
+					"_noteJumpMovementSpeed": 0.0,
+					"_noteJumpStartBeatOffset": 0.0
+				},
+				{
+					"_difficulty": "ExpertPlus",
+					"_difficultyRank": 9,
+					"_beatmapFilename": "ExpertPlus.dat",
+					"_noteJumpMovementSpeed": 0.0,
+					"_noteJumpStartBeatOffset": 1.0
+				}
+			]
+		},
+		{
+			"_beatmapCharacteristicName": "OneSaber",
+			"_difficultyBeatmaps": [
+				{
+					"_difficulty": "Expert",
+					"_difficultyRank": 7,
+					"_beatmapFilename": "OneSaberExpert.dat",
+					"_noteJumpMovementSpeed": 0.0,
+					"_noteJumpStartBeatOffset": 0.0
+				}
+			]
+		},
+		{
+			"_beatmapCharacteristicName": "NoArrows",
+			"_difficultyBeatmaps": [
+				{
+					"_difficulty": "Easy",
+					"_difficultyRank": 1,
+					"_beatmapFilename": "NoArrowsEasy.dat",
+					"_noteJumpMovementSpeed": 0.0,
+					"_noteJumpStartBeatOffset": 0.0
+				},
+				{
+					"_difficulty": "Normal",
+					"_difficultyRank": 3,
+					"_beatmapFilename": "NoArrowsNormal.dat",
+					"_noteJumpMovementSpeed": 0.0,
+					"_noteJumpStartBeatOffset": 0.0
+				},
+				{
+					"_difficulty": "Hard",
+					"_difficultyRank": 5,
+					"_beatmapFilename": "NoArrowsHard.dat",
+					"_noteJumpMovementSpeed": 0.0,
+					"_noteJumpStartBeatOffset": 0.0
+				},
+				{
+					"_difficulty": "Expert",
+					"_difficultyRank": 7,
+					"_beatmapFilename": "NoArrowsExpert.dat",
+					"_noteJumpMovementSpeed": 0.0,
+					"_noteJumpStartBeatOffset": 0.0
+				}
+			]
+		},
+		{
+			"_beatmapCharacteristicName": "360Degree",
+			"_difficultyBeatmaps": [
+				{
+					"_difficulty": "Easy",
+					"_difficultyRank": 1,
+					"_beatmapFilename": "360DegreeEasy.dat",
+					"_noteJumpMovementSpeed": 0.0,
+					"_noteJumpStartBeatOffset": 0.0
+				},
+				{
+					"_difficulty": "Hard",
+					"_difficultyRank": 5,
+					"_beatmapFilename": "360DegreeHard.dat",
+					"_noteJumpMovementSpeed": 0.0,
+					"_noteJumpStartBeatOffset": 0.0
+				},
+				{
+					"_difficulty": "Expert",
+					"_difficultyRank": 7,
+					"_beatmapFilename": "360DegreeExpert.dat",
+					"_noteJumpMovementSpeed": 0.0,
+					"_noteJumpStartBeatOffset": 0.0
+				},
+				{
+					"_difficulty": "ExpertPlus",
+					"_difficultyRank": 9,
+					"_beatmapFilename": "360DegreeExpertPlus.dat",
+					"_noteJumpMovementSpeed": 0.0,
+					"_noteJumpStartBeatOffset": 0.0
+				}
+			]
+		},
+		{
+			"_beatmapCharacteristicName": "90Degree",
+			"_difficultyBeatmaps": [
+				{
+					"_difficulty": "Easy",
+					"_difficultyRank": 1,
+					"_beatmapFilename": "90DegreeEasy.dat",
+					"_noteJumpMovementSpeed": 0.0,
+					"_noteJumpStartBeatOffset": 0.0
+				}
+			]
+		}
+	]
+}
