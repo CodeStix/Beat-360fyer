@@ -1,3 +1,4 @@
 .vs/
 *.exe
 *.exe.config
+*.cache

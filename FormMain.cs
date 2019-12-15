@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Stx.UltraDimension
+namespace Stx.ThreeSixtyfyer
 {
     public enum BeatMapDifficultyLevel
     {
@@ -154,7 +154,7 @@ namespace Stx.UltraDimension
             progressDialog.RunWorkerCompleted += (sender2, e2) =>
             {
                 if (added > 0)
-                    MessageBox.Show($"{added} 360 maps were added to {listBoxMaps.CheckedItems.Count} different songs. Just navigate to the map in the game and the 360 mode should appear.",
+                    MessageBox.Show($"{added} (360) maps were added to {listBoxMaps.CheckedItems.Count} different songs. Just navigate to the map in the game and the 360 mode should appear.",
                         "Completed!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else
                     MessageBox.Show($"No modes were added, this can be due to:\n" +
@@ -275,8 +275,9 @@ namespace Stx.UltraDimension
 
         public BeatMap Generate360MapFromStandard(BeatMap standardMap, float timeOffset = 0f)
         {
-            BeatMap map = new BeatMap(standardMap);
+            const float WALL_LOOKAHEAD_TIME = 2f; // The time to look in the future for walls
 
+            BeatMap map = new BeatMap(standardMap);
             if (map.notes.Count == 0)
                 return map;
 
@@ -292,8 +293,9 @@ namespace Stx.UltraDimension
 
             int spinsRemaining = 0;
             bool spinDirection = true;
+            int spinTimes = 0;
 
-            int noLeftRightStreak = 0;
+            bool goDirection = false;
 
             int prevBeat = 0;
             for (float time = minTime; time < maxTime; time += FRAME_LENGTH)
@@ -301,27 +303,69 @@ namespace Stx.UltraDimension
                 // Get all notes in current frame length
                 List<BeatMapNote> notesInFrame = GetNotes(time, FRAME_LENGTH);
                 List<BeatMapNote> notesInBeat = GetNotes(time, 1f);
-                List<BeatMapObstacle> activeObstacles = map.obstacles.Where((obst) =>  time > obst.time && time < obst.time + obst.duration).ToList();
-                bool enableGoLeft = !activeObstacles.Any((obst) => (obst.lineIndex == 0 || obst.lineIndex == 1) && obst.type == 0);
-                bool enableGoRight = !activeObstacles.Any((obst) => (obst.lineIndex == 2 || obst.lineIndex == 3) && obst.type == 0);
+                List<BeatMapObstacle> activeObstacles = map.obstacles.Where((obst) => time >= obst.time && time < obst.time + obst.duration + WALL_LOOKAHEAD_TIME).ToList(); // look WALL_LOOKAHEAD_TIME beats in the future, on top of obstacle duration
+                bool enableGoLeft = !activeObstacles.Any((obst) => (obst.lineIndex == 0 || obst.lineIndex == 1));  // && obst.type == 0
+                bool enableGoRight = !activeObstacles.Any((obst) => (obst.lineIndex == 2 || obst.lineIndex == 3)); // && obst.type == 0
+                bool heat = notesInBeat.Count >= 4;
 
                 if (spinsRemaining > 0)
                 {
                     spinsRemaining--;
                     if (spinDirection)
-                        map.AddGoLeftEvent(time, 1);
-                    else
-                        map.AddGoRightEvent(time, 1);
+                    {
+                        if (!enableGoLeft)
+                        {
+                            Console.WriteLine("resset 1");
+                            spinsRemaining = 0;
+                            spinTimes = 0;
+                            continue;
+                        }
 
-                    if (spinsRemaining == 1 && GetNotes(time, 7).Count == 0) // still no notes, spin more
+                        map.AddGoLeftEvent(time, 1);
+                    }
+                    else
+                    {
+                        if (!enableGoRight)
+                        {
+                            Console.WriteLine("resset 2");
+                            spinsRemaining = 0;
+                            spinTimes = 0;
+                            continue;
+                        }
+
+                        map.AddGoRightEvent(time, 1);
+                    }
+
+                    if (spinsRemaining == 0 && activeObstacles.Count == 0 && GetNotes(time, 8f).Count == 0) // still no notes, spin more
+                    { 
                         spinsRemaining += 24;
+                        spinTimes++;
+                    }
+                    else if (spinsRemaining == 0)
+                    {
+                        Console.WriteLine("resset 3");
+                        spinTimes = 0;
+                    }
 
                     continue;
                 }
-                else if (GetNotes(time, 8).Count == 0 && activeObstacles.Count == 0 && time > firstNoteTime) // if 0 notes in the following 32 frames (8 beats), spin effect
+                else if (GetNotes(time, 8f).Count == 0 && time > firstNoteTime) // if 0 notes in the following 32 frames (8 beats), spin effect
                 {
+                    if (enableGoLeft && enableGoRight)
+                        spinDirection = !spinDirection; // spin any direction
+                    else if (enableGoLeft)
+                        spinDirection = true; // spin left
+                    else if (enableGoRight)
+                        spinDirection = false; // spin right
+
                     spinsRemaining += 24; // 24 spins is one 360
-                    spinDirection = !spinDirection;
+                    spinTimes++;
+                }
+
+                if (spinTimes > 2)
+                {
+                    Console.WriteLine("wall");
+                    map.AddWall(time, 0);
                 }
 
                 if (notesInFrame.Count == 0)
@@ -330,14 +374,14 @@ namespace Stx.UltraDimension
                 BeatMapNote[] leftNotes = notesInFrame.Where((note) => (note.cutDirection == 2 || note.cutDirection == 6 || note.cutDirection == 4) && (note.type == 0 || note.type == 1)).ToArray();
                 if (leftNotes.Length >= 2 && enableGoLeft)
                 {
-                    map.AddGoLeftEvent(leftNotes[0].time, Math.Min(leftNotes.Length, 4));
+                    map.AddGoLeftEvent(leftNotes[0].time, Math.Min(leftNotes.Length, heat ? 2 : 4));
                     continue;
                 }
 
                 BeatMapNote[] rightNotes = notesInFrame.Where((note) => (note.cutDirection == 3 || note.cutDirection == 5 || note.cutDirection == 7) && (note.type == 0 || note.type == 1)).ToArray();
                 if (rightNotes.Length >= 2 && enableGoRight)
                 {
-                    map.AddGoRightEvent(rightNotes[0].time, Math.Min(rightNotes.Length, 4));
+                    map.AddGoRightEvent(rightNotes[0].time, Math.Min(rightNotes.Length, heat ? 2 : 4));
                     continue;
                 }
 
@@ -354,47 +398,43 @@ namespace Stx.UltraDimension
                         map.AddGoRightEvent(leftRightNotes.time, 1);
                         continue;
                     }
-
-                    /*if (noLeftRightStreak >= 8 / FRAME_LENGTH) // if streak was high and is now broken, add epic walls
-                    {
-                        Console.WriteLine("epicwall");
-
-                        map.AddGoLeftEvent(time - FRAME_LENGTH, 1);
-                        map.AddWall(time, 0);
-                        map.AddGoRightEvent(time, 2);
-                        map.AddWall(time, 3);
-                        map.AddGoLeftEvent(time + FRAME_LENGTH, 1);
-                    }*/
-
-                    noLeftRightStreak = 0;
-                }
-                else
-                {
-                    noLeftRightStreak++;
                 }
 
-                if (notesInBeat.Count > 0)
+                if (notesInBeat.Count > 0 && notesInBeat.All((note) => Math.Abs(note.time - notesInBeat[0].time) < FRAME_LENGTH))
                 {
-                    if (notesInBeat.All((note) => Math.Abs(note.time - notesInBeat[0].time) < FRAME_LENGTH))
+                    BeatMapNote[] groundLeftNotes = notesInFrame.Where((note) => ((note.lineIndex == 0 || note.lineIndex == 1) && note.lineLayer == 0) && (note.type == 0 || note.type == 1)).ToArray();
+                    BeatMapNote[] groundRightNotes = notesInFrame.Where((note) => ((note.lineIndex == 2 || note.lineIndex == 3) && note.lineLayer == 0) && (note.type == 0 || note.type == 1)).ToArray();
+                  
+                    if (groundLeftNotes.Length != 0 && groundLeftNotes.Length == groundRightNotes.Length && enableGoRight && enableGoLeft)
                     {
-                        BeatMapNote[] groundLeftNotes = notesInFrame.Where((note) => ((note.lineIndex == 0 || note.lineIndex == 1) && note.lineLayer == 0) && (note.type == 0 || note.type == 1)).ToArray();
-                        BeatMapNote[] groundRightNotes = notesInFrame.Where((note) => ((note.lineIndex == 2 || note.lineIndex == 3) && note.lineLayer == 0) && (note.type == 0 || note.type == 1)).ToArray();
+                        if (goDirection)
+                            map.AddGoLeftEvent(time, 1);
+                        else
+                            map.AddGoRightEvent(time, 1);
 
-                        if (!(groundLeftNotes.Length == groundRightNotes.Length && enableGoLeft && enableGoRight))
-                        {
-                            if (groundLeftNotes.Length > 0 && enableGoLeft)
-                            {
-                                map.AddGoLeftEvent(groundLeftNotes[0].time, 1);
-                                continue;
-                            }
-
-                            if (groundRightNotes.Length > 0 && enableGoRight)
-                            {
-                                map.AddGoRightEvent(groundRightNotes[0].time, 1);
-                                continue;
-                            }
-                        }
+                        goDirection = !goDirection;
+                        continue;
                     }
+                    else if (groundLeftNotes.Length > groundRightNotes.Length && enableGoLeft)
+                    {
+                        map.AddGoLeftEvent(groundLeftNotes[0].time, 1);
+                        continue;
+                    }
+                    else if (groundRightNotes.Length > groundLeftNotes.Length && enableGoRight)
+                    {
+                        map.AddGoRightEvent(groundRightNotes[0].time, 1);
+                        continue;
+                    }
+                }
+
+                // Bombs seizure
+                if (GetNotes(time, 4f).All((note) => note.type == 3))
+                {
+                    map.AddGoLeftEvent(time, 2);
+                    map.AddGoRightEvent(time + 0.25f, 4);
+                    map.AddGoLeftEvent(time + 0.5f, 4);
+                    map.AddGoRightEvent(time + 0.75f, 2);
+                    continue;
                 }
 
                 // This only activates one time per beat, not per frame
@@ -418,16 +458,16 @@ namespace Stx.UltraDimension
                             map.AddGoLeftEvent(time, 1);
                             continue;
                         }
-                    }
+                        else if (leftNoteCount == rightNoteCount && enableGoLeft && enableGoRight)
+                        {
+                            if (goDirection)
+                                map.AddGoLeftEvent(time, 1);
+                            else
+                                map.AddGoRightEvent(time, 1);
 
-                    // bombs seizure
-                    if (GetNotes(time, 4f).All((note) => note.type == 3))
-                    {
-                        map.AddGoLeftEvent(time - FRAME_LENGTH, 2);
-                        map.AddGoRightEvent(time, 4);
-                        map.AddGoLeftEvent(time + FRAME_LENGTH, 4);
-                        map.AddGoRightEvent(time + 2f * FRAME_LENGTH, 2);
-                        continue;
+                            goDirection = !goDirection;
+                            continue;
+                        }
                     }
                 }
             }
@@ -474,7 +514,7 @@ namespace Stx.UltraDimension
             progressDialog.RunWorkerCompleted += (sender2, e2) => 
             {
                 if (added > 0)
-                    MessageBox.Show($"{added}x 360 levels were added to {listBoxMaps.CheckedItems.Count} different songs. Just navigate to the level in the game and the 360 mode should appear.",
+                    MessageBox.Show($"{added} (360) levels were added to {listBoxMaps.CheckedItems.Count} different songs. Just navigate to the level in the game and the 360 mode should appear.",
                         "Completed!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 else
                     MessageBox.Show($"No modes were added, this can be due to:\n" +
@@ -553,7 +593,7 @@ namespace Stx.UltraDimension
 
         private void ToolStripStatusLabel2_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/CodeStix");
+            Process.Start("https://github.com/CodeStix/Beat-360fyer");
         }
     }
 }

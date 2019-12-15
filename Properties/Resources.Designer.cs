@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Stx.UltraDimension.Properties {
+namespace Stx.ThreeSixtyfyer.Properties {
     using System;
     
     

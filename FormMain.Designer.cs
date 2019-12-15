@@ -1,4 +1,4 @@
-﻿namespace Stx.UltraDimension
+﻿namespace Stx.ThreeSixtyfyer
 {
     partial class FormMain
     {

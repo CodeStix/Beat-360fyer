@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Stx.UltraDimension
+namespace Stx.ThreeSixtyfyer
 {
     [Serializable]
     public class BeatMapInfo

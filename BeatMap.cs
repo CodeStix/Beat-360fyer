@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Stx.UltraDimension
+namespace Stx.ThreeSixtyfyer
 {
     [Serializable]
     public class BeatMap
@@ -18,24 +18,26 @@ namespace Stx.UltraDimension
         public List<BeatMapNote> notes;
         [JsonProperty("_obstacles")]
         public List<BeatMapObstacle> obstacles;
-        [JsonProperty("_customData")]
-        public object customData;
+        [JsonProperty("_customData", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public object[] customData;
+        [JsonProperty("_BPMChanges", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public object[] BPMChanges;
+        [JsonProperty("_bookmarks", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public object[] bookmarks;
 
         public BeatMap() { }
         
         public BeatMap(BeatMap other)
         {
             version = other.version;
-            events = new List<BeatMapEvent>(other.events);
-            notes = new List<BeatMapNote>(other.notes);
-            obstacles = new List<BeatMapObstacle>(other.obstacles);
+            events = new List<BeatMapEvent>(other.events/*.OrderBy((e) => e.time)*/);
+            notes = new List<BeatMapNote>(other.notes/*.OrderBy((e) => e.time)*/);
+            obstacles = new List<BeatMapObstacle>(other.obstacles/*.OrderBy((e) => e.time)*/);
             customData = other.customData;
         }
 
         public void AddGoLeftEvent(float time, int steps)
         {
-            //Console.WriteLine($"Go left event at ${time} ${steps}");
-
             if (steps == 0)
                 return;
 
@@ -49,8 +51,6 @@ namespace Stx.UltraDimension
 
         public void AddGoRightEvent(float time, int steps)
         {
-            //Console.WriteLine($"Go right event at ${time} ${steps}");
-
             if (steps == 0)
                 return;
 
