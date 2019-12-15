@@ -14,7 +14,7 @@ This tool is used to generate 360 levels from standard Beat Saber levels.
 ## :question: How well does this work?
 :heavy_check_mark: **It works great with** not too spammy levels with a lot of cut direction variation. This is a great tool to spice up the easy levels!
 
-:warning: **It works not as good with** spammy levels, this works, but it will have hard time of knowning when to rotate the level, so don't expect sick 360 no scopes when converting, for example, GHOST. I am not saying you shouldn't try it tho!
+:warning: **It works not as good with** spammy levels, this works, but it will a have hard time of knowning when to rotate the level, so don't expect sick 360 no-scopes when converting, for example, GHOST. I am not saying you shouldn't try it tho!
 
 ## :mag: Demo
 Here are some demo levels, generated with this tool:
