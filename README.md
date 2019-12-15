@@ -18,4 +18,5 @@ This tool is used to generate 360 levels from standard Beat Saber levels.
 
 ## :mag: Demo
 Here are some demo levels, generated with this tool:
-- todo
+- [Beat it](https://github.com/CodeStix/Beat-360fyer/raw/master/Build/Demos/Beat%20it.zip)
+- [Jaroslav Beck - Beat Saber](https://github.com/CodeStix/Beat-360fyer/raw/master/Build/Demos/Jaroslav%20Beck%20-%20Beat%20Saber.zip)
