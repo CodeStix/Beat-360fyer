@@ -34,6 +34,8 @@ namespace Stx.ThreeSixtyfyer
         private HashSet<string> beatMapDifficulties = new HashSet<string>();
         private string selectedPath = string.Empty;
 
+        private const string ICON360_PATH = "icon.png";
+
         private void SetUI(bool enabled)
         {
             listBoxMaps.Enabled = enabled;
@@ -160,7 +162,7 @@ namespace Stx.ThreeSixtyfyer
                     MessageBox.Show($"No modes were added, this can be due to:\n" +
                         $" - The selected song does not have the standard mode, this is required for the conversion.\n" +
                         $" - The selected song already has the 360 modes, you can override this by checking 'replacing already existing 360 mode'.\n" +
-                        $" - An unkown file system error.\n", "Failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        $" - An unkown file system error. (Run as administrator?)\n", "Failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 BeginInvoke(new MethodInvoker(() => SetUI(true)));
             };
             progressDialog.ShowDialog();
@@ -217,14 +219,10 @@ namespace Stx.ThreeSixtyfyer
 
         public void Add360Mode(string mapRoot, BeatMapDifficultyLevel difficulty, bool replacePrevious = false)
         {
-            Console.WriteLine("Getting information...");
-
             BeatMapInfo info = GetMapInfo(mapRoot, out string infoFile);
             BeatMapDifficultySet difStandardSet = info.difficultyBeatmapSets.FirstOrDefault((difs) => difs.beatmapCharacteristicName == "Standard");
             BeatMapDifficulty difStandard = difStandardSet.difficultyBeatmaps.FirstOrDefault((diff) => diff.difficulty == difficulty.ToString());
             BeatMapDifficultySet dif360Set = info.difficultyBeatmapSets.FirstOrDefault((difs) => difs.beatmapCharacteristicName == "360Degree");
-
-            Console.WriteLine("Checking difficulties...");
 
             if (dif360Set == null)
             {
@@ -250,8 +248,6 @@ namespace Stx.ThreeSixtyfyer
                 throw new DataException("The normal version must be available to convert it into a 360 mode.");
             }
 
-            Console.WriteLine("Creating new difficulty...");
-
             BeatMapDifficulty newDif = new BeatMapDifficulty()
             {
                 difficulty = difficulty.ToString(),
@@ -266,11 +262,15 @@ namespace Stx.ThreeSixtyfyer
 
             newDif.SaveBeatMap(mapRoot, Generate360MapFromStandard(difStandard.LoadBeatMap(mapRoot), info.songTimeOffset));
 
-            Console.WriteLine("Saving...");
-
+            if (info.customData.contributors == null)
+                info.customData.contributors = new List<BeatMapContributor>();
+            if (!info.customData.contributors.Any((cont) => cont.name == "CodeStix's 360fyer"))
+                info.customData.contributors.Add(new BeatMapContributor()
+                {
+                    name = "CodeStix's 360fyer",
+                    role = "360 degree mode"
+                });
             info.SaveToFile(infoFile);
-
-            Console.WriteLine("\t-> Done");
         }
 
         public BeatMap Generate360MapFromStandard(BeatMap standardMap, float timeOffset = 0f)
@@ -294,7 +294,7 @@ namespace Stx.ThreeSixtyfyer
             {
                 return map.obstacles.Where((obst) => obst.time >= time && obst.time < time + futureTime).ToList();
             }
-            List<BeatMapObstacle> GetObstacles(float time, float futureTime)
+            List<BeatMapObstacle> GetActiveObstacles(float time, float futureTime)
             {
                 return map.obstacles.Where((obst) => time >= obst.time && time < obst.time + obst.duration + futureTime).ToList();
             }
@@ -311,11 +311,12 @@ namespace Stx.ThreeSixtyfyer
                 List<BeatMapNote> notesInFrame = GetNotes(time, FRAME_LENGTH);
                 List<BeatMapNote> notesInBeat = GetNotes(time, 1f);
                 List<BeatMapObstacle> obstaclesInFrame = GetStartingObstacles(time, FRAME_LENGTH);
-                List<BeatMapObstacle> activeObstacles = GetObstacles(time, WALL_LOOKAHEAD_TIME); // look WALL_LOOKAHEAD_TIME beats in the future, on top of obstacle duration
-                bool enableGoLeft = !activeObstacles.Any((obst) => (obst.lineIndex == 0 || obst.lineIndex == 1));  // && obst.type == 0
-                bool enableGoRight = !activeObstacles.Any((obst) => (obst.lineIndex == 2 || obst.lineIndex == 3)); // && obst.type == 0
+                List<BeatMapObstacle> activeObstacles = GetActiveObstacles(time, WALL_LOOKAHEAD_TIME); // look WALL_LOOKAHEAD_TIME beats in the future, on top of obstacle duration
+                bool enableGoLeft = !activeObstacles.Any((obst) => (obst.lineIndex == 0 || obst.lineIndex == 1));
+                bool enableGoRight = !activeObstacles.Any((obst) => (obst.lineIndex == 2 || obst.lineIndex == 3));
                 bool heat = notesInBeat.Count >= 4;
 
+                bool shouldSpin = GetActiveObstacles(time, 24f * FRAME_LENGTH).Count == 0 && GetNotes(time, 24f * FRAME_LENGTH + 2f).Count == 0;
                 if (spinsRemaining > 0)
                 {
                     spinsRemaining--;
@@ -324,12 +325,12 @@ namespace Stx.ThreeSixtyfyer
                     else
                         map.AddGoRightEvent(time, 1);
 
-                    if (spinsRemaining == 1 && GetObstacles(time, 24f * FRAME_LENGTH).Count == 0 && GetNotes(time, 24f * FRAME_LENGTH).Count == 0) // still no notes, spin more
+                    if (spinsRemaining == 1 && shouldSpin) // still no notes, spin more
                         spinsRemaining += 24;
 
                     continue;
                 }
-                else if (time > firstNoteTime && GetObstacles(time, 24f * FRAME_LENGTH).Count == 0 && GetNotes(time, 24f * FRAME_LENGTH).Count == 0) // if 0 notes in the following x frames, spin effect
+                else if (time > firstNoteTime && shouldSpin) // spin effect
                 {
                     spinDirection = !spinDirection; // spin any direction
                     spinsRemaining += 24; // 24 spins is one 360
@@ -353,14 +354,14 @@ namespace Stx.ThreeSixtyfyer
                 if (notesInFrame.Count == 0)
                     continue;
 
-                BeatMapNote[] leftNotes = notesInFrame.Where((note) => (note.cutDirection == 2 || note.cutDirection == 6 || note.cutDirection == 4) && (note.type == 0 || note.type == 1)).ToArray();
+                BeatMapNote[] leftNotes = notesInFrame.Where((note) => (note.cutDirection == 2 || (note.cutDirection == 6 && note.lineIndex <= 2) || (note.cutDirection == 4 && note.lineIndex <= 2)) && (note.type == 0 || note.type == 1)).ToArray();
                 if (leftNotes.Length >= 2 && enableGoLeft)
                 {
                     map.AddGoLeftEvent(leftNotes[0].time, Math.Min(leftNotes.Length, heat ? 2 : 4));
                     continue;
                 }
 
-                BeatMapNote[] rightNotes = notesInFrame.Where((note) => (note.cutDirection == 3 || note.cutDirection == 5 || note.cutDirection == 7) && (note.type == 0 || note.type == 1)).ToArray();
+                BeatMapNote[] rightNotes = notesInFrame.Where((note) => (note.cutDirection == 3 || (note.cutDirection == 5 && note.lineIndex >= 3) || (note.cutDirection == 7 && note.lineIndex >= 3)) && (note.type == 0 || note.type == 1)).ToArray();
                 if (rightNotes.Length >= 2 && enableGoRight)
                 {
                     map.AddGoRightEvent(rightNotes[0].time, Math.Min(rightNotes.Length, heat ? 2 : 4));
@@ -502,7 +503,7 @@ namespace Stx.ThreeSixtyfyer
                     MessageBox.Show($"No modes were added, this can be due to:\n" +
                         $" - The selected song does not have the standard mode, this is required for the conversion.\n" +
                         $" - The selected song already has the 360 modes, you can override this by checking 'replacing already existing 360 mode'.\n" +
-                        $" - An unkown file system error.\n", "Failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        $" - An unkown file system error. (Run as administrator?)\n", "Failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 BeginInvoke(new MethodInvoker(() => SetUI(true)));
             };

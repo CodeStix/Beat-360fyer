@@ -167,9 +167,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 89);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(199, 13);
+            this.label1.Size = new System.Drawing.Size(293, 13);
             this.label1.TabIndex = 8;
-            this.label1.Text = "Select the maps to add the 360 mode to:";
+            this.label1.Text = "Then, select the songs you wish to generate a 360 mode for:";
             // 
             // textBoxSearch
             // 
@@ -250,15 +250,15 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 9);
+            this.label4.Location = new System.Drawing.Point(12, 23);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(350, 13);
+            this.label4.Size = new System.Drawing.Size(259, 13);
             this.label4.TabIndex = 14;
-            this.label4.Text = "This tool is used to generate 360 mode from a standard Beat Saber level.";
+            this.label4.Text = "First, select your song or your CustomLevels directory:";
             // 
             // groupBox2
             // 
-            this.groupBox2.Location = new System.Drawing.Point(13, 29);
+            this.groupBox2.Location = new System.Drawing.Point(12, 10);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(479, 10);
             this.groupBox2.TabIndex = 13;
@@ -285,7 +285,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
-            this.Text = "Beat-360fyer";
+            this.Text = "Beat-360fyer - A 360 level generator";
             this.groupBoxDifficulties.ResumeLayout(false);
             this.groupBoxDifficulties.PerformLayout();
             this.statusStrip1.ResumeLayout(false);

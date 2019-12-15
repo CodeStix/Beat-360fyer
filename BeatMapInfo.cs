@@ -43,6 +43,8 @@ namespace Stx.ThreeSixtyfyer
         public string allDirectionsEnvironmentName;
         [JsonProperty("_difficultyBeatmapSets")]
         public List<BeatMapDifficultySet> difficultyBeatmapSets;
+        [JsonProperty("_customData")]
+        public BeatMapCustomData customData;
 
         [JsonIgnore]
         public string mapRoot;
@@ -63,6 +65,28 @@ namespace Stx.ThreeSixtyfyer
         {
             return $"{songName} (by {songAuthorName})";
         }
+    }
+
+    [Serializable]
+    public struct BeatMapCustomData
+    {
+        [JsonProperty("_customEnvironment")]
+        public string customEnvironment;
+        [JsonProperty("_customEnvironmentHash")]
+        public string customEnvironmentHash;
+        [JsonProperty("_contributors")]
+        public List<BeatMapContributor> contributors;
+    }
+
+    [Serializable]
+    public struct BeatMapContributor
+    {
+        [JsonProperty("_role")]
+        public string role;
+        [JsonProperty("_name")]
+        public string name;
+        [JsonProperty("_iconPath")]
+        public string iconPath;
     }
 
     [Serializable]
