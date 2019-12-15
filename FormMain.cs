@@ -290,10 +290,17 @@ namespace Stx.ThreeSixtyfyer
             {
                 return map.notes.Where((note) => note.time >= time && note.time < time + futureTime).ToList();
             }
+            List<BeatMapObstacle> GetStartingObstacles(float time, float futureTime)
+            {
+                return map.obstacles.Where((obst) => obst.time >= time && obst.time < time + futureTime).ToList();
+            }
+            List<BeatMapObstacle> GetObstacles(float time, float futureTime)
+            {
+                return map.obstacles.Where((obst) => time >= obst.time && time < obst.time + obst.duration + futureTime).ToList();
+            }
 
             int spinsRemaining = 0;
             bool spinDirection = true;
-            int spinTimes = 0;
 
             bool goDirection = false;
 
@@ -303,7 +310,8 @@ namespace Stx.ThreeSixtyfyer
                 // Get all notes in current frame length
                 List<BeatMapNote> notesInFrame = GetNotes(time, FRAME_LENGTH);
                 List<BeatMapNote> notesInBeat = GetNotes(time, 1f);
-                List<BeatMapObstacle> activeObstacles = map.obstacles.Where((obst) => time >= obst.time && time < obst.time + obst.duration + WALL_LOOKAHEAD_TIME).ToList(); // look WALL_LOOKAHEAD_TIME beats in the future, on top of obstacle duration
+                List<BeatMapObstacle> obstaclesInFrame = GetStartingObstacles(time, FRAME_LENGTH);
+                List<BeatMapObstacle> activeObstacles = GetObstacles(time, WALL_LOOKAHEAD_TIME); // look WALL_LOOKAHEAD_TIME beats in the future, on top of obstacle duration
                 bool enableGoLeft = !activeObstacles.Any((obst) => (obst.lineIndex == 0 || obst.lineIndex == 1));  // && obst.type == 0
                 bool enableGoRight = !activeObstacles.Any((obst) => (obst.lineIndex == 2 || obst.lineIndex == 3)); // && obst.type == 0
                 bool heat = notesInBeat.Count >= 4;
@@ -312,60 +320,34 @@ namespace Stx.ThreeSixtyfyer
                 {
                     spinsRemaining--;
                     if (spinDirection)
-                    {
-                        if (!enableGoLeft)
-                        {
-                            Console.WriteLine("resset 1");
-                            spinsRemaining = 0;
-                            spinTimes = 0;
-                            continue;
-                        }
-
                         map.AddGoLeftEvent(time, 1);
-                    }
                     else
-                    {
-                        if (!enableGoRight)
-                        {
-                            Console.WriteLine("resset 2");
-                            spinsRemaining = 0;
-                            spinTimes = 0;
-                            continue;
-                        }
-
                         map.AddGoRightEvent(time, 1);
-                    }
 
-                    if (spinsRemaining == 0 && activeObstacles.Count == 0 && GetNotes(time, 8f).Count == 0) // still no notes, spin more
-                    { 
+                    if (spinsRemaining == 1 && GetObstacles(time, 24f * FRAME_LENGTH).Count == 0 && GetNotes(time, 24f * FRAME_LENGTH).Count == 0) // still no notes, spin more
                         spinsRemaining += 24;
-                        spinTimes++;
-                    }
-                    else if (spinsRemaining == 0)
-                    {
-                        Console.WriteLine("resset 3");
-                        spinTimes = 0;
-                    }
 
                     continue;
                 }
-                else if (GetNotes(time, 8f).Count == 0 && time > firstNoteTime) // if 0 notes in the following 32 frames (8 beats), spin effect
+                else if (time > firstNoteTime && GetObstacles(time, 24f * FRAME_LENGTH).Count == 0 && GetNotes(time, 24f * FRAME_LENGTH).Count == 0) // if 0 notes in the following x frames, spin effect
                 {
-                    if (enableGoLeft && enableGoRight)
-                        spinDirection = !spinDirection; // spin any direction
-                    else if (enableGoLeft)
-                        spinDirection = true; // spin left
-                    else if (enableGoRight)
-                        spinDirection = false; // spin right
-
+                    spinDirection = !spinDirection; // spin any direction
                     spinsRemaining += 24; // 24 spins is one 360
-                    spinTimes++;
                 }
 
-                if (spinTimes > 2)
+                if (obstaclesInFrame.Count == 1/* && activeObstacles.Count == 1*/)
                 {
-                    Console.WriteLine("wall");
-                    map.AddWall(time, 0);
+                    BeatMapObstacle obstacle = obstaclesInFrame[0];
+                    if ((obstacle.lineIndex == 0 || obstacle.lineIndex == 1) && obstacle.width <= 3 && enableGoRight)
+                    {
+                        map.AddGoRightEvent(time, 1);
+                        continue;
+                    }
+                    else if ((obstacle.lineIndex == 2 || obstacle.lineIndex == 3) && obstacle.width <= 3 && enableGoLeft)
+                    {
+                        map.AddGoLeftEvent(time, 1);
+                        continue;
+                    }
                 }
 
                 if (notesInFrame.Count == 0)
