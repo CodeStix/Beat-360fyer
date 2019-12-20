@@ -120,6 +120,13 @@
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="label5.Text" xml:space="preserve">
+    <value>Warning:
+This tool causes the converted maps to have a changed 'Info.dat' file hash. This means that 
+scoresaber submissions will be sent to a new scoreboard and not the old normal visible scoreboard.
+So only convert the songs that you really want a 360 mode for, or create (currently manually) a copy. 
+In short, do not convert competitive maps where you case about score submission.</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

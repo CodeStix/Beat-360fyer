@@ -80,7 +80,6 @@ namespace Stx.ThreeSixtyfyer
                 BeginInvoke(new MethodInvoker(() =>
                 {
                     listBoxMaps.Items.AddRange(beatMaps.ToArray());
-                    SelectAll(true);
 
                     comboBoxDifficulty.Items.Clear();
                     comboBoxDifficulty.Items.AddRange(beatMapDifficulties.ToArray());
