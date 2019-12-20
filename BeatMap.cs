@@ -19,11 +19,7 @@ namespace Stx.ThreeSixtyfyer
         [JsonProperty("_obstacles")]
         public List<BeatMapObstacle> obstacles;
         [JsonProperty("_customData", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public object[] customData;
-        [JsonProperty("_BPMChanges", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public object[] BPMChanges;
-        [JsonProperty("_bookmarks", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public object[] bookmarks;
+        public object customData;
 
         public BeatMap() { }
         

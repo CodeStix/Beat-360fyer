@@ -44,7 +44,7 @@ namespace Stx.ThreeSixtyfyer
         [JsonProperty("_difficultyBeatmapSets")]
         public List<BeatMapDifficultySet> difficultyBeatmapSets;
         [JsonProperty("_customData")]
-        public BeatMapCustomData customData;
+        public BeatMapInfoCustomData customData;
 
         [JsonIgnore]
         public string mapRoot;
@@ -68,13 +68,13 @@ namespace Stx.ThreeSixtyfyer
     }
 
     [Serializable]
-    public struct BeatMapCustomData
+    public struct BeatMapInfoCustomData
     {
-        [JsonProperty("_customEnvironment")]
+        [JsonProperty("_customEnvironment", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string customEnvironment;
-        [JsonProperty("_customEnvironmentHash")]
+        [JsonProperty("_customEnvironmentHash", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string customEnvironmentHash;
-        [JsonProperty("_contributors")]
+        [JsonProperty("_contributors", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<BeatMapContributor> contributors;
     }
 
@@ -111,6 +111,8 @@ namespace Stx.ThreeSixtyfyer
         public float noteJumpMovementSpeed;
         [JsonProperty("_noteJumpStartBeatOffset")]
         public float noteJumpStartBeatOffset;
+        [JsonProperty("_customData")]
+        public object customData;
 
         public BeatMap LoadBeatMap(string mapDirectory)
         {
