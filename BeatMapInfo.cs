@@ -43,7 +43,7 @@ namespace Stx.ThreeSixtyfyer
         public string allDirectionsEnvironmentName;
         [JsonProperty("_difficultyBeatmapSets")]
         public List<BeatMapDifficultySet> difficultyBeatmapSets;
-        [JsonProperty("_customData")]
+        [JsonProperty("_customData", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public BeatMapInfoCustomData customData;
 
         [JsonIgnore]
@@ -111,7 +111,7 @@ namespace Stx.ThreeSixtyfyer
         public float noteJumpMovementSpeed;
         [JsonProperty("_noteJumpStartBeatOffset")]
         public float noteJumpStartBeatOffset;
-        [JsonProperty("_customData")]
+        [JsonProperty("_customData", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public object customData;
 
         public BeatMap LoadBeatMap(string mapDirectory)
