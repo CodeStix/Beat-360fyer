@@ -47,18 +47,28 @@ namespace Stx.ThreeSixtyfyer
         public BeatMapInfoCustomData customData;
 
         [JsonIgnore]
-        public string mapRoot;
+        public string mapDirectoryPath;
+        [JsonIgnore]
+        public string mapInfoPath;
 
-        public static BeatMapInfo FromFile(string file)
+        public static BeatMapInfo FromFile(string absoluteInfoFilePath)
         {
-            BeatMapInfo info = JsonConvert.DeserializeObject<BeatMapInfo>(File.ReadAllText(file));
-            info.mapRoot = new FileInfo(file).Directory.FullName;
+            BeatMapInfo info = JsonConvert.DeserializeObject<BeatMapInfo>(File.ReadAllText(absoluteInfoFilePath));
+            info.mapInfoPath = absoluteInfoFilePath;
+            info.mapDirectoryPath = new FileInfo(absoluteInfoFilePath).Directory.FullName;
             return info;
         }
 
         public void SaveToFile(string file)
         {
             File.WriteAllText(file, JsonConvert.SerializeObject(this));
+        }
+
+        public void CreateBackup(bool overwrite = false)
+        {
+            string backupFile = Path.Combine(mapDirectoryPath, "Info.dat.bak");
+            if (overwrite || !File.Exists(backupFile))
+                File.Copy(mapInfoPath, backupFile, true);
         }
 
         public override string ToString()

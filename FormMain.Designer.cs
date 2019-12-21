@@ -197,9 +197,9 @@
             // 
             // buttonSelectNone
             // 
-            this.buttonSelectNone.Location = new System.Drawing.Point(352, 506);
+            this.buttonSelectNone.Location = new System.Drawing.Point(353, 506);
             this.buttonSelectNone.Name = "buttonSelectNone";
-            this.buttonSelectNone.Size = new System.Drawing.Size(139, 23);
+            this.buttonSelectNone.Size = new System.Drawing.Size(138, 23);
             this.buttonSelectNone.TabIndex = 11;
             this.buttonSelectNone.Text = "Deselect all";
             this.buttonSelectNone.UseVisualStyleBackColor = true;

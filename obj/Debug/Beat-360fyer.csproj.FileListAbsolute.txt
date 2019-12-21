@@ -7,9 +7,9 @@ C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\bin\Debug\Newtonsoft.Json.x
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\bin\Debug\Ookii.Dialogs.Wpf.xml
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Debug\Beat-360fyer.csprojAssemblyReference.cache
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Debug\Stx.ThreeSixtyfyer.FormMain.resources
-C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Debug\Stx.UltraDimension.Properties.Resources.resources
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Debug\Beat-360fyer.csproj.GenerateResource.cache
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Debug\Beat-360fyer.csproj.CoreCompileInputs.cache
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Debug\Beat-360fyer.csproj.CopyComplete
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Debug\Beat-360fyer.exe
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Debug\Beat-360fyer.pdb
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Debug\Stx.ThreeSixtyfyer.Properties.Resources.resources
