@@ -32,9 +32,6 @@ namespace Stx.ThreeSixtyfyer
 
         private List<BeatMapInfo> beatMaps = new List<BeatMapInfo>();
         private HashSet<string> beatMapDifficulties = new HashSet<string>();
-        private string selectedPath = string.Empty;
-
-        private const string ICON360_PATH = "icon.png";
 
         private void SetUI(bool enabled)
         {
@@ -58,12 +55,11 @@ namespace Stx.ThreeSixtyfyer
             if (folderBrowser.ShowDialog() != DialogResult.OK)
                 return;
 
-            selectedPath = folderBrowser.SelectedPath;
-            Properties.Settings.Default.RememberPath = selectedPath;
-            Properties.Settings.Default.Save();
-
-            textBoxMapPath.Text = selectedPath;
+            textBoxMapPath.Text = folderBrowser.SelectedPath;
             listBoxMaps.Items.Clear();
+
+            Properties.Settings.Default.RememberPath = textBoxMapPath.Text;
+            Properties.Settings.Default.Save();
 
             FindSongs();
         }
