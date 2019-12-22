@@ -78,6 +78,8 @@ namespace Stx.ThreeSixtyfyer
         {
             public int modesGenerated;
             public int mapsChanged;
+            public int mapsIterated;
+            public bool cancelled;
         }
 
         public static void Generate360Maps(Generate360ModesOptions options, WorkerJobCompleted<Generate360ModesOptions, Generate360ModesResult> completed)
@@ -96,38 +98,44 @@ namespace Stx.ThreeSixtyfyer
             WorkerJob<Generate360ModesOptions, Generate360ModesResult> job = (WorkerJob<Generate360ModesOptions, Generate360ModesResult>)e.Argument;
             e.Result = job;
 
-            try
+            ParallelOptions options = new ParallelOptions()
             {
-                for (int i = 0; i < job.argument.toGenerateFor.Count; i++)
+                MaxDegreeOfParallelism = Environment.ProcessorCount
+            };
+
+            Parallel.For(0, job.argument.toGenerateFor.Count, options, (i) => {
+
+                if (job.employer.CancellationPending && !job.result.cancelled)
+                    job.result.cancelled = true;
+                if (job.result.cancelled)
+                    return;
+
+                BeatMapInfo info;
+                lock (job.argument.toGenerateFor)
+                    info = job.argument.toGenerateFor[i];
+
+                int first = job.result.modesGenerated;
+                foreach (BeatMapDifficultyLevel difficultyLevel in job.argument.difficultyLevels)
                 {
-                    if (job.employer.CancellationPending)
-                        throw new Exception("The generation process was cancelled.");
-
-                    BeatMapInfo info = job.argument.toGenerateFor[i];
-
-                    int first = job.result.modesGenerated;
-                    foreach (BeatMapDifficultyLevel difficultyLevel in job.argument.difficultyLevels)
+                    try
                     {
-                        try
-                        {
-                            if (ModeGenerator.Generate360ModeAndSave(info, difficultyLevel, job.argument.replacePreviousModes))
-                                job.result.modesGenerated++;
-                        }
-                        catch(Exception ex)
-                        {
-                            job.exceptions.Add(ex);
-                        }
+                        if (ModeGenerator.Generate360ModeAndSave(info, difficultyLevel, job.argument.replacePreviousModes))
+                            job.result.modesGenerated++;
                     }
-                    if (first != job.result.modesGenerated)
-                        job.result.mapsChanged++;
-
-                    job.Report((int)((float)i / (float)job.argument.toGenerateFor.Count * 100f), info.ToString(), info.mapDirectoryPath);
+                    catch (Exception ex)
+                    {
+                        job.exceptions.Add(ex);
+                    }
                 }
-            }
-            catch(Exception ex)
-            {
-                job.exceptions.Add(ex);
-            }
+                if (first != job.result.modesGenerated)
+                    job.result.mapsChanged++;
+
+                job.result.mapsIterated++;
+                job.Report((int)((float)job.result.mapsIterated / job.argument.toGenerateFor.Count * 100f), info.ToString(), info.mapDirectoryPath);
+            });
+
+            if (job.result.cancelled)
+                job.exceptions.Add(new Exception("The generation process was cancelled."));
         }
 
         #endregion

@@ -309,6 +309,7 @@
             this.Controls.Add(this.buttonOpenMap);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "FormMain";
             this.Text = "Beat-360fyer - A 360 level generator";
             this.groupBoxDifficulties.ResumeLayout(false);
