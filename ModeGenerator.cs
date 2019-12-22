@@ -122,7 +122,7 @@ namespace Stx.ThreeSixtyfyer
                 bool enableGoRight = !activeObstacles.Any((obst) => (obst.lineIndex == 2 || obst.lineIndex == 3));
                 bool heat = notesInBeat.Count >= 4;
 
-                bool shouldSpin = GetActiveObstacles(time, 24f * FRAME_LENGTH + 2f).Count == 0 && GetNotes(time, 24f * FRAME_LENGTH + 2f).Count == 0;
+                bool shouldSpin = GetActiveObstacles(time, 24f * FRAME_LENGTH + 4f).Count == 0 && GetNotes(time, 24f * FRAME_LENGTH + 4f).Count == 0;
                 if (spinsRemaining > 0)
                 {
                     spinsRemaining--;
