@@ -138,8 +138,8 @@ namespace Stx.ThreeSixtyfyer
             {
                 if (job.result.modesGenerated > 0)
                 {
-                    MessageBox.Show($"{job.result.modesGenerated} (360) modes were added to {job.result.mapsChanged} different levels for these difficulties:\n" +
-                        $"{string.Join(", ", job.argument.difficultyLevels)}\n" +
+                    MessageBox.Show($"{job.result.modesGenerated} (360) modes were added to {job.result.mapsChanged} different levels for these difficulties: " +
+                        $"{string.Join(", ", job.argument.difficultyLevels)}\n\n" +
                         $"Just navigate to the level in the game and the 360 mode will appear.",
                         "Completed!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }

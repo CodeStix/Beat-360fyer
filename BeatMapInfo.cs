@@ -71,6 +71,25 @@ namespace Stx.ThreeSixtyfyer
                 File.Copy(mapInfoPath, backupFile, true);
         }
 
+        public BeatMapDifficulty GetGameModeDifficulty(BeatMapDifficultyLevel difficulty, string gameMode)
+        {
+            BeatMapDifficultySet diffSet = difficultyBeatmapSets.FirstOrDefault((difs) => difs.beatmapCharacteristicName == gameMode);
+            return diffSet?.difficultyBeatmaps.FirstOrDefault((diff) => diff.difficulty == difficulty.ToString());
+        }
+
+        public void AddContributor(string name, string role, string iconPath = "")
+        {
+            if (customData.contributors == null)
+                customData.contributors = new List<BeatMapContributor>();
+            if (!customData.contributors.Any((cont) => cont.name == name))
+                customData.contributors.Add(new BeatMapContributor()
+                {
+                    name = name,
+                    role = role,
+                    iconPath = iconPath
+                });
+        }
+
         public override string ToString()
         {
             return $"{songName} (by {songAuthorName})";

@@ -65,6 +65,8 @@ namespace Stx.ThreeSixtyfyer
 
         #endregion // Finding songs
 
+        #region Generating 360 modes
+
         public struct Generate360ModesOptions
         {
             public List<BeatMapDifficultyLevel> difficultyLevels;
@@ -108,7 +110,7 @@ namespace Stx.ThreeSixtyfyer
                     {
                         try
                         {
-                            if (ModeGenerator.Add360ModeTo(info, difficultyLevel, job.argument.replacePreviousModes))
+                            if (ModeGenerator.Generate360ModeAndSave(info, difficultyLevel, job.argument.replacePreviousModes))
                                 job.result.modesGenerated++;
                         }
                         catch(Exception ex)
@@ -127,5 +129,7 @@ namespace Stx.ThreeSixtyfyer
                 job.exceptions.Add(ex);
             }
         }
+
+        #endregion
     }
 }

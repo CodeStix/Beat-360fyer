@@ -10,61 +10,71 @@ namespace Stx.ThreeSixtyfyer
 {
     public static class ModeGenerator
     {
-        public static bool Add360ModeTo(BeatMapInfo info, BeatMapDifficultyLevel difficulty, bool replacePrevious = false)
+        public enum ExportGeneratedMode
         {
-            info.CreateBackup();
+            ModifyExistingInfo,
+            PlaceInCustomSongPack
+        }
 
-            BeatMapDifficultySet difStandardSet = info.difficultyBeatmapSets.FirstOrDefault((difs) => difs.beatmapCharacteristicName == "Standard");
-            BeatMapDifficulty difStandard = difStandardSet.difficultyBeatmaps.FirstOrDefault((diff) => diff.difficulty == difficulty.ToString());
-            BeatMapDifficultySet dif360Set = info.difficultyBeatmapSets.FirstOrDefault((difs) => difs.beatmapCharacteristicName == "360Degree");
 
-            if (dif360Set == null)
+        public static bool AddNewDifficultyTo(BeatMapInfo info, BeatMapDifficulty newDifficulty, string gameMode, bool replaceExisting = false)
+        {
+            BeatMapDifficultySet newDiffSet = info.difficultyBeatmapSets.FirstOrDefault((difs) => difs.beatmapCharacteristicName == gameMode);
+            if (newDiffSet == null)
             {
-                dif360Set = new BeatMapDifficultySet()
+                newDiffSet = new BeatMapDifficultySet()
                 {
-                    beatmapCharacteristicName = "360Degree",
+                    beatmapCharacteristicName = gameMode,
                     difficultyBeatmaps = new List<BeatMapDifficulty>()
                 };
-                info.difficultyBeatmapSets.Add(dif360Set);
+                info.difficultyBeatmapSets.Add(newDiffSet);
             }
 
-            BeatMapDifficulty dif360 = dif360Set.difficultyBeatmaps.FirstOrDefault((diff) => diff.difficulty == difficulty.ToString());
-
-            if (dif360 != null)
+            BeatMapDifficulty existingDiff = newDiffSet.difficultyBeatmaps.FirstOrDefault((diff) => diff.difficulty == newDifficulty.difficulty.ToString());
+            if (existingDiff != null)
             {
-                if (!replacePrevious)
+                if (!replaceExisting)
                     return false;
 
-                dif360Set.difficultyBeatmaps.Remove(dif360);
-            }
-            if (difStandard == null)
-            {
-                return false;
+                newDiffSet.difficultyBeatmaps.Remove(existingDiff);
             }
 
-            BeatMapDifficulty newDif = new BeatMapDifficulty()
+            newDiffSet.difficultyBeatmaps.Add(newDifficulty);
+            newDiffSet.difficultyBeatmaps = newDiffSet.difficultyBeatmaps.OrderBy((diff) => diff.difficultyRank).ToList();
+
+            return true;
+        }
+
+        public static BeatMapDifficulty CreateNewDifficulty(BeatMapDifficultyLevel difficulty, string gameMode)
+        {
+            return new BeatMapDifficulty()
             {
                 difficulty = difficulty.ToString(),
                 difficultyRank = (int)difficulty,
-                beatmapFilename = "360Degree" + difficulty.ToString() + ".dat",
+                beatmapFilename = gameMode + difficulty.ToString() + ".dat",
                 noteJumpMovementSpeed = 0.0f,
                 noteJumpStartBeatOffset = 0.0f
             };
+        }
 
-            dif360Set.difficultyBeatmaps.Add(newDif);
-            dif360Set.difficultyBeatmaps = dif360Set.difficultyBeatmaps.OrderBy((diff) => diff.difficultyRank).ToList();
+        public static bool Generate360ModeAndSave(BeatMapInfo info, BeatMapDifficultyLevel difficulty, bool replaceExising360Mode = false)
+        {
+            info.CreateBackup();
 
-            newDif.SaveBeatMap(info.mapDirectoryPath, Generate360ModeFromStandard(difStandard.LoadBeatMap(info.mapDirectoryPath), info.songTimeOffset));
+            //BeatMapDifficulty difStandard = difStandardSet.difficultyBeatmaps.FirstOrDefault((diff) => diff.difficulty == newDifficulty.difficulty.ToString());
+            BeatMapDifficulty standardDiff = info.GetGameModeDifficulty(difficulty, "Standard");
 
-            if (info.customData.contributors == null)
-                info.customData.contributors = new List<BeatMapContributor>();
-            if (!info.customData.contributors.Any((cont) => cont.name == "CodeStix's 360fyer"))
-                info.customData.contributors.Add(new BeatMapContributor()
-                {
-                    name = "CodeStix's 360fyer",
-                    role = "360 degree mode"
-                });
+            if (standardDiff == null)
+                return false;
 
+            BeatMapDifficulty newDiff = CreateNewDifficulty(difficulty, "360Degree");
+
+            if (!AddNewDifficultyTo(info, newDiff, "360Degree", replaceExising360Mode))
+                return false;
+
+            newDiff.SaveBeatMap(info.mapDirectoryPath, Generate360ModeFromStandard(standardDiff.LoadBeatMap(info.mapDirectoryPath), info.songTimeOffset));
+
+            info.AddContributor("CodeStix's 360fyer", "360 degree mode");
             info.SaveToFile(info.mapInfoPath);
             return true;
         }
