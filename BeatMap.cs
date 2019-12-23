@@ -72,7 +72,7 @@ namespace Stx.ThreeSixtyfyer
     }
 
     [Serializable]
-    public struct BeatMapEvent
+    public class BeatMapEvent
     {
         [JsonProperty("_time")]
         public float time;
@@ -103,7 +103,7 @@ namespace Stx.ThreeSixtyfyer
     }
 
     [Serializable]
-    public struct BeatMapObstacle
+    public class BeatMapObstacle
     {
         [JsonProperty("_time")]
         public float time;

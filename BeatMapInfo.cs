@@ -92,7 +92,7 @@ namespace Stx.ThreeSixtyfyer
 
         public override string ToString()
         {
-            return $"{songName} (by {songAuthorName})";
+            return string.IsNullOrEmpty(songAuthorName) ? songName : $"{songName} - {songAuthorName}";
         }
     }
 

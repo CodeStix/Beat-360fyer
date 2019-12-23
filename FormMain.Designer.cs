@@ -209,6 +209,7 @@
             // labelInfo
             // 
             this.labelInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.labelInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.labelInfo.ForeColor = System.Drawing.Color.Black;
             this.labelInfo.Location = new System.Drawing.Point(356, 135);
             this.labelInfo.Name = "labelInfo";

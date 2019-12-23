@@ -86,9 +86,10 @@ namespace Stx.ThreeSixtyfyer
         {
             ProgressDialog progressDialog = new ProgressDialog();
             progressDialog.ShowCancelButton = true;
-            progressDialog.WindowTitle = "Converting maps...";
+            progressDialog.WindowTitle = "Generating modes...";
             progressDialog.UseCompactPathsForDescription = true;
             progressDialog.DoWork += Generate360Maps_DoWork;
+            progressDialog.ShowTimeRemaining = true;
             progressDialog.RunWorkerCompleted += (sender, e) => completed.Invoke((WorkerJob<Generate360ModesOptions, Generate360ModesResult>)e.Result);
             progressDialog.ShowDialog(null, new WorkerJob<Generate360ModesOptions, Generate360ModesResult>(progressDialog, options));
         }
@@ -98,11 +99,7 @@ namespace Stx.ThreeSixtyfyer
             WorkerJob<Generate360ModesOptions, Generate360ModesResult> job = (WorkerJob<Generate360ModesOptions, Generate360ModesResult>)e.Argument;
             e.Result = job;
 
-            ParallelOptions options = new ParallelOptions()
-            {
-                MaxDegreeOfParallelism = Environment.ProcessorCount
-            };
-
+            ParallelOptions options = new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount };
             Parallel.For(0, job.argument.toGenerateFor.Count, options, (i) => {
 
                 if (job.employer.CancellationPending && !job.result.cancelled)
