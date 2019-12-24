@@ -71,9 +71,14 @@ namespace Stx.ThreeSixtyfyer
                 File.Copy(mapInfoPath, backupFile, true);
         }
 
+        public BeatMapDifficultySet GetGameMode(string gameMode)
+        {
+            return difficultyBeatmapSets.FirstOrDefault((difs) => difs.beatmapCharacteristicName == gameMode);
+        }
+
         public BeatMapDifficulty GetGameModeDifficulty(BeatMapDifficultyLevel difficulty, string gameMode)
         {
-            BeatMapDifficultySet diffSet = difficultyBeatmapSets.FirstOrDefault((difs) => difs.beatmapCharacteristicName == gameMode);
+            BeatMapDifficultySet diffSet = GetGameMode(gameMode);
             return diffSet?.difficultyBeatmaps.FirstOrDefault((diff) => diff.difficulty == difficulty.ToString());
         }
 

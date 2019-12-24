@@ -116,6 +116,10 @@ namespace Stx.ThreeSixtyfyer
                 {
                     try
                     {
+                        /*if (ModeGenerator.Generate360ModeAndCopy(info, @"C:\FastGames\steamapps\common\Beat Saber\Beat Saber_Data\CustomGenerated360Levels",
+                            difficultyLevel))
+                            job.result.modesGenerated++;*/
+
                         if (ModeGenerator.Generate360ModeAndSave(info, difficultyLevel, job.argument.replacePreviousModes))
                             job.result.modesGenerated++;
                     }

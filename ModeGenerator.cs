@@ -10,13 +10,6 @@ namespace Stx.ThreeSixtyfyer
 {
     public static class ModeGenerator
     {
-        public enum ExportGeneratedMode
-        {
-            ModifyExistingInfo,
-            PlaceInCustomSongPack
-        }
-
-
         public static bool AddNewDifficultyTo(BeatMapInfo info, BeatMapDifficulty newDifficulty, string gameMode, bool replaceExisting = false)
         {
             BeatMapDifficultySet newDiffSet = info.difficultyBeatmapSets.FirstOrDefault((difs) => difs.beatmapCharacteristicName == gameMode);
@@ -68,6 +61,8 @@ namespace Stx.ThreeSixtyfyer
                 return false;
 
             BeatMapDifficulty newDiff = CreateNewDifficulty(difficulty, "360Degree");
+            newDiff.noteJumpMovementSpeed = standardDiff.noteJumpMovementSpeed;
+            newDiff.noteJumpStartBeatOffset = standardDiff.noteJumpStartBeatOffset;
 
             if (!AddNewDifficultyTo(info, newDiff, "360Degree", replaceExising360Mode))
                 return false;
@@ -76,6 +71,34 @@ namespace Stx.ThreeSixtyfyer
 
             info.AddContributor("CodeStix's 360fyer", "360 degree mode");
             info.SaveToFile(info.mapInfoPath);
+            return true;
+        }
+
+        public static bool Generate360ModeAndCopy(BeatMapInfo info, string destination, BeatMapDifficultyLevel difficulty)
+        {
+            BeatMapDifficulty standardDiff = info.GetGameModeDifficulty(difficulty, "Standard");
+
+            if (standardDiff == null)
+                return false;
+
+            BeatMapDifficulty newDiff = CreateNewDifficulty(difficulty, "360Degree");
+            newDiff.noteJumpMovementSpeed = standardDiff.noteJumpMovementSpeed;
+            newDiff.noteJumpStartBeatOffset = standardDiff.noteJumpStartBeatOffset;
+
+            if (!AddNewDifficultyTo(info, newDiff, "360Degree", true)) // always replace when making a copy
+                return false;
+
+            string mapDestination = Path.Combine(destination, new DirectoryInfo(info.mapDirectoryPath).Name);
+            Directory.CreateDirectory(mapDestination);
+
+            newDiff.SaveBeatMap(mapDestination, Generate360ModeFromStandard(standardDiff.LoadBeatMap(info.mapDirectoryPath), info.songTimeOffset));
+
+            info.difficultyBeatmapSets.RemoveAll((gm) => gm.beatmapCharacteristicName == "Standard");
+
+            File.Copy(Path.Combine(info.mapDirectoryPath, info.coverImageFilename), Path.Combine(mapDestination, info.coverImageFilename), true);
+            File.Copy(Path.Combine(info.mapDirectoryPath, info.songFilename), Path.Combine(mapDestination, info.songFilename), true);
+            info.AddContributor("CodeStix's 360fyer", "360 degree mode");
+            info.SaveToFile(Path.Combine(mapDestination, "Info.dat"));
             return true;
         }
 

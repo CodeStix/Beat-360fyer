@@ -20,6 +20,8 @@ namespace Stx.ThreeSixtyfyer
         public List<BeatMapObstacle> obstacles;
         [JsonProperty("_customData", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public object customData;
+        /*[JsonProperty("_generatorVersion", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int generatorVersion;*/
 
         public BeatMap() { }
         
