@@ -113,8 +113,8 @@ namespace Stx.ThreeSixtyfyer
             buttonSelectBeatSaber.Enabled = enable;
             textBoxBeatSaberPath.Enabled = enable;
             listSongs.Enabled = enable;
-            buttonGeneratorSettings.Enabled = enable;
-            comboBoxMode.Enabled = enable;
+            buttonGeneratorSettings.Enabled = enable && false;
+            comboBoxMode.Enabled = enable && false;
         }
 
         private void ListSongs_KeyDown(object sender, KeyEventArgs e)

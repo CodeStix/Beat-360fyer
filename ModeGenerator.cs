@@ -93,6 +93,7 @@ namespace Stx.ThreeSixtyfyer
 
             newDiff.SaveBeatMap(mapDestination, Generate360ModeFromStandard(standardDiff.LoadBeatMap(info.mapDirectoryPath), info.songTimeOffset));
 
+            info.difficultyBeatmapSets.RemoveAll((diffSet) => diffSet.beatmapCharacteristicName != "Standard" && diffSet.beatmapCharacteristicName != "360Degree");
             info.RemoveGameModeDifficulty(difficulty, "Standard");
 
             File.Copy(Path.Combine(info.mapDirectoryPath, info.coverImageFilename), Path.Combine(mapDestination, info.coverImageFilename), true);
@@ -104,8 +105,8 @@ namespace Stx.ThreeSixtyfyer
 
         public static BeatMap Generate360ModeFromStandard(BeatMap standardMap, float timeOffset = 0f)
         {
-            const float FRAME_LENGTH = 1f / 8f;     // in beats
-            const float BEAT_LENGTH = 1f;           // in beats
+            const float FRAME_LENGTH = 1f / 16f;     // in beats (1f/8f)
+            const float BEAT_LENGTH = 1f / 2f;           // in beats (1f)
             const float WALL_CUTOFF_CLOSE = 1.5f;   // last walls will be cut off if the last wall is in x beats of current time
             const bool ENABLE_SPIN = true;          // enable spin effect
 
