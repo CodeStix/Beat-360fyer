@@ -239,5 +239,25 @@ namespace Stx.ThreeSixtyfyer
         {
             Process.Start("https://github.com/CodeStix/Beat-360fyer");
         }
+
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            TaskDialog dialog = new TaskDialog();
+            dialog.Buttons.Add(new TaskDialogButton()
+            {
+                Text = "Modify",
+                CommandLinkNote = "Add generated modes to a existing maps and modify them directly."
+            });
+            dialog.Buttons.Add(new TaskDialogButton()
+            {
+                Text = "Music Pack",
+                CommandLinkNote = "Create a music pack with generated modes for selected songs."
+            });
+
+            dialog.ButtonStyle = TaskDialogButtonStyle.CommandLinks;
+            dialog.Content = "This is some content text.";
+
+            dialog.ShowDialog();
+        }
     }
 }

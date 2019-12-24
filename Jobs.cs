@@ -72,6 +72,7 @@ namespace Stx.ThreeSixtyfyer
             public List<BeatMapDifficultyLevel> difficultyLevels;
             public List<BeatMapInfo> toGenerateFor;
             public bool replacePreviousModes;
+            public string destination;
         }
 
         public struct Generate360ModesResult
@@ -116,12 +117,16 @@ namespace Stx.ThreeSixtyfyer
                 {
                     try
                     {
-                        /*if (ModeGenerator.Generate360ModeAndCopy(info, @"C:\FastGames\steamapps\common\Beat Saber\Beat Saber_Data\CustomGenerated360Levels",
-                            difficultyLevel))
-                            job.result.modesGenerated++;*/
-
-                        if (ModeGenerator.Generate360ModeAndSave(info, difficultyLevel, job.argument.replacePreviousModes))
-                            job.result.modesGenerated++;
+                        if (string.IsNullOrEmpty(job.argument.destination))
+                        {
+                            if (ModeGenerator.Generate360ModeAndSave(info, difficultyLevel, job.argument.replacePreviousModes))
+                                job.result.modesGenerated++;
+                        }
+                        else
+                        {
+                            if (ModeGenerator.Generate360ModeAndCopy(info, job.argument.destination, difficultyLevel))
+                                job.result.modesGenerated++;
+                        }
                     }
                     catch (Exception ex)
                     {

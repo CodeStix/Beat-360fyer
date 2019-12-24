@@ -93,17 +93,13 @@ namespace Stx.ThreeSixtyfyer
 
             newDiff.SaveBeatMap(mapDestination, Generate360ModeFromStandard(standardDiff.LoadBeatMap(info.mapDirectoryPath), info.songTimeOffset));
 
-            info.difficultyBeatmapSets.RemoveAll((gm) => gm.beatmapCharacteristicName == "Standard");
+            info.RemoveGameModeDifficulty(difficulty, "Standard");
 
             File.Copy(Path.Combine(info.mapDirectoryPath, info.coverImageFilename), Path.Combine(mapDestination, info.coverImageFilename), true);
             File.Copy(Path.Combine(info.mapDirectoryPath, info.songFilename), Path.Combine(mapDestination, info.songFilename), true);
             info.AddContributor("CodeStix's 360fyer", "360 degree mode");
             info.SaveToFile(Path.Combine(mapDestination, "Info.dat"));
             return true;
-        }
-
-        public struct GeneratorSettings
-        {
         }
 
         public static BeatMap Generate360ModeFromStandard(BeatMap standardMap, float timeOffset = 0f)

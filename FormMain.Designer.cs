@@ -313,6 +313,7 @@
             this.MaximizeBox = false;
             this.Name = "FormMain";
             this.Text = "Beat-360fyer - A 360 level generator";
+            this.Load += new System.EventHandler(this.FormMain_Load);
             this.groupBoxDifficulties.ResumeLayout(false);
             this.groupBoxDifficulties.PerformLayout();
             this.statusStrip1.ResumeLayout(false);

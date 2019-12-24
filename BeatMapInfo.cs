@@ -82,6 +82,21 @@ namespace Stx.ThreeSixtyfyer
             return diffSet?.difficultyBeatmaps.FirstOrDefault((diff) => diff.difficulty == difficulty.ToString());
         }
 
+        public bool RemoveGameModeDifficulty(BeatMapDifficultyLevel difficulty, string gameMode)
+        {
+            BeatMapDifficultySet diffSet = GetGameMode(gameMode);
+
+            if (diffSet == null)
+                return false; // it is already removed
+
+            bool res = diffSet.difficultyBeatmaps.RemoveAll((diff) => diff.difficulty == difficulty.ToString()) > 0;
+
+            if (diffSet.difficultyBeatmaps.Count == 0) // remove gamemode if all difficulties are removed
+                difficultyBeatmapSets.RemoveAll((diff) => diff.beatmapCharacteristicName == gameMode);
+
+            return res;
+        }
+
         public void AddContributor(string name, string role, string iconPath = "")
         {
             if (customData.contributors == null)

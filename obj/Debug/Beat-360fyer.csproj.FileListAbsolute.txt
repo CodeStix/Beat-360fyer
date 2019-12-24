@@ -13,3 +13,4 @@ C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Debug\Beat-360fyer.cspr
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Debug\Beat-360fyer.exe
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Debug\Beat-360fyer.pdb
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Debug\Stx.ThreeSixtyfyer.Properties.Resources.resources
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Debug\Stx.ThreeSixtyfyer.FormGenerate.resources
