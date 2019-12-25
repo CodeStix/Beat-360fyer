@@ -105,10 +105,10 @@ namespace Stx.ThreeSixtyfyer
 
         public static BeatMap Generate360ModeFromStandard(BeatMap standardMap, float timeOffset = 0f)
         {
-            const float FRAME_LENGTH = 1f / 16f;        // in beats (default 1f/8f), the length of generator loop in beats
-            const float BEAT_LENGTH = 1f / 2f;          // in beats (default 1f), how the generator should interpret each beats length
-            const float WALL_CUTOFF_CLOSE = 1.5f;       // last walls will be cut off if the last wall is in x beats of current time
-            const float WALL_CUTOFF_AMOUNT = 1.75f;     // the amount (in beats) to cut off walls
+            const float FRAME_LENGTH = 1f / 32f;        // in beats (default 1f/8f), the length of generator loop in beats
+            const float BEAT_LENGTH = 1f / 4f;          // in beats (default 1f), how the generator should interpret each beats length
+            const float WALL_CUTOFF_CLOSE = 2f;         // last walls will be cut off if the last wall is in x beats of current time
+            const float WALL_CUTOFF_AMOUNT = 1.7f;      // the amount (in beats) to cut off walls
             const bool ENABLE_SPIN = true;              // enable spin effect
 
             BeatMap map = new BeatMap(standardMap);

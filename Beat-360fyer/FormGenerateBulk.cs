@@ -23,9 +23,9 @@ namespace Stx.ThreeSixtyfyer
         ExpertPlus = 9
     }
 
-    public partial class FormMain : Form
+    public partial class FormGenerateBulk : Form
     {
-        public FormMain()
+        public FormGenerateBulk()
         {
             InitializeComponent();
         }
@@ -38,9 +38,6 @@ namespace Stx.ThreeSixtyfyer
             listBoxMaps.Enabled = enabled;
             textBoxSearch.Enabled = enabled;
             groupBoxDifficulties.Enabled = enabled;
-            buttonSelectAll.Visible = enabled;
-            buttonSelectNone.Visible = enabled;
-            labelInfo.Visible = enabled;
             buttonOpenMap.Enabled = enabled;
         }
 
@@ -189,8 +186,6 @@ namespace Stx.ThreeSixtyfyer
         {
             for (int i = 0; i < listBoxMaps.Items.Count; i++)
                 listBoxMaps.SetItemChecked(i, selected);
-
-            UpdateStatus();
         }
 
         private void ButtonSelectNone_Click(object sender, EventArgs e)
@@ -200,20 +195,7 @@ namespace Stx.ThreeSixtyfyer
 
         private void ButtonSelectAll_Click(object sender, EventArgs e)
         {
-            SelectAll(true);
-        }
-
-        public void UpdateStatus()
-        {
-            if (listBoxMaps.CheckedItems.Count == 0)
-                labelInfo.Text = "The 360 will be added to no levels, please select some in the list.";
-            else
-                labelInfo.Text = $"The 360 mode will be added to {listBoxMaps.CheckedItems.Count} levels.";
-        }
-
-        private void ListBoxMaps_MouseUp(object sender, MouseEventArgs e)
-        {
-            UpdateStatus();
+           
         }
 
         private void TextBoxMapPath_KeyDown(object sender, KeyEventArgs e)
@@ -240,24 +222,16 @@ namespace Stx.ThreeSixtyfyer
             Process.Start("https://github.com/CodeStix/Beat-360fyer");
         }
 
-        private void FormMain_Load(object sender, EventArgs e)
+        private void ListBoxMaps_KeyDown(object sender, KeyEventArgs e)
         {
-            TaskDialog dialog = new TaskDialog();
-            dialog.Buttons.Add(new TaskDialogButton()
+            if (e.Control && e.KeyCode == Keys.A)
             {
-                Text = "Modify",
-                CommandLinkNote = "Add generated modes to a existing maps and modify them directly."
-            });
-            dialog.Buttons.Add(new TaskDialogButton()
+                SelectAll(true);
+            }
+            else if (e.Control && e.KeyCode == Keys.D)
             {
-                Text = "Music Pack",
-                CommandLinkNote = "Create a music pack with generated modes for selected songs."
-            });
-
-            dialog.ButtonStyle = TaskDialogButtonStyle.CommandLinks;
-            dialog.Content = "This is some content text.";
-
-            dialog.ShowDialog();
+                SelectAll(false);
+            }
         }
     }
 }

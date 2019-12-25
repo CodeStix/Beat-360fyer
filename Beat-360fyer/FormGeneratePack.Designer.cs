@@ -1,6 +1,6 @@
 ﻿namespace Stx.ThreeSixtyfyer
 {
-    partial class FormGenerate
+    partial class FormGeneratePack
     {
         /// <summary>
         /// Required designer variable.
@@ -28,27 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Songs", System.Windows.Forms.HorizontalAlignment.Left);
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGenerate));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGeneratePack));
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Songs", System.Windows.Forms.HorizontalAlignment.Left);
             this.buttonSelectBeatSaber = new System.Windows.Forms.Button();
             this.textBoxBeatSaberPath = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.buttonGeneratorSettings = new System.Windows.Forms.Button();
             this.buttonGenerate = new System.Windows.Forms.Button();
-            this.comboBoxMode = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.listSongs = new System.Windows.Forms.ListView();
             this.columnHeaderSongName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderAuthor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label3 = new System.Windows.Forms.Label();
-            this.groupBox2.SuspendLayout();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonSelectBeatSaber
             // 
-            this.buttonSelectBeatSaber.Location = new System.Drawing.Point(12, 53);
+            this.buttonSelectBeatSaber.Location = new System.Drawing.Point(12, 71);
             this.buttonSelectBeatSaber.Name = "buttonSelectBeatSaber";
             this.buttonSelectBeatSaber.Size = new System.Drawing.Size(155, 23);
             this.buttonSelectBeatSaber.TabIndex = 0;
@@ -58,10 +58,10 @@
             // 
             // textBoxBeatSaberPath
             // 
-            this.textBoxBeatSaberPath.Location = new System.Drawing.Point(173, 55);
+            this.textBoxBeatSaberPath.Location = new System.Drawing.Point(173, 73);
             this.textBoxBeatSaberPath.Name = "textBoxBeatSaberPath";
             this.textBoxBeatSaberPath.ReadOnly = true;
-            this.textBoxBeatSaberPath.Size = new System.Drawing.Size(407, 20);
+            this.textBoxBeatSaberPath.Size = new System.Drawing.Size(335, 20);
             this.textBoxBeatSaberPath.TabIndex = 2;
             // 
             // label1
@@ -79,26 +79,14 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(9, 24);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(301, 13);
+            this.label2.Size = new System.Drawing.Size(458, 39);
             this.label2.TabIndex = 4;
-            this.label2.Text = "The SongCore mod is required to create a custom music pack.";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.buttonGeneratorSettings);
-            this.groupBox2.Controls.Add(this.comboBoxMode);
-            this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Location = new System.Drawing.Point(12, 476);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(568, 62);
-            this.groupBox2.TabIndex = 7;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Generator";
+            this.label2.Text = resources.GetString("label2.Text");
             // 
             // buttonGeneratorSettings
             // 
             this.buttonGeneratorSettings.Enabled = false;
-            this.buttonGeneratorSettings.Location = new System.Drawing.Point(176, 26);
+            this.buttonGeneratorSettings.Location = new System.Drawing.Point(386, 497);
             this.buttonGeneratorSettings.Name = "buttonGeneratorSettings";
             this.buttonGeneratorSettings.Size = new System.Drawing.Size(122, 23);
             this.buttonGeneratorSettings.TabIndex = 3;
@@ -109,34 +97,13 @@
             // 
             this.buttonGenerate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.buttonGenerate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonGenerate.Location = new System.Drawing.Point(439, 440);
+            this.buttonGenerate.Location = new System.Drawing.Point(367, 458);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(141, 33);
             this.buttonGenerate.TabIndex = 2;
             this.buttonGenerate.Text = "Generate Music Pack\r\n";
             this.buttonGenerate.UseVisualStyleBackColor = false;
             this.buttonGenerate.Click += new System.EventHandler(this.ButtonGenerate_Click);
-            // 
-            // comboBoxMode
-            // 
-            this.comboBoxMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxMode.Enabled = false;
-            this.comboBoxMode.FormattingEnabled = true;
-            this.comboBoxMode.Items.AddRange(new object[] {
-            "360 degrees"});
-            this.comboBoxMode.Location = new System.Drawing.Point(49, 27);
-            this.comboBoxMode.Name = "comboBoxMode";
-            this.comboBoxMode.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxMode.TabIndex = 1;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 30);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(37, 13);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "Mode:\r\n";
             // 
             // listSongs
             // 
@@ -145,14 +112,14 @@
             this.columnHeaderSongName,
             this.columnHeaderAuthor});
             this.listSongs.FullRowSelect = true;
-            listViewGroup1.Header = "Songs";
-            listViewGroup1.Name = "listViewGroup1";
+            listViewGroup2.Header = "Songs";
+            listViewGroup2.Name = "listViewGroup1";
             this.listSongs.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1});
+            listViewGroup2});
             this.listSongs.HideSelection = false;
-            this.listSongs.Location = new System.Drawing.Point(12, 92);
+            this.listSongs.Location = new System.Drawing.Point(12, 110);
             this.listSongs.Name = "listSongs";
-            this.listSongs.Size = new System.Drawing.Size(568, 342);
+            this.listSongs.Size = new System.Drawing.Size(496, 342);
             this.listSongs.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listSongs.TabIndex = 6;
             this.listSongs.UseCompatibleStateImageBehavior = false;
@@ -171,22 +138,47 @@
             // 
             // label3
             // 
-            this.label3.ForeColor = System.Drawing.Color.Gray;
-            this.label3.Location = new System.Drawing.Point(9, 437);
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label3.Location = new System.Drawing.Point(9, 455);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(387, 26);
+            this.label3.Size = new System.Drawing.Size(352, 65);
             this.label3.TabIndex = 7;
             this.label3.Text = "Tip: use shift to select multiple items, then use space to check or uncheck them." +
     "\r\nUse (Ctrl+A) to select all songs and (Ctrl+D) to deselect all songs.";
             // 
-            // FormGenerate
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1,
+            this.toolStripStatusLabel2});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 529);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(521, 22);
+            this.statusStrip1.TabIndex = 14;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(190, 17);
+            this.toolStripStatusLabel1.Text = "by Stijn Rogiest (CodeStix) 2019 (c)";
+            // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.IsLink = true;
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(45, 17);
+            this.toolStripStatusLabel2.Text = "GitHub";
+            // 
+            // FormGeneratePack
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(595, 548);
+            this.ClientSize = new System.Drawing.Size(521, 551);
+            this.Controls.Add(this.buttonGeneratorSettings);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.buttonGenerate);
-            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.listSongs);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -195,11 +187,11 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "FormGenerate";
+            this.Name = "FormGeneratePack";
             this.Text = "Beat-360fyer - A 360 level generator";
             this.Load += new System.EventHandler(this.FormGenerate_Load);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -211,14 +203,14 @@
         private System.Windows.Forms.TextBox textBoxBeatSaberPath;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ListView listSongs;
         private System.Windows.Forms.ColumnHeader columnHeaderSongName;
         private System.Windows.Forms.ColumnHeader columnHeaderAuthor;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox comboBoxMode;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button buttonGenerate;
         private System.Windows.Forms.Button buttonGeneratorSettings;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
     }
 }

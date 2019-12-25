@@ -14,9 +14,9 @@ using System.Xml.Linq;
 
 namespace Stx.ThreeSixtyfyer
 {
-    public partial class FormGenerate : Form
+    public partial class FormGeneratePack : Form
     {
-        public FormGenerate()
+        public FormGeneratePack()
         {
             InitializeComponent();
         }
@@ -114,7 +114,6 @@ namespace Stx.ThreeSixtyfyer
             textBoxBeatSaberPath.Enabled = enable;
             listSongs.Enabled = enable;
             buttonGeneratorSettings.Enabled = enable && false;
-            comboBoxMode.Enabled = enable && false;
         }
 
         private void ListSongs_KeyDown(object sender, KeyEventArgs e)
@@ -139,8 +138,7 @@ namespace Stx.ThreeSixtyfyer
 
         private void FormGenerate_Load(object sender, EventArgs e)
         {
-            this.Height = 130;
-            comboBoxMode.SelectedIndex = 0;
+            this.Height = 165;
         }
 
         private void ButtonGenerate_Click(object sender, EventArgs e)
@@ -176,9 +174,11 @@ namespace Stx.ThreeSixtyfyer
             {
                 if (job.result.modesGenerated > 0)
                 {
-                    MessageBox.Show($"{job.result.modesGenerated} (360) modes were added to {job.result.mapsChanged} different levels for these difficulties: " +
+                    MessageBox.Show($"{job.result.modesGenerated} (360) modes were generated from {job.result.mapsChanged} different levels for these difficulties: " +
                         $"{string.Join(", ", job.argument.difficultyLevels)}\n\n" +
-                        $"Just navigate to the level in the game and the 360 mode will appear.",
+                        $"Navigate to custom levels in the game and a new music pack should appear named {CustomGenerated360LevelsPack}.\n\n" +
+                        $"!!! NOTE: Due to a bug in SongCore, the new music pack is merged with normal levels in the default 'Custom Levels' pack. " +
+                        $"Temporary fix: After all songs are loaded in the main menu, press Ctrl+R on your keyboard, this will hide the duplicates.",
                         "Completed!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
@@ -196,8 +196,7 @@ namespace Stx.ThreeSixtyfyer
                     else
                     {
                         MessageBox.Show($"No modes were added, this can be due to:\n" +
-                            $" - The selected songs didn't have the standard mode, this is required for the conversion.\n" +
-                            $" - The selected songs already have the 360 modes, you can override this by checking 'replacing already existing 360 mode'.\n",
+                            $" - The selected songs didn't have the standard mode, this is required for the conversion.\n",
                             "Nothing happened", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                 }
