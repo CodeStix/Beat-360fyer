@@ -26,5 +26,5 @@ C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Release\Beat-360fyer.cs
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Release\Beat-360fyer.csproj.CopyComplete
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Release\Beat-360fyer.exe
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Release\Beat-360fyer.pdb
-C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Release\Beat-360fyer.csprojAssemblyReference.cache
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Release\Stx.ThreeSixtyfyer.Properties.Resources.resources
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\obj\Release\Stx.ThreeSixtyfyer.FormGenerate.resources
