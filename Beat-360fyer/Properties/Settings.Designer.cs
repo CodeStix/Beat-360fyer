@@ -26,12 +26,24 @@ namespace Stx.ThreeSixtyfyer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string RememberPath {
+        public string RememberPathPack {
             get {
-                return ((string)(this["RememberPath"]));
+                return ((string)(this["RememberPathPack"]));
             }
             set {
-                this["RememberPath"] = value;
+                this["RememberPathPack"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RememberPathBulk {
+            get {
+                return ((string)(this["RememberPathBulk"]));
+            }
+            set {
+                this["RememberPathBulk"] = value;
             }
         }
     }

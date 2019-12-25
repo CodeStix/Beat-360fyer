@@ -35,6 +35,8 @@
             this.comboBoxDifficulty = new System.Windows.Forms.ComboBox();
             this.buttonConvertAllDifficulties = new System.Windows.Forms.Button();
             this.groupBoxDifficulties = new System.Windows.Forms.GroupBox();
+            this.buttonGeneratorSettings = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
             this.checkBoxReplace = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -45,15 +47,14 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.buttonGeneratorSettings = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
             this.groupBoxDifficulties.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOpenMap
             // 
-            this.buttonOpenMap.Location = new System.Drawing.Point(11, 70);
+            this.buttonOpenMap.Location = new System.Drawing.Point(11, 85);
             this.buttonOpenMap.Name = "buttonOpenMap";
             this.buttonOpenMap.Size = new System.Drawing.Size(104, 23);
             this.buttonOpenMap.TabIndex = 0;
@@ -63,7 +64,7 @@
             // 
             // textBoxMapPath
             // 
-            this.textBoxMapPath.Location = new System.Drawing.Point(121, 73);
+            this.textBoxMapPath.Location = new System.Drawing.Point(121, 88);
             this.textBoxMapPath.Name = "textBoxMapPath";
             this.textBoxMapPath.ReadOnly = true;
             this.textBoxMapPath.Size = new System.Drawing.Size(370, 20);
@@ -114,12 +115,34 @@
             this.groupBoxDifficulties.Controls.Add(this.buttonConvertAllDifficulties);
             this.groupBoxDifficulties.Controls.Add(this.buttonConvert);
             this.groupBoxDifficulties.Enabled = false;
-            this.groupBoxDifficulties.Location = new System.Drawing.Point(12, 370);
+            this.groupBoxDifficulties.Location = new System.Drawing.Point(11, 402);
             this.groupBoxDifficulties.Name = "groupBoxDifficulties";
             this.groupBoxDifficulties.Size = new System.Drawing.Size(479, 99);
             this.groupBoxDifficulties.TabIndex = 5;
             this.groupBoxDifficulties.TabStop = false;
             this.groupBoxDifficulties.Text = "Generate modes";
+            // 
+            // buttonGeneratorSettings
+            // 
+            this.buttonGeneratorSettings.Enabled = false;
+            this.buttonGeneratorSettings.Location = new System.Drawing.Point(335, 66);
+            this.buttonGeneratorSettings.Name = "buttonGeneratorSettings";
+            this.buttonGeneratorSettings.Size = new System.Drawing.Size(122, 23);
+            this.buttonGeneratorSettings.TabIndex = 15;
+            this.buttonGeneratorSettings.Text = "Generator settings...";
+            this.buttonGeneratorSettings.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.BackColor = System.Drawing.SystemColors.Control;
+            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label5.Location = new System.Drawing.Point(332, 17);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(48, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Settings:";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // checkBoxReplace
             // 
@@ -158,7 +181,7 @@
             // 
             this.listBoxMaps.Enabled = false;
             this.listBoxMaps.FormattingEnabled = true;
-            this.listBoxMaps.Location = new System.Drawing.Point(12, 135);
+            this.listBoxMaps.Location = new System.Drawing.Point(12, 150);
             this.listBoxMaps.Name = "listBoxMaps";
             this.listBoxMaps.ScrollAlwaysVisible = true;
             this.listBoxMaps.Size = new System.Drawing.Size(479, 229);
@@ -171,14 +194,14 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(9, 24);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(449, 39);
+            this.label1.Size = new System.Drawing.Size(449, 52);
             this.label1.TabIndex = 8;
             this.label1.Text = resources.GetString("label1.Text");
             // 
             // textBoxSearch
             // 
             this.textBoxSearch.Enabled = false;
-            this.textBoxSearch.Location = new System.Drawing.Point(12, 109);
+            this.textBoxSearch.Location = new System.Drawing.Point(12, 124);
             this.textBoxSearch.Name = "textBoxSearch";
             this.textBoxSearch.Size = new System.Drawing.Size(480, 20);
             this.textBoxSearch.TabIndex = 9;
@@ -190,7 +213,7 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 481);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 511);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(504, 22);
             this.statusStrip1.TabIndex = 13;
@@ -220,33 +243,23 @@
             this.label4.TabIndex = 4;
             this.label4.Text = "Generate And Modify Directly";
             // 
-            // label5
+            // label6
             // 
-            this.label5.AutoSize = true;
-            this.label5.BackColor = System.Drawing.SystemColors.Control;
-            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label5.Location = new System.Drawing.Point(332, 17);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(48, 13);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "Settings:";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // buttonGeneratorSettings
-            // 
-            this.buttonGeneratorSettings.Enabled = false;
-            this.buttonGeneratorSettings.Location = new System.Drawing.Point(335, 66);
-            this.buttonGeneratorSettings.Name = "buttonGeneratorSettings";
-            this.buttonGeneratorSettings.Size = new System.Drawing.Size(122, 23);
-            this.buttonGeneratorSettings.TabIndex = 15;
-            this.buttonGeneratorSettings.Text = "Generator settings...";
-            this.buttonGeneratorSettings.UseVisualStyleBackColor = true;
+            this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.Color.Gray;
+            this.label6.Location = new System.Drawing.Point(9, 382);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(418, 13);
+            this.label6.TabIndex = 14;
+            this.label6.Text = "Use (Ctrl+A) to select all and (Ctrl+D) to deselect all. Use the text input on to" +
+    "p to search.";
             // 
             // FormGenerateBulk
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(504, 503);
+            this.ClientSize = new System.Drawing.Size(504, 533);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.textBoxSearch);
@@ -260,6 +273,7 @@
             this.MaximizeBox = false;
             this.Name = "FormGenerateBulk";
             this.Text = "Beat-360fyer - A 360 level generator";
+            this.Load += new System.EventHandler(this.FormGenerateBulk_Load);
             this.groupBoxDifficulties.ResumeLayout(false);
             this.groupBoxDifficulties.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
@@ -289,6 +303,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button buttonGeneratorSettings;
+        private System.Windows.Forms.Label label6;
     }
 }
 

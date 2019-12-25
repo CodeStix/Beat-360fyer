@@ -15,7 +15,6 @@ namespace Stx.ThreeSixtyfyer
         public struct FindSongsJobResult
         {
             public List<BeatMapInfo> beatMaps;
-            public HashSet<string> beatMapDifficulties;
         }
 
         public static void FindSongsUnderPath(string path, WorkerJobCompleted<string, FindSongsJobResult> completed)
@@ -34,7 +33,6 @@ namespace Stx.ThreeSixtyfyer
         private static void FindSongsUnderPath_DoWork(object sender, DoWorkEventArgs e)
         {
             WorkerJob<string, FindSongsJobResult> job = (WorkerJob<string, FindSongsJobResult>)e.Argument;
-            job.result.beatMapDifficulties = new HashSet<string>();
             job.result.beatMaps = new List<BeatMapInfo>();
             e.Result = job;
 
@@ -53,7 +51,6 @@ namespace Stx.ThreeSixtyfyer
                     if (difStandardSet == null)
                         continue; // Cannot convert if a normal version does not exist
 
-                    difStandardSet.difficultyBeatmaps.ForEach((diff) => job.result.beatMapDifficulties.Add(diff.difficulty));
                     job.result.beatMaps.Add(info);
                 }
             }

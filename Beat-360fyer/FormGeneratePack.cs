@@ -28,7 +28,7 @@ namespace Stx.ThreeSixtyfyer
         {
             VistaFolderBrowserDialog folderBrowser = new VistaFolderBrowserDialog()
             {
-                SelectedPath = Properties.Settings.Default.RememberPath,
+                SelectedPath = Properties.Settings.Default.RememberPathPack,
                 Description = "Please select the directory containing 'Beat Saber.exe'.",
                 ShowNewFolderButton = false,
                 UseDescriptionForTitle = false
@@ -51,7 +51,7 @@ namespace Stx.ThreeSixtyfyer
                 return;
             }
 
-            Properties.Settings.Default.RememberPath = folderBrowser.SelectedPath;
+            Properties.Settings.Default.RememberPathPack = folderBrowser.SelectedPath;
             Properties.Settings.Default.Save();
 
             textBoxBeatSaberPath.Text = folderBrowser.SelectedPath;

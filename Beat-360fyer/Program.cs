@@ -23,6 +23,7 @@ namespace Stx.ThreeSixtyfyer
             {
                 Text = "Music Pack",
                 ButtonType = ButtonType.Custom,
+                Default = true,
                 CommandLinkNote = "Create a music pack with generated modes for selected songs."
             });
             dialog.Buttons.Add(new TaskDialogButton()
@@ -49,11 +50,7 @@ namespace Stx.ThreeSixtyfyer
 
             TaskDialogButton pressed = dialog.ShowDialog();
 
-            if (pressed.ButtonType == ButtonType.Close)
-            {
-                Environment.Exit(0);
-            }
-            else
+            if (pressed.ButtonType == ButtonType.Custom)
             {
                 if (pressed.Text == "Music Pack")
                 {
@@ -64,8 +61,6 @@ namespace Stx.ThreeSixtyfyer
                     Application.Run(new FormGenerateBulk());
                 }
             }
-
-            //Application.Run(new FormMain());
         }
     }
 }

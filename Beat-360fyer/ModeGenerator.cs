@@ -105,8 +105,8 @@ namespace Stx.ThreeSixtyfyer
 
         public static BeatMap Generate360ModeFromStandard(BeatMap standardMap, float timeOffset = 0f)
         {
-            const float FRAME_LENGTH = 1f / 32f;        // in beats (default 1f/8f), the length of generator loop in beats
-            const float BEAT_LENGTH = 1f / 4f;          // in beats (default 1f), how the generator should interpret each beats length
+            const float FRAME_LENGTH = 1f / 16f;        // in beats (default 1f/8f), the length of generator loop in beats
+            const float BEAT_LENGTH = 1f / 2f;          // in beats (default 1f), how the generator should interpret each beats length
             const float WALL_CUTOFF_CLOSE = 2f;         // last walls will be cut off if the last wall is in x beats of current time
             const float WALL_CUTOFF_AMOUNT = 1.7f;      // the amount (in beats) to cut off walls
             const bool ENABLE_SPIN = true;              // enable spin effect
@@ -117,7 +117,7 @@ namespace Stx.ThreeSixtyfyer
 
             float minTime = timeOffset;
             float firstNoteTime = map.notes[0].time;
-            float maxTime = map.notes.Last().time;
+            float maxTime = map.notes.Last().time + 24f * FRAME_LENGTH; // will spin once on end
 
             List<BeatMapNote> GetNotes(float time, float futureTime) // <- look in the future for notes coming
             {
@@ -298,7 +298,7 @@ namespace Stx.ThreeSixtyfyer
                 }
 
                 // This only activates one time per beat, not per frame
-                if (time % BEAT_LENGTH == 0)
+                if ((time - minTime) % BEAT_LENGTH == 0)
                 {
                     // Add movement for all direction notes, only if they are the only one in the beat
                     if (notesInBeat.All((note) => note.cutDirection == 8 && (note.type == 0 || note.type == 1)))

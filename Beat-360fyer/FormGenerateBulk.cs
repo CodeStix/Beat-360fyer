@@ -31,7 +31,7 @@ namespace Stx.ThreeSixtyfyer
         }
 
         private List<BeatMapInfo> beatMaps = new List<BeatMapInfo>();
-        private HashSet<string> beatMapDifficulties = new HashSet<string>();
+        private List<BeatMapDifficultyLevel> beatMapDifficulties = new List<BeatMapDifficultyLevel>((BeatMapDifficultyLevel[])Enum.GetValues(typeof(BeatMapDifficultyLevel)));
 
         private void SetUI(bool enabled)
         {
@@ -47,7 +47,7 @@ namespace Stx.ThreeSixtyfyer
             folderBrowser.Description = "Select your BeatSaber_Data/CustomLevels directory or select a single custom level, " +
                 "it will look for *.dat files, so either will work.\n" +
                 "The selected path will be remembered.";
-            folderBrowser.SelectedPath = Properties.Settings.Default.RememberPath;//Directory.GetCurrentDirectory();
+            folderBrowser.SelectedPath = Properties.Settings.Default.RememberPathBulk;//Directory.GetCurrentDirectory();
 
             if (folderBrowser.ShowDialog() != DialogResult.OK)
                 return;
@@ -55,8 +55,10 @@ namespace Stx.ThreeSixtyfyer
             textBoxMapPath.Text = folderBrowser.SelectedPath;
             listBoxMaps.Items.Clear();
 
-            Properties.Settings.Default.RememberPath = textBoxMapPath.Text;
+            Properties.Settings.Default.RememberPathBulk = textBoxMapPath.Text;
             Properties.Settings.Default.Save();
+
+            this.Height = 572;
 
             Jobs.FindSongsUnderPath(textBoxMapPath.Text, FindSongsUnderPath_Completed);
         }
@@ -69,14 +71,11 @@ namespace Stx.ThreeSixtyfyer
                     MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 beatMaps = job.result.beatMaps;
-                beatMapDifficulties = job.result.beatMapDifficulties;
 
                 listBoxMaps.Items.Clear();
                 listBoxMaps.Items.AddRange(beatMaps.ToArray());
-                comboBoxDifficulty.Items.Clear();
-                comboBoxDifficulty.Items.AddRange(beatMapDifficulties.ToArray());
 
-                if (listBoxMaps.Items.Count > 0 && comboBoxDifficulty.Items.Count > 0)
+                if (listBoxMaps.Items.Count > 0)
                 {
                     SetUI(true);
                     comboBoxDifficulty.SelectedIndex = 0;
@@ -95,18 +94,12 @@ namespace Stx.ThreeSixtyfyer
 
         private void ButtonConvert_Click(object sender, EventArgs e)
         {
-            var diff = new List<BeatMapDifficultyLevel>()
-            {
-                (BeatMapDifficultyLevel)Enum.Parse(typeof(BeatMapDifficultyLevel), comboBoxDifficulty.SelectedItem.ToString())
-            };
-            ConvertCheckedSongs(diff);
+            ConvertCheckedSongs(new List<BeatMapDifficultyLevel>() { (BeatMapDifficultyLevel)comboBoxDifficulty.SelectedItem });
         }
 
         private void ButtonConvertAllDifficulties_Click(object sender, EventArgs e)
         {
-            var diff = beatMapDifficulties.Select((str) => 
-                (BeatMapDifficultyLevel)Enum.Parse(typeof(BeatMapDifficultyLevel), str)).ToList();
-            ConvertCheckedSongs(diff);
+            ConvertCheckedSongs(beatMapDifficulties);
         }
 
         private void ConvertCheckedSongs(List<BeatMapDifficultyLevel> difficultyLevels)
@@ -203,7 +196,6 @@ namespace Stx.ThreeSixtyfyer
            if (e.KeyCode == Keys.Enter && !textBoxMapPath.ReadOnly)
            {
                 beatMaps.Clear();
-                beatMapDifficulties.Clear();
 
                 Jobs.FindSongsUnderPath(textBoxMapPath.Text, FindSongsUnderPath_Completed);
            }
@@ -232,6 +224,14 @@ namespace Stx.ThreeSixtyfyer
             {
                 SelectAll(false);
             }
+        }
+
+        private void FormGenerateBulk_Load(object sender, EventArgs e)
+        {
+            this.Height = 180;
+
+            foreach (BeatMapDifficultyLevel diff in beatMapDifficulties)
+                comboBoxDifficulty.Items.Add(diff);
         }
     }
 }
