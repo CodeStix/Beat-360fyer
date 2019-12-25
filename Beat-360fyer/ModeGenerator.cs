@@ -109,6 +109,7 @@ namespace Stx.ThreeSixtyfyer
             const float BEAT_LENGTH = 1f / 2f;          // in beats (default 1f), how the generator should interpret each beats length
             const float WALL_CUTOFF_CLOSE = 2f;         // last walls will be cut off if the last wall is in x beats of current time
             const float WALL_CUTOFF_AMOUNT = 1.7f;      // the amount (in beats) to cut off walls
+            const float ACTIVE_WALL_LOOKAHEAD = 0.5f;   // the amount (in beats) to look ahead looking for active walls
             const bool ENABLE_SPIN = true;              // enable spin effect
 
             BeatMap map = new BeatMap(standardMap);
@@ -160,7 +161,7 @@ namespace Stx.ThreeSixtyfyer
                 List<BeatMapNote> notesInFrame = GetNotes(time, FRAME_LENGTH);
                 List<BeatMapNote> notesInBeat = GetNotes(time, BEAT_LENGTH);
                 List<BeatMapObstacle> obstaclesInFrame = GetStartingObstacles(time, FRAME_LENGTH);
-                List<BeatMapObstacle> activeObstacles = GetActiveObstacles(time);
+                List<BeatMapObstacle> activeObstacles = GetActiveObstacles(time + ACTIVE_WALL_LOOKAHEAD);
                 bool enableGoLeft = !activeObstacles.Any((obst) => (obst.lineIndex == 0 || obst.lineIndex == 1) || (obst.type == 1 && obst.width > 3));
                 bool enableGoRight = !activeObstacles.Any((obst) => (obst.lineIndex == 2 || obst.lineIndex == 3) || (obst.type == 1 && obst.width > 3));
                 bool heat = notesInBeat.Count >= 4;
