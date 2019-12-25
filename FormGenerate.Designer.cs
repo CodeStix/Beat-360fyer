@@ -35,14 +35,14 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.buttonGeneratorSettings = new System.Windows.Forms.Button();
+            this.buttonGenerate = new System.Windows.Forms.Button();
+            this.comboBoxMode = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.listSongs = new System.Windows.Forms.ListView();
             this.columnHeaderSongName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderAuthor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.comboBoxMode = new System.Windows.Forms.ComboBox();
-            this.buttonGenerate = new System.Windows.Forms.Button();
-            this.buttonGeneratorSettings = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -86,19 +86,60 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.buttonGeneratorSettings);
-            this.groupBox2.Controls.Add(this.buttonGenerate);
             this.groupBox2.Controls.Add(this.comboBoxMode);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Location = new System.Drawing.Point(398, 92);
+            this.groupBox2.Location = new System.Drawing.Point(12, 476);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(182, 158);
+            this.groupBox2.Size = new System.Drawing.Size(568, 62);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Generator";
             // 
+            // buttonGeneratorSettings
+            // 
+            this.buttonGeneratorSettings.Enabled = false;
+            this.buttonGeneratorSettings.Location = new System.Drawing.Point(176, 26);
+            this.buttonGeneratorSettings.Name = "buttonGeneratorSettings";
+            this.buttonGeneratorSettings.Size = new System.Drawing.Size(122, 23);
+            this.buttonGeneratorSettings.TabIndex = 3;
+            this.buttonGeneratorSettings.Text = "Generator settings...";
+            this.buttonGeneratorSettings.UseVisualStyleBackColor = true;
+            // 
+            // buttonGenerate
+            // 
+            this.buttonGenerate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.buttonGenerate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonGenerate.Location = new System.Drawing.Point(439, 440);
+            this.buttonGenerate.Name = "buttonGenerate";
+            this.buttonGenerate.Size = new System.Drawing.Size(141, 33);
+            this.buttonGenerate.TabIndex = 2;
+            this.buttonGenerate.Text = "Generate Music Pack\r\n";
+            this.buttonGenerate.UseVisualStyleBackColor = false;
+            this.buttonGenerate.Click += new System.EventHandler(this.ButtonGenerate_Click);
+            // 
+            // comboBoxMode
+            // 
+            this.comboBoxMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxMode.Enabled = false;
+            this.comboBoxMode.FormattingEnabled = true;
+            this.comboBoxMode.Items.AddRange(new object[] {
+            "360 degrees"});
+            this.comboBoxMode.Location = new System.Drawing.Point(49, 27);
+            this.comboBoxMode.Name = "comboBoxMode";
+            this.comboBoxMode.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxMode.TabIndex = 1;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 30);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(37, 13);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Mode:\r\n";
+            // 
             // listSongs
             // 
-            this.listSongs.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listSongs.CheckBoxes = true;
             this.listSongs.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderSongName,
@@ -111,7 +152,7 @@
             this.listSongs.HideSelection = false;
             this.listSongs.Location = new System.Drawing.Point(12, 92);
             this.listSongs.Name = "listSongs";
-            this.listSongs.Size = new System.Drawing.Size(369, 342);
+            this.listSongs.Size = new System.Drawing.Size(568, 342);
             this.listSongs.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listSongs.TabIndex = 6;
             this.listSongs.UseCompatibleStateImageBehavior = false;
@@ -131,67 +172,29 @@
             // label3
             // 
             this.label3.ForeColor = System.Drawing.Color.Gray;
-            this.label3.Location = new System.Drawing.Point(7, 437);
+            this.label3.Location = new System.Drawing.Point(9, 437);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(387, 26);
             this.label3.TabIndex = 7;
             this.label3.Text = "Tip: use shift to select multiple items, then use space to check or uncheck them." +
     "\r\nUse (Ctrl+A) to select all songs and (Ctrl+D) to deselect all songs.";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 30);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(37, 13);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "Mode:\r\n";
-            // 
-            // comboBoxMode
-            // 
-            this.comboBoxMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxMode.Enabled = false;
-            this.comboBoxMode.FormattingEnabled = true;
-            this.comboBoxMode.Items.AddRange(new object[] {
-            "360 degrees"});
-            this.comboBoxMode.Location = new System.Drawing.Point(49, 27);
-            this.comboBoxMode.Name = "comboBoxMode";
-            this.comboBoxMode.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxMode.TabIndex = 1;
-            // 
-            // buttonGenerate
-            // 
-            this.buttonGenerate.Location = new System.Drawing.Point(9, 123);
-            this.buttonGenerate.Name = "buttonGenerate";
-            this.buttonGenerate.Size = new System.Drawing.Size(161, 26);
-            this.buttonGenerate.TabIndex = 2;
-            this.buttonGenerate.Text = "Generate Music Pack\r\n";
-            this.buttonGenerate.UseVisualStyleBackColor = true;
-            this.buttonGenerate.Click += new System.EventHandler(this.ButtonGenerate_Click);
-            // 
-            // buttonGeneratorSettings
-            // 
-            this.buttonGeneratorSettings.Enabled = false;
-            this.buttonGeneratorSettings.Location = new System.Drawing.Point(9, 91);
-            this.buttonGeneratorSettings.Name = "buttonGeneratorSettings";
-            this.buttonGeneratorSettings.Size = new System.Drawing.Size(161, 26);
-            this.buttonGeneratorSettings.TabIndex = 3;
-            this.buttonGeneratorSettings.Text = "Generator settings...";
-            this.buttonGeneratorSettings.UseVisualStyleBackColor = true;
-            // 
             // FormGenerate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(595, 470);
+            this.ClientSize = new System.Drawing.Size(595, 548);
             this.Controls.Add(this.label3);
+            this.Controls.Add(this.buttonGenerate);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.listSongs);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxBeatSaberPath);
             this.Controls.Add(this.buttonSelectBeatSaber);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "FormGenerate";
             this.Text = "Beat-360fyer - A 360 level generator";
             this.Load += new System.EventHandler(this.FormGenerate_Load);

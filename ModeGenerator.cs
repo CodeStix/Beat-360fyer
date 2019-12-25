@@ -105,10 +105,11 @@ namespace Stx.ThreeSixtyfyer
 
         public static BeatMap Generate360ModeFromStandard(BeatMap standardMap, float timeOffset = 0f)
         {
-            const float FRAME_LENGTH = 1f / 16f;     // in beats (1f/8f)
-            const float BEAT_LENGTH = 1f / 2f;           // in beats (1f)
-            const float WALL_CUTOFF_CLOSE = 1.5f;   // last walls will be cut off if the last wall is in x beats of current time
-            const bool ENABLE_SPIN = true;          // enable spin effect
+            const float FRAME_LENGTH = 1f / 16f;        // in beats (default 1f/8f), the length of generator loop in beats
+            const float BEAT_LENGTH = 1f / 2f;          // in beats (default 1f), how the generator should interpret each beats length
+            const float WALL_CUTOFF_CLOSE = 1.5f;       // last walls will be cut off if the last wall is in x beats of current time
+            const float WALL_CUTOFF_AMOUNT = 1.75f;     // the amount (in beats) to cut off walls
+            const bool ENABLE_SPIN = true;              // enable spin effect
 
             BeatMap map = new BeatMap(standardMap);
             if (map.notes.Count == 0)
@@ -129,9 +130,6 @@ namespace Stx.ThreeSixtyfyer
             List<BeatMapObstacle> GetActiveObstacles(float time)
             {
                 return map.obstacles.Where((obst) => time >= obst.time && time < obst.time + obst.duration).ToList();
-                //return map.obstacles.Where((obst) => obst.time >= time && obst.time < time + futureTime + obst.duration).ToList();
-                //return map.obstacles.Where((obst) => obst.time + obst.duration > time && obst.time <= time + futureTime).ToList();
-                //return map.obstacles.Where((obst) => time + futureTime >= obst.time && time < obst.time + obst.duration).ToList();
             }
 
             BeatMapObstacle[] lastLeftObstacles = new BeatMapObstacle[0], lastRightObstacles = new BeatMapObstacle[0];
@@ -139,13 +137,7 @@ namespace Stx.ThreeSixtyfyer
             void CutOffWalls(BeatMapObstacle[] walls)
             {
                 foreach (BeatMapObstacle obst in walls)
-                {
-                    obst.duration *= 0.4f;
-                    /*if (obst.duration <= 2f)
-                        obst.duration *= 0.4f;
-                    else
-                        obst.duration -= 1.5f;*/
-                }
+                    obst.duration -= WALL_CUTOFF_AMOUNT; // negative durations will be removed later
             }
             void CutOffRightWalls(float time)
             {
@@ -160,7 +152,6 @@ namespace Stx.ThreeSixtyfyer
 
             int spinsRemaining = 0;
             bool spinDirection = true;
-
             bool goDirection = false;
 
             for (float time = minTime; time < maxTime; time += FRAME_LENGTH)
@@ -350,33 +341,10 @@ namespace Stx.ThreeSixtyfyer
                             continue;
                         }
                     }
-                    // If all notes in beat are bombs, bomb seizure
-                    /*if (notesInBeat.All((note) => note.type == 3))
-                    {
-                        float prevTime = 0f;
-                        for(int i = 0; i < notesInBeat.Count; i++)
-                        {
-                            BeatMapNote bomb = notesInBeat[i];
-
-                            bomb.time = time + ((float)i / notesInBeat.Count);
-
-                            if (prevTime > 1f)
-                            {
-                                int amount = Math.Min(i / 2 + 1, 4);
-
-                                if (i % 2 == 0 && enableGoLeft)
-                                    map.AddGoLeftEvent((prevTime + bomb.time) / 2f, amount);
-                                else if (i % 2 != 0 && enableGoRight)
-                                    map.AddGoRightEvent((prevTime + bomb.time) / 2f, amount);
-                            }
-
-                            prevTime = bomb.time;
-                        }
-                        continue;
-                    }*/
                 }
             }
 
+            map.obstacles.RemoveAll((obst) => obst.duration <= 0); // remove all walls with a negative duration, can happen when cutting off
             map.events = map.events.OrderBy((e) => e.time).ToList();
 
             return map;

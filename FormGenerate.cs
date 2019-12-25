@@ -55,9 +55,9 @@ namespace Stx.ThreeSixtyfyer
             Properties.Settings.Default.Save();
 
             textBoxBeatSaberPath.Text = folderBrowser.SelectedPath;
+            this.Height = 590;
 
             RefreshSongs();
-            EnsureCustomPack(CustomGenerated360LevelsPack, CustomGenerated360LevelsPath, "360.png");
         }
 
         private void RefreshSongs()
@@ -139,11 +139,13 @@ namespace Stx.ThreeSixtyfyer
 
         private void FormGenerate_Load(object sender, EventArgs e)
         {
+            this.Height = 130;
             comboBoxMode.SelectedIndex = 0;
         }
 
         private void ButtonGenerate_Click(object sender, EventArgs e)
         {
+            EnsureCustomPack(CustomGenerated360LevelsPack, CustomGenerated360LevelsPath, "360.png");
             ConvertCheckedSongs(Enum.GetValues(typeof(BeatMapDifficultyLevel)).Cast<BeatMapDifficultyLevel>().ToList());
         }
 
