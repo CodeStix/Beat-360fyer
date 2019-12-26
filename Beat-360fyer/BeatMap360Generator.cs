@@ -9,11 +9,11 @@ namespace Stx.ThreeSixtyfyer
     public class BeatMap360GeneratorSettings
     {
         public float timeOffset = 0f;                      // the offset of the notes in beats
-        public float frameLength = 1f / 16f;               // in beats (default 1f/8f), the length of each generator loop cycle in beats
+        public float frameLength = 1f / 16f;               // in beats (default 1f/16f), the length of each generator loop cycle in beats
         public float beatLength = 1f;                      // in beats (default 1f), how the generator should interpret each beats length
-        public float obstableCutoffTimeSpan = 2f;        // last walls will be cut off if the last wall is in x beats of current time
-        public float obstacleCutoffAmount = 0.65f;          // the amount (in beats) to cut off walls
-        public float activeWallLookahead = -1f;            // the amount (in beats) to look ahead looking for active walls
+        public float obstableCutoffTimeSpan = 2f;          // last walls will be cut off if the last wall is in x beats of current time
+        public float obstacleCutoffAmount = 0.65f;         // the amount (in beats) to cut off walls
+        public float activeWallLookahead = -0.5f;          // the amount (in beats) to look ahead looking for active walls
         public bool enableSpin = true;                     // enable spin effect
     }
 
