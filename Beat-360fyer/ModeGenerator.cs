@@ -168,6 +168,8 @@ namespace Stx.ThreeSixtyfyer
                 bool enableGoRight = !activeObstacles.Any((obst) => ((obst.lineIndex == 2 || obst.lineIndex == 3) && obst.width < 3) || (obst.width == 3 && obst.lineIndex == 1));
                 bool heat = notesInBeat.Count >= 4;
 
+                #region SPIN
+
                 bool shouldSpin = ENABLE_SPIN
                     && activeObstacles.Count == 0 
                     && GetStartingObstacles(time, 24f * FRAME_LENGTH).Count == 0
@@ -191,6 +193,10 @@ namespace Stx.ThreeSixtyfyer
                     spinDirection = !spinDirection; // spin any direction
                     spinsRemaining += 24; // 24 spins is one 360
                 }
+
+                #endregion
+
+                #region OBSTACLE ROTATION
 
                 if (obstaclesInFrame.Count > 0)
                 {
@@ -231,7 +237,71 @@ namespace Stx.ThreeSixtyfyer
                     continue;
                 }
 
-                if (notesInFrame.Count == 0)
+                #endregion
+
+                #region ONCE PER BEAT EFFECTS   
+
+                // This only activates one time per beat, not per frame
+                if ((time - minTime) % BEAT_LENGTH == 0)
+                {
+                    // Add movement for all direction notes, only if they are the only one in the beat
+                    if (notesInBeat.All((note) => note.cutDirection == 8 && (note.type == 0 || note.type == 1)))
+                    {
+                        int rightNoteCount = notesInBeat.Count((note) => (note.lineIndex == 2 || note.lineIndex == 3) && (note.type == 0 || note.type == 1));
+                        int leftNoteCount = notesInBeat.Count((note) => (note.lineIndex == 0 || note.lineIndex == 1) && (note.type == 0 || note.type == 1));
+
+                        if (rightNoteCount > leftNoteCount && enableGoRight)
+                        {
+                            CutOffRightWalls(time);
+                            map.AddGoRightEvent(time, 1);
+                            continue;
+                        }
+                        else if (leftNoteCount > rightNoteCount && enableGoLeft)
+                        {
+                            CutOffLeftWalls(time);
+                            map.AddGoLeftEvent(time, 1);
+                            continue;
+                        }
+                        else if (leftNoteCount == rightNoteCount && enableGoLeft && enableGoRight)
+                        {
+                            if (goDirection)
+                            {
+                                CutOffLeftWalls(time);
+                                map.AddGoLeftEvent(time, 1);
+                            }
+                            else
+                            {
+                                CutOffRightWalls(time);
+                                map.AddGoRightEvent(time, 1);
+                            }
+
+                            goDirection = !goDirection;
+                            continue;
+                        }
+                    }
+
+                    if (notesInBeat.All((note) => note.type == 3))
+                    {
+                        if (goDirection && enableGoLeft)
+                        {
+                            CutOffLeftWalls(time);
+                            map.AddGoLeftEvent(time, 1);
+                            continue;
+                        }
+                        else if (!goDirection && enableGoRight)
+                        {
+                            CutOffRightWalls(time);
+                            map.AddGoRightEvent(time, 1);
+                            continue;
+                        }
+                    }
+                }
+
+                #endregion
+
+                #region PER FRAME BEAT EFFECTS
+
+                if (notesInFrame.Count == 0) // all if clauses coming use the notesInFrame, so continue if there are none
                     continue;
 
                 BeatMapNote[] leftNotes = notesInFrame.Where((note) => (note.cutDirection == 2 || (note.cutDirection == 6 && note.lineIndex <= 2) || (note.cutDirection == 4 && note.lineIndex <= 2)) && (note.type == 0 || note.type == 1)).ToArray();
@@ -302,62 +372,7 @@ namespace Stx.ThreeSixtyfyer
                     }
                 }
 
-                // This only activates one time per beat, not per frame
-                if ((time - minTime) % BEAT_LENGTH == 0)
-                {
-                   
-                    // Add movement for all direction notes, only if they are the only one in the beat
-                    if (notesInBeat.All((note) => note.cutDirection == 8 && (note.type == 0 || note.type == 1)))
-                    {
-                        int rightNoteCount = notesInBeat.Count((note) => (note.lineIndex == 2 || note.lineIndex == 3) && (note.type == 0 || note.type == 1));
-                        int leftNoteCount = notesInBeat.Count((note) => (note.lineIndex == 0 || note.lineIndex == 1) && (note.type == 0 || note.type == 1));
-
-                        if (rightNoteCount > leftNoteCount && enableGoRight)
-                        {
-                            CutOffRightWalls(time);
-                            map.AddGoRightEvent(time, 1);
-                            continue;
-                        }
-                        else if (leftNoteCount > rightNoteCount && enableGoLeft)
-                        {
-                            CutOffLeftWalls(time);
-                            map.AddGoLeftEvent(time, 1);
-                            continue;
-                        }
-                        else if (leftNoteCount == rightNoteCount && enableGoLeft && enableGoRight)
-                        {
-                            if (goDirection)
-                            {
-                                CutOffLeftWalls(time);
-                                map.AddGoLeftEvent(time, 1);
-                            }
-                            else
-                            {
-                                CutOffRightWalls(time);
-                                map.AddGoRightEvent(time, 1);
-                            }
-
-                            goDirection = !goDirection;
-                            continue;
-                        }
-                    }
-
-                    if (notesInBeat.All((note) => note.type == 3))
-                    {
-                        if (goDirection && enableGoLeft)
-                        {
-                            CutOffLeftWalls(time);
-                            map.AddGoLeftEvent(time, 1);
-                            continue;
-                        }
-                        else if (!goDirection && enableGoRight)
-                        {
-                            CutOffRightWalls(time);
-                            map.AddGoRightEvent(time, 1);
-                            continue;
-                        }
-                    }
-                }
+                #endregion
             }
 
             map.obstacles.RemoveAll((obst) => obst.duration <= 0); // remove all walls with a negative duration, can happen when cutting off
