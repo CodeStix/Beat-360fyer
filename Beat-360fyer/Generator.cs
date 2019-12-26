@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Stx.ThreeSixtyfyer
 {
-    public static class ModeGenerator
+    public static class Generator
     {
         public static bool AddNewDifficultyTo(BeatMapInfo info, BeatMapDifficulty newDifficulty, string gameMode, bool replaceExisting = false)
         {
