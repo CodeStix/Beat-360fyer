@@ -97,6 +97,33 @@ namespace Stx.ThreeSixtyfyer
             return res;
         }
 
+        public bool AddGameModeDifficulty(BeatMapDifficulty newDifficulty, string gameMode, bool replaceExisting)
+        {
+            BeatMapDifficultySet newDiffSet = difficultyBeatmapSets.FirstOrDefault((difs) => difs.beatmapCharacteristicName == gameMode);
+            if (newDiffSet == null)
+            {
+                newDiffSet = new BeatMapDifficultySet()
+                {
+                    beatmapCharacteristicName = gameMode,
+                    difficultyBeatmaps = new List<BeatMapDifficulty>()
+                };
+                difficultyBeatmapSets.Add(newDiffSet);
+            }
+
+            BeatMapDifficulty existingDiff = newDiffSet.difficultyBeatmaps.FirstOrDefault((diff) => diff.difficulty == newDifficulty.difficulty.ToString());
+            if (existingDiff != null)
+            {
+                if (!replaceExisting)
+                    return false;
+
+                newDiffSet.difficultyBeatmaps.Remove(existingDiff);
+            }
+
+            newDiffSet.difficultyBeatmaps.Add(newDifficulty);
+            newDiffSet.difficultyBeatmaps = newDiffSet.difficultyBeatmaps.OrderBy((diff) => diff.difficultyRank).ToList();
+            return true;
+        }
+
         public void AddContributor(string name, string role, string iconPath = "")
         {
             if (customData.contributors == null)
@@ -173,6 +200,18 @@ namespace Stx.ThreeSixtyfyer
         {
             string fullPath = Path.Combine(mapDirectory, beatmapFilename);
             File.WriteAllText(fullPath, JsonConvert.SerializeObject(map));
+        }
+
+        public static BeatMapDifficulty Create(BeatMapDifficultyLevel difficulty, string gameMode)
+        {
+            return new BeatMapDifficulty()
+            {
+                difficulty = difficulty.ToString(),
+                difficultyRank = (int)difficulty,
+                beatmapFilename = gameMode + difficulty.ToString() + ".dat",
+                noteJumpMovementSpeed = 0.0f,
+                noteJumpStartBeatOffset = 0.0f
+            };
         }
     }
 }

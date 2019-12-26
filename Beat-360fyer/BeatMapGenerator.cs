@@ -10,46 +10,6 @@ namespace Stx.ThreeSixtyfyer
 {
     public static class BeatMapGenerator
     {
-        public static bool AddNewDifficultyTo(BeatMapInfo info, BeatMapDifficulty newDifficulty, string gameMode, bool replaceExisting = false)
-        {
-            BeatMapDifficultySet newDiffSet = info.difficultyBeatmapSets.FirstOrDefault((difs) => difs.beatmapCharacteristicName == gameMode);
-            if (newDiffSet == null)
-            {
-                newDiffSet = new BeatMapDifficultySet()
-                {
-                    beatmapCharacteristicName = gameMode,
-                    difficultyBeatmaps = new List<BeatMapDifficulty>()
-                };
-                info.difficultyBeatmapSets.Add(newDiffSet);
-            }
-
-            BeatMapDifficulty existingDiff = newDiffSet.difficultyBeatmaps.FirstOrDefault((diff) => diff.difficulty == newDifficulty.difficulty.ToString());
-            if (existingDiff != null)
-            {
-                if (!replaceExisting)
-                    return false;
-
-                newDiffSet.difficultyBeatmaps.Remove(existingDiff);
-            }
-
-            newDiffSet.difficultyBeatmaps.Add(newDifficulty);
-            newDiffSet.difficultyBeatmaps = newDiffSet.difficultyBeatmaps.OrderBy((diff) => diff.difficultyRank).ToList();
-
-            return true;
-        }
-
-        public static BeatMapDifficulty CreateNewDifficulty(BeatMapDifficultyLevel difficulty, string gameMode)
-        {
-            return new BeatMapDifficulty()
-            {
-                difficulty = difficulty.ToString(),
-                difficultyRank = (int)difficulty,
-                beatmapFilename = gameMode + difficulty.ToString() + ".dat",
-                noteJumpMovementSpeed = 0.0f,
-                noteJumpStartBeatOffset = 0.0f
-            };
-        }
-
         public static bool Generate360ModeAndSave(BeatMapInfo info, BeatMapDifficultyLevel difficulty, bool replaceExising360Mode = false)
         {
             info.CreateBackup();
@@ -60,11 +20,11 @@ namespace Stx.ThreeSixtyfyer
             if (standardDiff == null)
                 return false;
 
-            BeatMapDifficulty newDiff = CreateNewDifficulty(difficulty, "360Degree");
+            BeatMapDifficulty newDiff = BeatMapDifficulty.Create(difficulty, "360Degree");
             newDiff.noteJumpMovementSpeed = standardDiff.noteJumpMovementSpeed;
             newDiff.noteJumpStartBeatOffset = standardDiff.noteJumpStartBeatOffset;
 
-            if (!AddNewDifficultyTo(info, newDiff, "360Degree", replaceExising360Mode))
+            if (!info.AddGameModeDifficulty(newDiff, "360Degree", replaceExising360Mode))
                 return false;
 
             newDiff.SaveBeatMap(info.mapDirectoryPath, Generate360ModeFromStandard(standardDiff.LoadBeatMap(info.mapDirectoryPath), info.songTimeOffset));
@@ -81,11 +41,11 @@ namespace Stx.ThreeSixtyfyer
             if (standardDiff == null)
                 return false;
 
-            BeatMapDifficulty newDiff = CreateNewDifficulty(difficulty, "360Degree");
+            BeatMapDifficulty newDiff = BeatMapDifficulty.Create(difficulty, "360Degree");
             newDiff.noteJumpMovementSpeed = standardDiff.noteJumpMovementSpeed;
             newDiff.noteJumpStartBeatOffset = standardDiff.noteJumpStartBeatOffset;
 
-            if (!AddNewDifficultyTo(info, newDiff, "360Degree", true)) // always replace when making a copy
+            if (!info.AddGameModeDifficulty(newDiff, "360Degree", true)) // always replace when making a copy
                 return false;
 
             string mapDestination = Path.Combine(destination, new DirectoryInfo(info.mapDirectoryPath).Name);
