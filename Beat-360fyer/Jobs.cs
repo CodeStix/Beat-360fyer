@@ -116,12 +116,12 @@ namespace Stx.ThreeSixtyfyer
                     {
                         if (string.IsNullOrEmpty(job.argument.destination))
                         {
-                            if (Generator.Generate360ModeAndSave(info, difficultyLevel, job.argument.replacePreviousModes))
+                            if (BeatMapGenerator.Generate360ModeAndSave(info, difficultyLevel, job.argument.replacePreviousModes))
                                 job.result.modesGenerated++;
                         }
                         else
                         {
-                            if (Generator.Generate360ModeAndCopy(info, job.argument.destination, difficultyLevel))
+                            if (BeatMapGenerator.Generate360ModeAndCopy(info, job.argument.destination, difficultyLevel))
                                 job.result.modesGenerated++;
                         }
                     }

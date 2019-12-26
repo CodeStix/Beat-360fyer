@@ -1,124 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Stx.ThreeSixtyfyer
 {
-    public static class Generator
+    public class BeatMap360GeneratorSettings
     {
-        public static bool AddNewDifficultyTo(BeatMapInfo info, BeatMapDifficulty newDifficulty, string gameMode, bool replaceExisting = false)
+        public float timeOffset = 0f;                      // the offset of the notes in beats
+        public float frameLength = 1f / 16f;               // in beats (default 1f/8f), the length of each generator loop cycle in beats
+        public float beatLength = 1f;                      // in beats (default 1f), how the generator should interpret each beats length
+        public float obstableCutoffTimeSpan = 2.5f;        // last walls will be cut off if the last wall is in x beats of current time
+        public float obstacleCutoffAmount = 1.7f;          // the amount (in beats) to cut off walls
+        public float activeWallLookahead = -1f;            // the amount (in beats) to look ahead looking for active walls
+        public bool enableSpin = true;                     // enable spin effect
+    }
+
+    public class BeatMap360Generator : IBeatMapGenerator<BeatMap360GeneratorSettings>
+    {
+        public BeatMap FromNormal(BeatMap standardMap, BeatMap360GeneratorSettings settings)
         {
-            BeatMapDifficultySet newDiffSet = info.difficultyBeatmapSets.FirstOrDefault((difs) => difs.beatmapCharacteristicName == gameMode);
-            if (newDiffSet == null)
-            {
-                newDiffSet = new BeatMapDifficultySet()
-                {
-                    beatmapCharacteristicName = gameMode,
-                    difficultyBeatmaps = new List<BeatMapDifficulty>()
-                };
-                info.difficultyBeatmapSets.Add(newDiffSet);
-            }
-
-            BeatMapDifficulty existingDiff = newDiffSet.difficultyBeatmaps.FirstOrDefault((diff) => diff.difficulty == newDifficulty.difficulty.ToString());
-            if (existingDiff != null)
-            {
-                if (!replaceExisting)
-                    return false;
-
-                newDiffSet.difficultyBeatmaps.Remove(existingDiff);
-            }
-
-            newDiffSet.difficultyBeatmaps.Add(newDifficulty);
-            newDiffSet.difficultyBeatmaps = newDiffSet.difficultyBeatmaps.OrderBy((diff) => diff.difficultyRank).ToList();
-
-            return true;
-        }
-
-        public static BeatMapDifficulty CreateNewDifficulty(BeatMapDifficultyLevel difficulty, string gameMode)
-        {
-            return new BeatMapDifficulty()
-            {
-                difficulty = difficulty.ToString(),
-                difficultyRank = (int)difficulty,
-                beatmapFilename = gameMode + difficulty.ToString() + ".dat",
-                noteJumpMovementSpeed = 0.0f,
-                noteJumpStartBeatOffset = 0.0f
-            };
-        }
-
-        public static bool Generate360ModeAndSave(BeatMapInfo info, BeatMapDifficultyLevel difficulty, bool replaceExising360Mode = false)
-        {
-            info.CreateBackup();
-
-            //BeatMapDifficulty difStandard = difStandardSet.difficultyBeatmaps.FirstOrDefault((diff) => diff.difficulty == newDifficulty.difficulty.ToString());
-            BeatMapDifficulty standardDiff = info.GetGameModeDifficulty(difficulty, "Standard");
-
-            if (standardDiff == null)
-                return false;
-
-            BeatMapDifficulty newDiff = CreateNewDifficulty(difficulty, "360Degree");
-            newDiff.noteJumpMovementSpeed = standardDiff.noteJumpMovementSpeed;
-            newDiff.noteJumpStartBeatOffset = standardDiff.noteJumpStartBeatOffset;
-
-            if (!AddNewDifficultyTo(info, newDiff, "360Degree", replaceExising360Mode))
-                return false;
-
-            newDiff.SaveBeatMap(info.mapDirectoryPath, Generate360ModeFromStandard(standardDiff.LoadBeatMap(info.mapDirectoryPath), info.songTimeOffset));
-
-            info.AddContributor("CodeStix's 360fyer", "360 degree mode");
-            info.SaveToFile(info.mapInfoPath);
-            return true;
-        }
-
-        public static bool Generate360ModeAndCopy(BeatMapInfo info, string destination, BeatMapDifficultyLevel difficulty)
-        {
-            BeatMapDifficulty standardDiff = info.GetGameModeDifficulty(difficulty, "Standard");
-
-            if (standardDiff == null)
-                return false;
-
-            BeatMapDifficulty newDiff = CreateNewDifficulty(difficulty, "360Degree");
-            newDiff.noteJumpMovementSpeed = standardDiff.noteJumpMovementSpeed;
-            newDiff.noteJumpStartBeatOffset = standardDiff.noteJumpStartBeatOffset;
-
-            if (!AddNewDifficultyTo(info, newDiff, "360Degree", true)) // always replace when making a copy
-                return false;
-
-            string mapDestination = Path.Combine(destination, new DirectoryInfo(info.mapDirectoryPath).Name);
-            Directory.CreateDirectory(mapDestination);
-
-            newDiff.SaveBeatMap(mapDestination, Generate360ModeFromStandard(standardDiff.LoadBeatMap(info.mapDirectoryPath), info.songTimeOffset));
-
-            info.difficultyBeatmapSets.RemoveAll((diffSet) => diffSet.beatmapCharacteristicName != "Standard" && diffSet.beatmapCharacteristicName != "360Degree");
-            info.RemoveGameModeDifficulty(difficulty, "Standard");
-
-            File.Copy(Path.Combine(info.mapDirectoryPath, info.coverImageFilename), Path.Combine(mapDestination, info.coverImageFilename), true);
-            File.Copy(Path.Combine(info.mapDirectoryPath, info.songFilename), Path.Combine(mapDestination, info.songFilename), true);
-            info.AddContributor("CodeStix's 360fyer", "360 degree mode");
-            info.SaveToFile(Path.Combine(mapDestination, "Info.dat"));
-            return true;
-        }
-
-        public static BeatMap Generate360ModeFromStandard(BeatMap standardMap, float timeOffset = 0f)
-        {
-            const float FRAME_LENGTH = 1f / 16f;        // in beats (default 1f/8f), the length of each generator loop cycle in beats
-            const float BEAT_LENGTH = 1f;               // in beats (default 1f), how the generator should interpret each beats length
-            const float WALL_CUTOFF_CLOSE = 2.5f;       // last walls will be cut off if the last wall is in x beats of current time
-            const float WALL_CUTOFF_AMOUNT = 1.7f;      // the amount (in beats) to cut off walls
-            const float ACTIVE_WALL_LOOKAHEAD = -1f;    // the amount (in beats) to look ahead looking for active walls
-            const bool ENABLE_SPIN = true;              // enable spin effect
-
             BeatMap map = new BeatMap(standardMap);
             if (map.notes.Count == 0)
                 return map;
 
-            float minTime = timeOffset;
+            float minTime = settings.timeOffset;
             float firstNoteTime = map.notes[0].time;
-            float maxTime = map.notes.Last().time + 24f * FRAME_LENGTH; // will spin once on end
+            float maxTime = map.notes.Last().time + 24f * settings.frameLength; // will spin once on end
 
             List<BeatMapNote> GetNotes(float time, float futureTime) // <- look in the future for notes coming
             {
@@ -139,17 +48,17 @@ namespace Stx.ThreeSixtyfyer
             {
                 foreach (BeatMapObstacle obst in walls)
                 {
-                    obst.duration -= WALL_CUTOFF_AMOUNT; // negative durations will be removed later
+                    obst.duration -= settings.obstacleCutoffAmount; // negative durations will be removed later
                 }
             }
             void CutOffRightWalls(float time)
             {
-                if (lastRightObstacles.Length > 0 && time + FRAME_LENGTH - (lastRightObstacles[0].time + lastRightObstacles[0].duration) <= WALL_CUTOFF_CLOSE)
+                if (lastRightObstacles.Length > 0 && time + settings.frameLength - (lastRightObstacles[0].time + lastRightObstacles[0].duration) <= obstableCutoffTimeSpan)
                     CutOffWalls(lastRightObstacles);
             }
             void CutOffLeftWalls(float time)
             {
-                if (lastLeftObstacles.Length > 0 && time + FRAME_LENGTH - (lastLeftObstacles[0].time + lastLeftObstacles[0].duration) <= WALL_CUTOFF_CLOSE)
+                if (lastLeftObstacles.Length > 0 && time + settings.frameLength - (lastLeftObstacles[0].time + lastLeftObstacles[0].duration) <= obstableCutoffTimeSpan)
                     CutOffWalls(lastLeftObstacles);
             }
 
@@ -157,23 +66,23 @@ namespace Stx.ThreeSixtyfyer
             bool spinDirection = true;
             bool goDirection = false;
 
-            for (float time = minTime; time < maxTime; time += FRAME_LENGTH)
+            for (float time = minTime; time < maxTime; time += settings.frameLength)
             {
                 // Get all notes in current frame length
-                List<BeatMapNote> notesInFrame = GetNotes(time, FRAME_LENGTH);
-                List<BeatMapNote> notesInBeat = GetNotes(time, BEAT_LENGTH);
-                List<BeatMapObstacle> obstaclesInFrame = GetStartingObstacles(time, FRAME_LENGTH);
-                List<BeatMapObstacle> activeObstacles = GetActiveObstacles(time, ACTIVE_WALL_LOOKAHEAD);
+                List<BeatMapNote> notesInFrame = GetNotes(time, settings.frameLength);
+                List<BeatMapNote> notesInBeat = GetNotes(time, settings.beatLength);
+                List<BeatMapObstacle> obstaclesInFrame = GetStartingObstacles(time, settings.frameLength);
+                List<BeatMapObstacle> activeObstacles = GetActiveObstacles(time, settings.activeWallLookahead);
                 bool enableGoLeft = !activeObstacles.Any((obst) => ((obst.lineIndex == 0 || obst.lineIndex == 1) && obst.width < 3) || (obst.width == 3 && obst.lineIndex == 0));
                 bool enableGoRight = !activeObstacles.Any((obst) => ((obst.lineIndex == 2 || obst.lineIndex == 3) && obst.width < 3) || (obst.width == 3 && obst.lineIndex == 1));
                 bool heat = notesInBeat.Count >= 4;
 
                 #region SPIN
 
-                bool shouldSpin = ENABLE_SPIN
-                    && activeObstacles.Count == 0 
-                    && GetStartingObstacles(time, 24f * FRAME_LENGTH).Count == 0
-                    && GetNotes(time, 24f * FRAME_LENGTH).Count == 0;
+                bool shouldSpin = settings.enableSpin
+                    && activeObstacles.Count == 0
+                    && GetStartingObstacles(time, 24f * settings.frameLength).Count == 0
+                    && GetNotes(time, 24f * settings.frameLength).Count == 0;
 
                 if (spinsRemaining > 0)
                 {
@@ -226,12 +135,12 @@ namespace Stx.ThreeSixtyfyer
                     if (goDirection)
                     {
                         CutOffLeftWalls(time);
-                        map.AddGoLeftEvent(time - FRAME_LENGTH, 1); // insert before this wall comes
+                        map.AddGoLeftEvent(time - settings.frameLength, 1); // insert before this wall comes
                     }
                     else
                     {
                         CutOffRightWalls(time);
-                        map.AddGoRightEvent(time - FRAME_LENGTH, 1);
+                        map.AddGoRightEvent(time - settings.frameLength, 1);
                     }
 
                     continue;
@@ -242,7 +151,7 @@ namespace Stx.ThreeSixtyfyer
                 #region ONCE PER BEAT EFFECTS   
 
                 // This only activates one time per beat, not per frame
-                if ((time - minTime) % BEAT_LENGTH == 0)
+                if ((time - minTime) % settings.beatLength == 0)
                 {
                     // Add movement for all direction notes, only if they are the only one in the beat
                     if (notesInBeat.Count > 0 && notesInBeat.All((note) => note.cutDirection == 8 && (note.type == 0 || note.type == 1)))
@@ -337,7 +246,7 @@ namespace Stx.ThreeSixtyfyer
                     }
                 }
 
-                if (notesInBeat.Count > 0 && notesInBeat.All((note) => Math.Abs(note.time - notesInBeat[0].time) < FRAME_LENGTH))
+                if (notesInBeat.Count > 0 && notesInBeat.All((note) => Math.Abs(note.time - notesInBeat[0].time) < frameLength))
                 {
                     BeatMapNote[] groundLeftNotes = notesInBeat.Where((note) => ((note.lineIndex == 0 || note.lineIndex == 1) && note.lineLayer == 0) && (note.type == 0 || note.type == 1)).ToArray();
                     BeatMapNote[] groundRightNotes = notesInBeat.Where((note) => ((note.lineIndex == 2 || note.lineIndex == 3) && note.lineLayer == 0) && (note.type == 0 || note.type == 1)).ToArray();
@@ -381,4 +290,5 @@ namespace Stx.ThreeSixtyfyer
             return map;
         }
     }
+
 }
