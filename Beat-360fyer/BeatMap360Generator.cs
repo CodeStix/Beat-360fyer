@@ -70,12 +70,11 @@ namespace Stx.ThreeSixtyfyer
             {
                 // Get all notes in current frame length
                 List<BeatMapNote> notesInFrame = GetNotes(time, settings.frameLength);
-                List<BeatMapNote> notesInBeat = GetNotes(time, settings.beatLength);
                 List<BeatMapObstacle> obstaclesInFrame = GetStartingObstacles(time, settings.frameLength);
                 List<BeatMapObstacle> activeObstacles = GetActiveObstacles(time, settings.activeWallLookahead);
                 bool enableGoLeft = !activeObstacles.Any((obst) => ((obst.lineIndex == 0 || obst.lineIndex == 1) && obst.width < 3) || (obst.width == 3 && obst.lineIndex == 0));
                 bool enableGoRight = !activeObstacles.Any((obst) => ((obst.lineIndex == 2 || obst.lineIndex == 3) && obst.width < 3) || (obst.width == 3 && obst.lineIndex == 1));
-                bool heat = notesInBeat.Count >= 4;
+                bool heat = false/*notesInBeat.Count >= 2*/;
 
                 #region SPIN
 
@@ -153,6 +152,8 @@ namespace Stx.ThreeSixtyfyer
                 // This only activates one time per beat, not per frame
                 if ((time - minTime) % settings.beatLength == 0)
                 {
+                    List<BeatMapNote> notesInBeat = GetNotes(time, settings.beatLength);
+
                     // Add movement for all direction notes, only if they are the only one in the beat
                     if (notesInBeat.Count > 0 && notesInBeat.All((note) => note.cutDirection == 8 && (note.type == 0 || note.type == 1)))
                     {
@@ -213,32 +214,38 @@ namespace Stx.ThreeSixtyfyer
                 if (notesInFrame.Count == 0) // all if clauses coming use the notesInFrame, so continue if there are none
                     continue;
 
-                BeatMapNote[] leftNotes = notesInFrame.Where((note) => (note.cutDirection == 2 || (note.cutDirection == 6 && note.lineIndex <= 2) || (note.cutDirection == 4 && note.lineIndex <= 2)) && (note.type == 0 || note.type == 1)).ToArray();
+                BeatMapNote[] leftNotes = notesInFrame.Where((note) => (note.cutDirection == 2 || ((note.cutDirection == 6 || note.cutDirection == 4) && note.lineIndex <= 2)) && (note.type == 0 || note.type == 1)).ToArray();
                 if (leftNotes.Length >= 2 && enableGoLeft)
                 {
                     CutOffLeftWalls(time);
                     map.AddGoLeftEvent(leftNotes[0].time, Math.Min(leftNotes.Length, heat ? 2 : 4));
+
+                    if (!leftNotes.Any((note) => note.lineIndex == 3))
+                        map.AddWall(leftNotes[0].time - settings.frameLength, 3, leftNotes.Length, 1);
                     continue;
                 }
 
-                BeatMapNote[] rightNotes = notesInFrame.Where((note) => (note.cutDirection == 3 || (note.cutDirection == 5 && note.lineIndex >= 3) || (note.cutDirection == 7 && note.lineIndex >= 3)) && (note.type == 0 || note.type == 1)).ToArray();
+                BeatMapNote[] rightNotes = notesInFrame.Where((note) => (note.cutDirection == 3 || ((note.cutDirection == 5 || note.cutDirection == 7) && note.lineIndex >= 3)) && (note.type == 0 || note.type == 1)).ToArray();
                 if (rightNotes.Length >= 2 && enableGoRight)
                 {
                     CutOffRightWalls(time);
                     map.AddGoRightEvent(rightNotes[0].time, Math.Min(rightNotes.Length, heat ? 2 : 4));
+
+                    if (!rightNotes.Any((note) => note.lineIndex == 0))
+                        map.AddWall(rightNotes[0].time - settings.frameLength, 0, rightNotes.Length, 1);
                     continue;
                 }
 
-                BeatMapNote leftRightNotes = notesInFrame.FirstOrDefault((note) => (note.cutDirection >= 2 && note.cutDirection <= 5) && (note.type == 0 || note.type == 1));
+                BeatMapNote leftRightNotes = notesInFrame.FirstOrDefault((note) => (note.cutDirection >= 2 && note.cutDirection <= 7) && (note.type == 0 || note.type == 1));
                 if (leftRightNotes != null)
                 {
-                    if ((leftRightNotes.cutDirection == 2 || leftRightNotes.cutDirection == 4) && enableGoLeft)
+                    if ((leftRightNotes.cutDirection == 2 || leftRightNotes.cutDirection == 4 || leftRightNotes.cutDirection == 6) && enableGoLeft)
                     {
                         CutOffLeftWalls(time);
                         map.AddGoLeftEvent(leftRightNotes.time, 1);
                         continue;
                     }
-                    else if ((leftRightNotes.cutDirection == 3 || leftRightNotes.cutDirection == 5) && enableGoRight)
+                    else if ((leftRightNotes.cutDirection == 3 || leftRightNotes.cutDirection == 5 || leftRightNotes.cutDirection == 7) && enableGoRight)
                     {
                         CutOffRightWalls(time);
                         map.AddGoRightEvent(leftRightNotes.time, 1);
@@ -246,10 +253,12 @@ namespace Stx.ThreeSixtyfyer
                     }
                 }
 
-                if (notesInBeat.Count > 0 && notesInBeat.All((note) => Math.Abs(note.time - notesInBeat[0].time) < settings.frameLength))
+
+                List<BeatMapNote> notes = GetNotes(time, settings.beatLength);
+                if (notes.Count > 0 && notes.All((note) => Math.Abs(note.time - notes[0].time) < settings.frameLength))
                 {
-                    BeatMapNote[] groundLeftNotes = notesInBeat.Where((note) => ((note.lineIndex == 0 || note.lineIndex == 1) && note.lineLayer == 0) && (note.type == 0 || note.type == 1)).ToArray();
-                    BeatMapNote[] groundRightNotes = notesInBeat.Where((note) => ((note.lineIndex == 2 || note.lineIndex == 3) && note.lineLayer == 0) && (note.type == 0 || note.type == 1)).ToArray();
+                    BeatMapNote[] groundLeftNotes = notes.Where((note) => ((note.lineIndex == 0 || note.lineIndex == 1) && note.lineLayer == 0) && (note.type == 0 || note.type == 1)).ToArray();
+                    BeatMapNote[] groundRightNotes = notes.Where((note) => ((note.lineIndex == 2 || note.lineIndex == 3) && note.lineLayer == 0) && (note.type == 0 || note.type == 1)).ToArray();
 
                     if (groundLeftNotes.Length == groundRightNotes.Length && enableGoRight && enableGoLeft)
                     {

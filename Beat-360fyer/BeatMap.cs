@@ -100,7 +100,7 @@ namespace Stx.ThreeSixtyfyer
 
         public override string ToString()
         {
-            return $"at {time} type {type}";
+            return $"Note at {time} type {type}";
         }
     }
 
