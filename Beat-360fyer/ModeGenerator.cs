@@ -245,7 +245,7 @@ namespace Stx.ThreeSixtyfyer
                 if ((time - minTime) % BEAT_LENGTH == 0)
                 {
                     // Add movement for all direction notes, only if they are the only one in the beat
-                    if (notesInBeat.All((note) => note.cutDirection == 8 && (note.type == 0 || note.type == 1)))
+                    if (notesInBeat.Count > 0 && notesInBeat.All((note) => note.cutDirection == 8 && (note.type == 0 || note.type == 1)))
                     {
                         int rightNoteCount = notesInBeat.Count((note) => (note.lineIndex == 2 || note.lineIndex == 3) && (note.type == 0 || note.type == 1));
                         int leftNoteCount = notesInBeat.Count((note) => (note.lineIndex == 0 || note.lineIndex == 1) && (note.type == 0 || note.type == 1));
@@ -280,7 +280,7 @@ namespace Stx.ThreeSixtyfyer
                         }
                     }
 
-                    if (notesInBeat.All((note) => note.type == 3))
+                    if (notesInBeat.Count > 0 && notesInBeat.All((note) => note.type == 3))
                     {
                         if (goDirection && enableGoLeft)
                         {
