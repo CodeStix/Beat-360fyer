@@ -11,8 +11,8 @@ namespace Stx.ThreeSixtyfyer
         public float timeOffset = 0f;                      // the offset of the notes in beats
         public float frameLength = 1f / 16f;               // in beats (default 1f/8f), the length of each generator loop cycle in beats
         public float beatLength = 1f;                      // in beats (default 1f), how the generator should interpret each beats length
-        public float obstableCutoffTimeSpan = 2.5f;        // last walls will be cut off if the last wall is in x beats of current time
-        public float obstacleCutoffAmount = 1.7f;          // the amount (in beats) to cut off walls
+        public float obstableCutoffTimeSpan = 2f;        // last walls will be cut off if the last wall is in x beats of current time
+        public float obstacleCutoffAmount = 0.65f;          // the amount (in beats) to cut off walls
         public float activeWallLookahead = -1f;            // the amount (in beats) to look ahead looking for active walls
         public bool enableSpin = true;                     // enable spin effect
     }
@@ -53,12 +53,12 @@ namespace Stx.ThreeSixtyfyer
             }
             void CutOffRightWalls(float time)
             {
-                if (lastRightObstacles.Length > 0 && time + settings.frameLength - (lastRightObstacles[0].time + lastRightObstacles[0].duration) <= obstableCutoffTimeSpan)
+                if (lastRightObstacles.Length > 0 && time + settings.frameLength - (lastRightObstacles[0].time + lastRightObstacles[0].duration) <= settings.obstableCutoffTimeSpan)
                     CutOffWalls(lastRightObstacles);
             }
             void CutOffLeftWalls(float time)
             {
-                if (lastLeftObstacles.Length > 0 && time + settings.frameLength - (lastLeftObstacles[0].time + lastLeftObstacles[0].duration) <= obstableCutoffTimeSpan)
+                if (lastLeftObstacles.Length > 0 && time + settings.frameLength - (lastLeftObstacles[0].time + lastLeftObstacles[0].duration) <= settings.obstableCutoffTimeSpan)
                     CutOffWalls(lastLeftObstacles);
             }
 
@@ -246,7 +246,7 @@ namespace Stx.ThreeSixtyfyer
                     }
                 }
 
-                if (notesInBeat.Count > 0 && notesInBeat.All((note) => Math.Abs(note.time - notesInBeat[0].time) < frameLength))
+                if (notesInBeat.Count > 0 && notesInBeat.All((note) => Math.Abs(note.time - notesInBeat[0].time) < settings.frameLength))
                 {
                     BeatMapNote[] groundLeftNotes = notesInBeat.Where((note) => ((note.lineIndex == 0 || note.lineIndex == 1) && note.lineLayer == 0) && (note.type == 0 || note.type == 1)).ToArray();
                     BeatMapNote[] groundRightNotes = notesInBeat.Where((note) => ((note.lineIndex == 2 || note.lineIndex == 3) && note.lineLayer == 0) && (note.type == 0 || note.type == 1)).ToArray();

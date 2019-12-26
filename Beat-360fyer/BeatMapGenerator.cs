@@ -10,6 +10,11 @@ namespace Stx.ThreeSixtyfyer
 {
     public static class BeatMapGenerator
     {
+        public static BeatMap UseGenerator<TGenerator, TGeneratorSettings>(BeatMap normal, TGeneratorSettings settings = null) where TGenerator : IBeatMapGenerator<TGeneratorSettings>, new() where TGeneratorSettings : class, new()
+        {
+            return new TGenerator().FromNormal(normal, settings ?? new TGeneratorSettings());
+        }
+
         public static bool Generate360ModeAndSave(BeatMapInfo info, BeatMapDifficultyLevel difficulty, bool replaceExising360Mode = false)
         {
             info.CreateBackup();
@@ -27,7 +32,12 @@ namespace Stx.ThreeSixtyfyer
             if (!info.AddGameModeDifficulty(newDiff, "360Degree", replaceExising360Mode))
                 return false;
 
-            newDiff.SaveBeatMap(info.mapDirectoryPath, Generate360ModeFromStandard(standardDiff.LoadBeatMap(info.mapDirectoryPath), info.songTimeOffset));
+            BeatMap360GeneratorSettings settings = new BeatMap360GeneratorSettings()
+            {
+                timeOffset = info.songTimeOffset
+            };
+
+            newDiff.SaveBeatMap(info.mapDirectoryPath, UseGenerator<BeatMap360Generator, BeatMap360GeneratorSettings>(standardDiff.LoadBeatMap(info.mapDirectoryPath), settings));
 
             info.AddContributor("CodeStix's 360fyer", "360 degree mode");
             info.SaveToFile(info.mapInfoPath);
@@ -51,7 +61,12 @@ namespace Stx.ThreeSixtyfyer
             string mapDestination = Path.Combine(destination, new DirectoryInfo(info.mapDirectoryPath).Name);
             Directory.CreateDirectory(mapDestination);
 
-            newDiff.SaveBeatMap(mapDestination, Generate360ModeFromStandard(standardDiff.LoadBeatMap(info.mapDirectoryPath), info.songTimeOffset));
+            BeatMap360GeneratorSettings settings = new BeatMap360GeneratorSettings()
+            {
+                timeOffset = info.songTimeOffset
+            };
+
+            newDiff.SaveBeatMap(mapDestination, UseGenerator<BeatMap360Generator, BeatMap360GeneratorSettings>(standardDiff.LoadBeatMap(info.mapDirectoryPath), settings));
 
             info.difficultyBeatmapSets.RemoveAll((diffSet) => diffSet.beatmapCharacteristicName != "Standard" && diffSet.beatmapCharacteristicName != "360Degree");
             info.RemoveGameModeDifficulty(difficulty, "Standard");
