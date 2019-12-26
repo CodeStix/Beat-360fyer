@@ -107,9 +107,9 @@ namespace Stx.ThreeSixtyfyer
         {
             const float FRAME_LENGTH = 1f / 16f;        // in beats (default 1f/8f), the length of each generator loop cycle in beats
             const float BEAT_LENGTH = 1f;               // in beats (default 1f), how the generator should interpret each beats length
-            const float WALL_CUTOFF_CLOSE = 2.5f;        // last walls will be cut off if the last wall is in x beats of current time
+            const float WALL_CUTOFF_CLOSE = 2.5f;       // last walls will be cut off if the last wall is in x beats of current time
             const float WALL_CUTOFF_AMOUNT = 1.7f;      // the amount (in beats) to cut off walls
-            const float ACTIVE_WALL_LOOKAHEAD = -1f;  // the amount (in beats) to look ahead looking for active walls
+            const float ACTIVE_WALL_LOOKAHEAD = -1f;    // the amount (in beats) to look ahead looking for active walls
             const bool ENABLE_SPIN = true;              // enable spin effect
 
             BeatMap map = new BeatMap(standardMap);
@@ -139,24 +139,17 @@ namespace Stx.ThreeSixtyfyer
             {
                 foreach (BeatMapObstacle obst in walls)
                 {
-                    if (obst.type == 1)
-                    {
-                        obst.duration = 0f; // remove wall if it is floating
-                    }
-                    else
-                    {
-                        obst.duration -= WALL_CUTOFF_AMOUNT; // negative durations will be removed later
-                    }
+                    obst.duration -= WALL_CUTOFF_AMOUNT; // negative durations will be removed later
                 }
             }
             void CutOffRightWalls(float time)
             {
-                if (lastRightObstacles.Length > 0 && time - (lastRightObstacles[0].time + lastRightObstacles[0].duration) <= WALL_CUTOFF_CLOSE)
+                if (lastRightObstacles.Length > 0 && time + FRAME_LENGTH - (lastRightObstacles[0].time + lastRightObstacles[0].duration) <= WALL_CUTOFF_CLOSE)
                     CutOffWalls(lastRightObstacles);
             }
             void CutOffLeftWalls(float time)
             {
-                if (lastLeftObstacles.Length > 0 && time - (lastLeftObstacles[0].time + lastLeftObstacles[0].duration) <= WALL_CUTOFF_CLOSE)
+                if (lastLeftObstacles.Length > 0 && time + FRAME_LENGTH - (lastLeftObstacles[0].time + lastLeftObstacles[0].duration) <= WALL_CUTOFF_CLOSE)
                     CutOffWalls(lastLeftObstacles);
             }
 
@@ -171,8 +164,8 @@ namespace Stx.ThreeSixtyfyer
                 List<BeatMapNote> notesInBeat = GetNotes(time, BEAT_LENGTH);
                 List<BeatMapObstacle> obstaclesInFrame = GetStartingObstacles(time, FRAME_LENGTH);
                 List<BeatMapObstacle> activeObstacles = GetActiveObstacles(time, ACTIVE_WALL_LOOKAHEAD);
-                bool enableGoLeft = !activeObstacles.Any((obst) => (obst.lineIndex == 0 || obst.lineIndex == 1) || (obst.type == 1 && obst.width > 3));
-                bool enableGoRight = !activeObstacles.Any((obst) => (obst.lineIndex == 2 || obst.lineIndex == 3) || (obst.type == 1 && obst.width > 3));
+                bool enableGoLeft = !activeObstacles.Any((obst) => ((obst.lineIndex == 0 || obst.lineIndex == 1) && obst.width < 3) || (obst.width == 3 && obst.lineIndex == 0));
+                bool enableGoRight = !activeObstacles.Any((obst) => ((obst.lineIndex == 2 || obst.lineIndex == 3) && obst.width < 3) || (obst.width == 3 && obst.lineIndex == 1));
                 bool heat = notesInBeat.Count >= 4;
 
                 bool shouldSpin = ENABLE_SPIN
@@ -199,6 +192,12 @@ namespace Stx.ThreeSixtyfyer
                     spinsRemaining += 24; // 24 spins is one 360
                 }
 
+                if (obstaclesInFrame.Count > 0)
+                {
+                    lastLeftObstacles = obstaclesInFrame.Where((obst) => ((obst.lineIndex == 0 || obst.lineIndex == 1) && obst.width < 3) || (obst.width == 3 && obst.lineIndex == 0)).ToArray();
+                    lastRightObstacles = obstaclesInFrame.Where((obst) => ((obst.lineIndex == 2 || obst.lineIndex == 3) && obst.width < 3) || (obst.width == 3 && obst.lineIndex == 1)).ToArray();
+                }
+
                 if (obstaclesInFrame.Count == 1)
                 {
                     BeatMapObstacle obstacle = obstaclesInFrame[0];
@@ -207,14 +206,12 @@ namespace Stx.ThreeSixtyfyer
                     {
                         CutOffRightWalls(time);
                         map.AddGoRightEvent(time, 1);
-                        lastLeftObstacles = new BeatMapObstacle[] { obstacle };
                         continue;
                     }
                     else if ((obstacle.lineIndex == 2 || obstacle.lineIndex == 3) && obstacle.width <= 3 && enableGoLeft)
                     {
                         CutOffLeftWalls(time);
                         map.AddGoLeftEvent(time, 1);
-                        lastRightObstacles = new BeatMapObstacle[] { obstacle };
                         continue;
                     }
                 }
@@ -231,8 +228,6 @@ namespace Stx.ThreeSixtyfyer
                         map.AddGoRightEvent(time - FRAME_LENGTH, 1);
                     }
 
-                    lastLeftObstacles = obstaclesInFrame.Where((obst) => obst.lineIndex == 0 || obst.lineIndex == 1).ToArray();
-                    lastRightObstacles = obstaclesInFrame.Where((obst) => obst.lineIndex == 2 || obst.lineIndex == 3).ToArray();
                     continue;
                 }
 
