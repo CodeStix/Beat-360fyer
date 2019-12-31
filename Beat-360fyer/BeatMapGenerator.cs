@@ -10,9 +10,9 @@ namespace Stx.ThreeSixtyfyer
 {
     public static class BeatMapGenerator
     {
-        public static BeatMap UseGenerator<TGenerator, TGeneratorSettings>(BeatMap normal, TGeneratorSettings settings = null) where TGenerator : IBeatMapGenerator<TGeneratorSettings>, new() where TGeneratorSettings : class, new()
+        public static BeatMap UseGenerator<TGenerator, TGeneratorSettings>(BeatMap normal, TGeneratorSettings settings = null) where TGenerator : IBeatMapGenerator<TGeneratorSettings>, new() where TGeneratorSettings : class
         {
-            return new TGenerator().FromNormal(normal, settings ?? new TGeneratorSettings());
+            return new TGenerator().FromNormal(normal, settings);
         }
 
         public static bool Generate360ModeAndSave(BeatMapInfo info, BeatMapDifficultyLevel difficulty, bool replaceExising360Mode = false)
@@ -32,10 +32,7 @@ namespace Stx.ThreeSixtyfyer
             if (!info.AddGameModeDifficulty(newDiff, "360Degree", replaceExising360Mode))
                 return false;
 
-            BeatMap360GeneratorSettings settings = new BeatMap360GeneratorSettings()
-            {
-                timeOffset = info.songTimeOffset
-            };
+            BeatMap360GeneratorSettings settings = new BeatMap360GeneratorSettings(info.beatsPerMinute, info.songTimeOffset) {/* default generator settings */};
 
             newDiff.SaveBeatMap(info.mapDirectoryPath, UseGenerator<BeatMap360Generator, BeatMap360GeneratorSettings>(standardDiff.LoadBeatMap(info.mapDirectoryPath), settings));
 
@@ -61,10 +58,7 @@ namespace Stx.ThreeSixtyfyer
             string mapDestination = Path.Combine(destination, new DirectoryInfo(info.mapDirectoryPath).Name);
             Directory.CreateDirectory(mapDestination);
 
-            BeatMap360GeneratorSettings settings = new BeatMap360GeneratorSettings()
-            {
-                timeOffset = info.songTimeOffset
-            };
+            BeatMap360GeneratorSettings settings = new BeatMap360GeneratorSettings(info.beatsPerMinute, info.songTimeOffset) {/* default generator settings */};
 
             newDiff.SaveBeatMap(mapDestination, UseGenerator<BeatMap360Generator, BeatMap360GeneratorSettings>(standardDiff.LoadBeatMap(info.mapDirectoryPath), settings));
 
