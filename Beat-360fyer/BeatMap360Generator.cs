@@ -12,7 +12,7 @@ namespace Stx.ThreeSixtyfyer
         public float frameLength = 1f / 16f;               // in beats (default 1f/16f), the length of each generator loop cycle in beats
         public float beatLength = 1f;                      // in beats (default 1f), how the generator should interpret each beats length
         public float obstableCutoffTimeSpan = 2f;          // last walls will be cut off if the last wall is in x beats of current time
-        public float obstacleCutoffAmount = 0.65f;         // the amount (in beats) to cut off walls
+        //public float obstacleCutoffAmount = 0.65f;         // the amount (in beats) to cut off walls
         public float activeWallLookahead = -0.5f;          // the amount (in beats) to look ahead looking for active walls
         public bool enableSpin = true;                     // enable spin effect
     }
@@ -44,25 +44,27 @@ namespace Stx.ThreeSixtyfyer
 
             BeatMapObstacle[] lastLeftObstacles = new BeatMapObstacle[0], lastRightObstacles = new BeatMapObstacle[0];
 
-            void CutOffWalls(BeatMapObstacle[] walls)
+            void CutOffWalls(float time, BeatMapObstacle[] walls)
             {
                 foreach (BeatMapObstacle obst in walls)
                 {
-                    obst.duration -= settings.obstacleCutoffAmount; // negative durations will be removed later
+                    if (obst.time + obst.duration > time - settings.obstableCutoffTimeSpan)
+                        obst.duration -= obst.time + obst.duration - (time - settings.obstableCutoffTimeSpan);
                 }
             }
             void CutOffRightWalls(float time)
             {
-                if (lastRightObstacles.Length > 0 && time + settings.frameLength - (lastRightObstacles[0].time + lastRightObstacles[0].duration) <= settings.obstableCutoffTimeSpan)
-                    CutOffWalls(lastRightObstacles);
+                //if (lastRightObstacles.Length > 0 && time + settings.frameLength - (lastRightObstacles[0].time + lastRightObstacles[0].duration) <= settings.obstableCutoffTimeSpan)
+                CutOffWalls(time, lastRightObstacles);
             }
             void CutOffLeftWalls(float time)
             {
-                if (lastLeftObstacles.Length > 0 && time + settings.frameLength - (lastLeftObstacles[0].time + lastLeftObstacles[0].duration) <= settings.obstableCutoffTimeSpan)
-                    CutOffWalls(lastLeftObstacles);
+                //if (lastLeftObstacles.Length > 0 && time + settings.frameLength - (lastLeftObstacles[0].time + lastLeftObstacles[0].duration) <= settings.obstableCutoffTimeSpan)
+                CutOffWalls(time, lastLeftObstacles);
             }
 
             int spinsRemaining = 0;
+            int noBeatSpinStreak = 0;
             bool spinDirection = true;
             bool goDirection = false;
 
@@ -253,10 +255,11 @@ namespace Stx.ThreeSixtyfyer
                     }
                 }
 
-
-                List<BeatMapNote> notes = GetNotes(time, settings.beatLength);
+                List<BeatMapNote> notes = GetNotes(time, settings.beatLength / ((noBeatSpinStreak / 8) + 1));
                 if (notes.Count > 0 && notes.All((note) => Math.Abs(note.time - notes[0].time) < settings.frameLength))
                 {
+                    noBeatSpinStreak = 0;
+
                     BeatMapNote[] groundLeftNotes = notes.Where((note) => ((note.lineIndex == 0 || note.lineIndex == 1) && note.lineLayer == 0) && (note.type == 0 || note.type == 1)).ToArray();
                     BeatMapNote[] groundRightNotes = notes.Where((note) => ((note.lineIndex == 2 || note.lineIndex == 3) && note.lineLayer == 0) && (note.type == 0 || note.type == 1)).ToArray();
 
@@ -288,6 +291,11 @@ namespace Stx.ThreeSixtyfyer
                         map.AddGoRightEvent(groundRightNotes[0].time, 1);
                         continue;
                     }
+                }
+                else if (notes.Count > 0)
+                {
+                    if (noBeatSpinStreak < 24)
+                        noBeatSpinStreak++;
                 }
 
                 #endregion
