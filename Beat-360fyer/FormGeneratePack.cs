@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -21,8 +22,8 @@ namespace Stx.ThreeSixtyfyer
             InitializeComponent();
         }
 
-        private string CustomGenerated360LevelsPack => "Generated 360 Levels";
-        private string CustomGenerated360LevelsPath => Path.Combine(textBoxBeatSaberPath.Text, "Beat Saber_Data", "CustomGenerated360Levels");
+        private string CustomGenerated360LevelsPack => textBoxPackName.Text;
+        private string CustomGenerated360LevelsPath => Path.Combine(textBoxBeatSaberPath.Text, "Beat Saber_Data", "Custom" + textBoxPackName.Text.Replace(" ", ""));
           
         private void ButtonSelectBeatSaber_Click(object sender, EventArgs e)
         {
@@ -111,6 +112,7 @@ namespace Stx.ThreeSixtyfyer
             textBoxBeatSaberPath.Enabled = enable;
             listSongs.Enabled = enable;
             buttonGeneratorSettings.Enabled = enable && false;
+            textBoxPackName.Enabled = enable;
         }
 
         private void ListSongs_KeyDown(object sender, KeyEventArgs e)
@@ -140,13 +142,29 @@ namespace Stx.ThreeSixtyfyer
 
         private void ButtonGenerate_Click(object sender, EventArgs e)
         {
-            string imagePath = Path.Combine(CustomGenerated360LevelsPath, "cover.png");
-            if (!File.Exists(imagePath))
-                File.Copy("360.png", imagePath, true);
-            BeatMapGenerator.ContributorImagePath = imagePath;
+            try
+            {
+                if (textBoxPackName.Text.Length < 1)
+                    throw new Exception($"The pack name '{textBoxPackName.Text}' is too short.");
+                if (!Regex.IsMatch(textBoxPackName.Text, "^[a-zA-Z0-9 ]+$"))
+                    throw new Exception($"The pack name '{textBoxPackName.Text}' contains illegal characters, it should only contain A-Z and spaces.");
+                if (!File.Exists("360.png"))
+                    throw new Exception("The cover image '360.png' was not found in the current directory, please place the '360.png' next to this tool.");
 
-            EnsureCustomPack(CustomGenerated360LevelsPack, CustomGenerated360LevelsPath, imagePath);
-            ConvertCheckedSongs(Enum.GetValues(typeof(BeatMapDifficultyLevel)).Cast<BeatMapDifficultyLevel>().ToList());
+                Directory.CreateDirectory(CustomGenerated360LevelsPath);
+                string imagePath = Path.Combine(CustomGenerated360LevelsPath, "cover.png");
+                if (!File.Exists(imagePath))
+                    File.Copy("360.png", imagePath, true);
+                BeatMapGenerator.ContributorImagePath = imagePath;
+
+                EnsureCustomPack(CustomGenerated360LevelsPack, CustomGenerated360LevelsPath, imagePath);
+                ConvertCheckedSongs(Enum.GetValues(typeof(BeatMapDifficultyLevel)).Cast<BeatMapDifficultyLevel>().ToList());
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Cannot start generator: {ex.Message}", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
 
         private void ConvertCheckedSongs(List<BeatMapDifficultyLevel> difficultyLevels)

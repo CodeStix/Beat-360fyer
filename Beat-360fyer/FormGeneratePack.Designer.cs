@@ -43,6 +43,8 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.textBoxPackName = new System.Windows.Forms.TextBox();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -170,11 +172,30 @@
             this.toolStripStatusLabel2.Size = new System.Drawing.Size(45, 17);
             this.toolStripStatusLabel2.Text = "GitHub";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(12, 503);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(64, 13);
+            this.label4.TabIndex = 16;
+            this.label4.Text = "Pack name:";
+            // 
+            // textBoxPackName
+            // 
+            this.textBoxPackName.Location = new System.Drawing.Point(82, 500);
+            this.textBoxPackName.Name = "textBoxPackName";
+            this.textBoxPackName.Size = new System.Drawing.Size(167, 20);
+            this.textBoxPackName.TabIndex = 17;
+            this.textBoxPackName.Text = "Generated 360 Levels";
+            // 
             // FormGeneratePack
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(521, 551);
+            this.Controls.Add(this.textBoxPackName);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.buttonGeneratorSettings);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.label3);
@@ -212,5 +233,7 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox textBoxPackName;
     }
 }
