@@ -77,7 +77,7 @@ namespace Stx.ThreeSixtyfyer
             });
         }
         
-        private void EnsureCustomPack(string name, string songsDir, string imageToImport)
+        private void EnsureCustomPack(string name, string songsDir, string imagePath)
         {
             Directory.CreateDirectory(songsDir);
 
@@ -93,9 +93,6 @@ namespace Stx.ThreeSixtyfyer
                     break;
                 }
             }
-
-            string imagePath = Path.Combine(songsDir, "cover.png");
-            File.Copy(imageToImport, imagePath, true);
 
             document.Root.Add(
                 new XElement("folder",
@@ -143,7 +140,12 @@ namespace Stx.ThreeSixtyfyer
 
         private void ButtonGenerate_Click(object sender, EventArgs e)
         {
-            EnsureCustomPack(CustomGenerated360LevelsPack, CustomGenerated360LevelsPath, "360.png");
+            string imagePath = Path.Combine(CustomGenerated360LevelsPath, "cover.png");
+            if (!File.Exists(imagePath))
+                File.Copy("360.png", imagePath, true);
+            BeatMapGenerator.ContributorImagePath = imagePath;
+
+            EnsureCustomPack(CustomGenerated360LevelsPack, CustomGenerated360LevelsPath, imagePath);
             ConvertCheckedSongs(Enum.GetValues(typeof(BeatMapDifficultyLevel)).Cast<BeatMapDifficultyLevel>().ToList());
         }
 
@@ -165,16 +167,16 @@ namespace Stx.ThreeSixtyfyer
 
             Jobs.Generate360ModesOptions options = new Jobs.Generate360ModesOptions()
             {
-                difficultyLevels = difficultyLevels,
+                difficultyLevels = difficultyLevels.ToArray(),
                 destination = CustomGenerated360LevelsPath,
                 toGenerateFor = new List<BeatMapInfo>(maps)
             };
 
             Jobs.Generate360Maps(options, (job) =>
             {
-                if (job.result.modesGenerated > 0)
+                if (job.result.mapsChanged > 0)
                 {
-                    MessageBox.Show($"{job.result.modesGenerated} (360) modes were generated from {job.result.mapsChanged} different levels for these difficulties: " +
+                    MessageBox.Show($"360 modes were generated for {job.result.mapsChanged} different levels for these difficulties: " +
                         $"{string.Join(", ", job.argument.difficultyLevels)}\n\n" +
                         $"Navigate to custom levels in the game and a new music pack should appear named {CustomGenerated360LevelsPack}.\n\n" +
                         $"!!! NOTE: Due to a bug in SongCore, the new music pack is merged with normal levels in the default 'Custom Levels' pack. " +

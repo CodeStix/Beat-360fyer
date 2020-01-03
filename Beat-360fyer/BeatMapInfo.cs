@@ -126,6 +126,8 @@ namespace Stx.ThreeSixtyfyer
 
         public void AddContributor(string name, string role, string iconPath = "")
         {
+            if (customData == null)
+                customData = new BeatMapInfoCustomData();
             if (customData.contributors == null)
                 customData.contributors = new List<BeatMapContributor>();
             if (!customData.contributors.Any((cont) => cont.name == name))
@@ -137,6 +139,16 @@ namespace Stx.ThreeSixtyfyer
                 });
         }
 
+        /*public void Set360Generator(BeatMap360Generator generator)
+        {
+            if (customData == null)
+                customData = new BeatMapInfoCustomData();
+            if (customData.generator360 == null)
+                customData.generator360 = new BeatMap360GeneratorConfig();
+            customData.generator360.settings = generator.Settings;
+            customData.generator360.version = generator.Version;
+        }*/
+
         public override string ToString()
         {
             return string.IsNullOrEmpty(songAuthorName) ? songName : $"{songName} - {songAuthorName}";
@@ -144,7 +156,7 @@ namespace Stx.ThreeSixtyfyer
     }
 
     [Serializable]
-    public struct BeatMapInfoCustomData
+    public class BeatMapInfoCustomData
     {
         [JsonProperty("_customEnvironment", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string customEnvironment;
@@ -152,6 +164,42 @@ namespace Stx.ThreeSixtyfyer
         public string customEnvironmentHash;
         [JsonProperty("_contributors", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<BeatMapContributor> contributors;
+        /*[JsonProperty("_generator360", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public BeatMapCustomData360GeneratorSettings generator360;*/
+    }
+
+    [Serializable]
+    public class BeatMap360GeneratorConfig
+    {
+        [JsonProperty("_settings")]
+        public BeatMap360GeneratorSettings settings;
+        [JsonProperty("_version")]
+        public int version;
+        [JsonProperty("_originalMapLocation")]
+        public string originalMapLocation;
+        [JsonProperty("_difficulties")]
+        public BeatMapDifficultyLevel[] difficulties;
+
+        public static BeatMap360GeneratorConfig FromGenerator(BeatMap360Generator generator, string originalMapLocation, BeatMapDifficultyLevel[] difficulties)
+        {
+            return new BeatMap360GeneratorConfig()
+            {
+                settings = generator.Settings,
+                version = generator.Version,
+                originalMapLocation = originalMapLocation,
+                difficulties = difficulties
+            };
+        }
+
+        public void SaveToFile(string file)
+        {
+            File.WriteAllText(file, JsonConvert.SerializeObject(this));
+        }
+
+        public static BeatMap360GeneratorConfig FromFile(string file)
+        {
+            return JsonConvert.DeserializeObject<BeatMap360GeneratorConfig>(File.ReadAllText(file));
+        }
     }
 
     [Serializable]
@@ -211,6 +259,19 @@ namespace Stx.ThreeSixtyfyer
                 beatmapFilename = gameMode + difficulty.ToString() + ".dat",
                 noteJumpMovementSpeed = 0.0f,
                 noteJumpStartBeatOffset = 0.0f
+            };
+        }
+
+        public static BeatMapDifficulty CopyFrom(BeatMapDifficulty difficulty, string gameMode = "")
+        {
+            return new BeatMapDifficulty()
+            {
+                difficulty = difficulty.difficulty,
+                difficultyRank = difficulty.difficultyRank,
+                beatmapFilename = gameMode + difficulty.difficulty + ".dat",
+                noteJumpMovementSpeed = difficulty.noteJumpMovementSpeed,
+                noteJumpStartBeatOffset = difficulty.noteJumpStartBeatOffset,
+                customData = difficulty.customData
             };
         }
     }

@@ -119,16 +119,16 @@ namespace Stx.ThreeSixtyfyer
 
             Jobs.Generate360ModesOptions options = new Jobs.Generate360ModesOptions()
             {
-                difficultyLevels = difficultyLevels,
+                difficultyLevels = difficultyLevels.ToArray(),
                 replacePreviousModes = checkBoxReplace.Checked,
                 toGenerateFor = new List<BeatMapInfo>(maps)
             };
 
             Jobs.Generate360Maps(options, (job) =>
             {
-                if (job.result.modesGenerated > 0)
+                if (job.result.mapsChanged > 0)
                 {
-                    MessageBox.Show($"{job.result.modesGenerated} (360) modes were added to {job.result.mapsChanged} different levels for these difficulties: " +
+                    MessageBox.Show($"360 modes were added to {job.result.mapsChanged} different levels for these difficulties: " +
                         $"{string.Join(", ", job.argument.difficultyLevels)}\n\n" +
                         $"Just navigate to the level in the game and the 360 mode will appear.",
                         "Completed!", MessageBoxButtons.OK, MessageBoxIcon.Information);

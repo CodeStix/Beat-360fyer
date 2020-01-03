@@ -8,6 +8,8 @@ namespace Stx.ThreeSixtyfyer
 {
     public interface IBeatMapGenerator<TSettings>
     {
-        BeatMap FromNormal(BeatMap normal, TSettings generatorSettings);
+        int Version { get; }
+        TSettings Settings { get; set; }
+        BeatMap FromNormal(BeatMap normal);
     }
 }

@@ -66,7 +66,7 @@ namespace Stx.ThreeSixtyfyer
 
         public struct Generate360ModesOptions
         {
-            public List<BeatMapDifficultyLevel> difficultyLevels;
+            public BeatMapDifficultyLevel[] difficultyLevels;
             public List<BeatMapInfo> toGenerateFor;
             public bool replacePreviousModes;
             public string destination;
@@ -74,7 +74,6 @@ namespace Stx.ThreeSixtyfyer
 
         public struct Generate360ModesResult
         {
-            public int modesGenerated;
             public int mapsChanged;
             public int mapsIterated;
             public bool cancelled;
@@ -109,29 +108,16 @@ namespace Stx.ThreeSixtyfyer
                 lock (job.argument.toGenerateFor)
                     info = job.argument.toGenerateFor[i];
 
-                int first = job.result.modesGenerated;
-                foreach (BeatMapDifficultyLevel difficultyLevel in job.argument.difficultyLevels)
+                if (string.IsNullOrEmpty(job.argument.destination))
                 {
-                    try
-                    {
-                        if (string.IsNullOrEmpty(job.argument.destination))
-                        {
-                            if (BeatMapGenerator.Generate360ModeAndSave(info, difficultyLevel, job.argument.replacePreviousModes))
-                                job.result.modesGenerated++;
-                        }
-                        else
-                        {
-                            if (BeatMapGenerator.Generate360ModeAndCopy(info, job.argument.destination, difficultyLevel))
-                                job.result.modesGenerated++;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        job.exceptions.Add(ex);
-                    }
+                    if (BeatMapGenerator.Generate360ModeAndSave(info, job.argument.difficultyLevels, job.argument.replacePreviousModes))
+                        job.result.mapsChanged++;
                 }
-                if (first != job.result.modesGenerated)
-                    job.result.mapsChanged++;
+                else
+                {
+                    if (BeatMapGenerator.Generate360ModeAndCopy(info, job.argument.destination, job.argument.difficultyLevels))
+                        job.result.mapsChanged++;
+                }
 
                 job.result.mapsIterated++;
                 job.Report((int)((float)job.result.mapsIterated / job.argument.toGenerateFor.Count * 100f), info.ToString(), info.mapDirectoryPath);
