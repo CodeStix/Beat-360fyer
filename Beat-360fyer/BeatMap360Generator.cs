@@ -23,7 +23,7 @@ namespace Stx.ThreeSixtyfyer
         public float frameLength = 1f / 16f;               // in beats (default 1f/16f), the length of each generator loop cycle in beats
         public float beatLength = 1f;                      // in beats (default 1f), how the generator should interpret each beats length
         public float obstableCutoffSeconds = 0.3f;         // last walls will be cut off if the last wall is in x seconds (0.3f!)
-        public float activeWallMaySpinPercentage = 0.8f;   // the percentage (0f - 1f) of an obstacles duration from which rotation is enabled again (0.4f), and wall cutoff will be used
+        public float activeWallMaySpinPercentage = 0.5f;   // the percentage (0f - 1f) of an obstacles duration from which rotation is enabled again (0.4f), and wall cutoff will be used
         public bool enableSpin = true;                     // enable spin effect
         public WallGenerator wallGenerator = WallGenerator.Disabled;
 
