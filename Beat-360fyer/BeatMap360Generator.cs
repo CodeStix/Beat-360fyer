@@ -175,7 +175,7 @@ namespace Stx.ThreeSixtyfyer
                 // Get all notes in current frame length
                 List<BeatMapNote> notesInFrame = GetNotes(time, Settings.frameLength);
                 List<BeatMapObstacle> obstaclesInFrame = GetStartingObstacles(time, Settings.frameLength);
-                IEnumerable<BeatMapObstacle> activeObstacles = map.obstacles.Where((obst) => time > obst.time - Settings.obstacleFrontCutoffSeconds * beatsPerSecond && time < obst.time + obst.duration + Settings.obstableBackCutoffSeconds * beatsPerSecond);
+                IEnumerable<BeatMapObstacle> activeObstacles = map.obstacles.Where((obst) => time + obst.duration > obst.time - Settings.obstacleFrontCutoffSeconds * beatsPerSecond && time < obst.time + Settings.obstableBackCutoffSeconds * beatsPerSecond);
                 IEnumerable<BeatMapObstacle> leftObstacles = activeObstacles.Where((obst) => obst.lineIndex <= 1 || obst.width >= 3);
                 IEnumerable<BeatMapObstacle> rightObstacles = activeObstacles.Where((obst) => obst.lineIndex >= 2 || obst.width >= 3);
                 bool enableGoLeft = 
