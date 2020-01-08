@@ -125,7 +125,7 @@ namespace Stx.ThreeSixtyfyer
                 BeatMapNote nextNote = GetNextNote(time, lineIndex);
                 BeatMapObstacle nextObstacle = GetNextObstacle(time, lineIndex);
 
-                float duration = Math.Min(maxDuration, Math.Min(nextObstacle?.time - time - Settings.obstableBackCutoffSeconds * beatsPerSecond ?? float.MaxValue, nextNote?.time - time - Settings.obstableBackCutoffSeconds * beatsPerSecond ?? float.MaxValue));
+                float duration = Math.Min(maxDuration, Math.Min(nextObstacle?.time - time - Settings.obstacleFrontCutoffSeconds * beatsPerSecond ?? float.MaxValue, nextNote?.time - time - Settings.obstacleFrontCutoffSeconds * beatsPerSecond ?? float.MaxValue));
                 if (duration <= 0.05f * beatsPerSecond)
                     return;
 
@@ -174,7 +174,6 @@ namespace Stx.ThreeSixtyfyer
             {
                 // Get all notes in current frame length
                 List<BeatMapNote> notesInFrame = GetNotes(time, Settings.frameLength);
-                List<BeatMapObstacle> obstaclesInFrame = GetStartingObstacles(time, Settings.frameLength);
                 IEnumerable<BeatMapObstacle> activeObstacles = map.obstacles.Where((obst) => time + obst.duration > obst.time - Settings.obstacleFrontCutoffSeconds * beatsPerSecond && time < obst.time + Settings.obstableBackCutoffSeconds * beatsPerSecond);
                 IEnumerable<BeatMapObstacle> leftObstacles = activeObstacles.Where((obst) => obst.lineIndex <= 1 || obst.width >= 3);
                 IEnumerable<BeatMapObstacle> rightObstacles = activeObstacles.Where((obst) => obst.lineIndex >= 2 || obst.width >= 3);
@@ -223,6 +222,7 @@ namespace Stx.ThreeSixtyfyer
 
                     #region OBSTACLE ROTATION
 
+                    List<BeatMapObstacle> obstaclesInFrame = GetStartingObstacles(time, Settings.frameLength);
                     if (obstaclesInFrame.Count == 1)
                     {
                         BeatMapObstacle obstacle = obstaclesInFrame[0];
