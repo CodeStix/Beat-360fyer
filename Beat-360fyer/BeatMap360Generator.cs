@@ -169,25 +169,23 @@ namespace Stx.ThreeSixtyfyer
 
             for (float time = minTime; time < maxTime; time += Settings.frameLength)
             {
-                // Get all notes in current frame length
-                List<BeatMapNote> notesInFrame = GetNotes(time, Settings.frameLength);
                 IEnumerable<BeatMapObstacle> activeObstacles = map.obstacles.Where((obst) => time >= obst.time - Settings.obstacleFrontCutoffSeconds * beatsPerSecond && time <= obst.time + obst.duration + Settings.obstableBackCutoffSeconds * beatsPerSecond);
-                //map.obstacles.Where((obst) => time > obst.time - Settings.obstacleFrontCutoffSeconds * beatsPerSecond && time < obst.time + obst.duration + Settings.obstableBackCutoffSeconds * beatsPerSecond);
                 IEnumerable<BeatMapObstacle> leftObstacles = activeObstacles.Where((obst) => obst.lineIndex <= 1 || obst.width >= 3);
                 IEnumerable<BeatMapObstacle> rightObstacles = activeObstacles.Where((obst) => obst.lineIndex >= 2 || obst.width >= 3);
-                bool enableGoLeft = 
-                    leftObstacles.All((obst) => time <= obst.time || time >= obst.time + obst.duration * Settings.activeWallMaySpinPercentage)
-                    && !notesInFrame.Any((note) => note.type == 3 && note.lineIndex <= 1);
-                bool enableGoRight =
-                    rightObstacles.All((obst) => time <= obst.time || time >= obst.time + obst.duration * Settings.activeWallMaySpinPercentage)
-                    && !notesInFrame.Any((note) => note.type == 3 && note.lineIndex >= 2);
-
-                List<BeatMapNote> notesInSecond = GetNotes(time, beatsPerSecond);
-                bool heat = notesInSecond.Count > 6; // is heat when there are more than x notes in one second
 
                 // This function returns the amount the map should rotate and if a wall should be generated.
                 ValueTuple<int, bool> Rotate()
                 {
+                    List<BeatMapNote> notesInFrame = GetNotes(time, Settings.frameLength);
+                    bool enableGoLeft =
+                        leftObstacles.All((obst) => time <= obst.time || time >= obst.time + obst.duration * Settings.activeWallMaySpinPercentage)
+                        && !notesInFrame.Any((note) => note.type == 3 && note.lineIndex <= 1);
+                    bool enableGoRight =
+                        rightObstacles.All((obst) => time <= obst.time || time >= obst.time + obst.duration * Settings.activeWallMaySpinPercentage)
+                        && !notesInFrame.Any((note) => note.type == 3 && note.lineIndex >= 2);
+                    List<BeatMapNote> notesInSecond = GetNotes(time, beatsPerSecond);
+                    bool calm = notesInSecond.Count == 0 || notesInSecond.All((note) => Math.Abs(note.time - notesInSecond[0].time) < Settings.frameLength);
+
                     #region SPIN
 
                     if (notesInFrame.Count > 0)
@@ -228,17 +226,17 @@ namespace Stx.ThreeSixtyfyer
                         if ((obstacle.lineIndex == 0 || obstacle.lineIndex == 1) && obstacle.width <= 3 && enableGoRight)
                         {
                             ShouldGoRight();
-                            return (heat ? 1 : 2, false);
+                            return (calm ? 2 : 1, false);
                         }
                         else if ((obstacle.lineIndex == 2 || obstacle.lineIndex == 3) && obstacle.width <= 3 && enableGoLeft)
                         {
                             ShouldGoLeft();
-                            return (heat ? 1 : 2, false);
+                            return (calm ? 2 : 1, false);
                         }
                     }
                     else if (obstaclesInFrame.Count >= 2 && obstaclesInFrame.All((obst) => obst.type == 0))
                     {
-                        return (1, false);
+                        return (calm ? 2 : 1, false);
                     }
 
                     #endregion
@@ -251,7 +249,7 @@ namespace Stx.ThreeSixtyfyer
                         List<BeatMapNote> notesInBeat = GetNotes(time, Settings.beatLength);
 
                         // Add movement for all direction notes, only if they are the only one in the beat
-                        if (!heat && notesInBeat.Count > 0 && notesInBeat.All((note) => note.cutDirection == 8 && (note.type == 0 || note.type == 1)))
+                        if (notesInBeat.Count > 0 && notesInBeat.All((note) => note.cutDirection == 8 && (note.type == 0 || note.type == 1)))
                         {
                             int rightNoteCount = notesInBeat.Count((note) => (note.lineIndex == 2 || note.lineIndex == 3) && (note.type == 0 || note.type == 1));
                             int leftNoteCount = notesInBeat.Count((note) => (note.lineIndex == 0 || note.lineIndex == 1) && (note.type == 0 || note.type == 1));
@@ -274,7 +272,7 @@ namespace Stx.ThreeSixtyfyer
                     }
 
                     #endregion
-
+                    
                     #region PER FRAME BEAT EFFECTS
 
                     if (notesInFrame.Count == 0)
@@ -364,21 +362,29 @@ namespace Stx.ThreeSixtyfyer
                 bool generateWall = shouldGenerateWall && Settings.wallGenerator == BeatMap360GeneratorSettings.WallGeneratorMode.Enabled;
                 if (GetGoDirection(rotateAmount)) // direction > 0 : left
                 {
-                    CutOffWalls(time, leftObstacles);
-
                     if (rotateAmount > 0)
+                    {
+                        CutOffWalls(time, leftObstacles); // cut off walls in the direction we will be going
                         map.AddGoLeftEvent(generateWall ? time - Settings.frameLength : time, rotateAmount); // insert before this wall comes
+                    }
                     if (generateWall)
+                    {
+                        CutOffWalls(time, rightObstacles); // cut off walls in the place where we wish to generate
                         TryGenerateWall(time, 3, beatsPerSecond); // max wall duration of 1 second
+                    }
                 }
                 else
                 {
-                    CutOffWalls(time, rightObstacles);
-
                     if (rotateAmount > 0)
+                    {
+                        CutOffWalls(time, rightObstacles); // cut off walls in the direction we will be going
                         map.AddGoRightEvent(generateWall ? time - Settings.frameLength : time, rotateAmount);
+                    }
                     if (generateWall)
+                    {
+                        CutOffWalls(time, leftObstacles); // cut off walls in the place where we wish to generate
                         TryGenerateWall(time, 0, beatsPerSecond);
+                    }
                 }
             }
 
