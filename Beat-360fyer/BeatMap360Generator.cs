@@ -137,7 +137,6 @@ namespace Stx.ThreeSixtyfyer
             int spinsRemaining = 0;
             int noBeatRotateStreak = 0;
             float beatTimeScalar = 1f;
-            bool spinDirection = true;
             bool allowSpin = true;
 
             int direction = 1;
@@ -206,7 +205,7 @@ namespace Stx.ThreeSixtyfyer
                     if (spinsRemaining > 0)
                     {
                         spinsRemaining--;
-                        if (spinDirection)
+                        if (direction > 0)
                             map.AddGoLeftEvent(time, 1);
                         else
                             map.AddGoRightEvent(time, 1);
@@ -219,7 +218,6 @@ namespace Stx.ThreeSixtyfyer
                     }
                     else if (time > firstNoteTime && shouldSpin) // spin effect
                     {
-                        spinDirection = !spinDirection; // spin any direction
                         spinsRemaining += 24; // 24 spins is one 360
                     }
 
