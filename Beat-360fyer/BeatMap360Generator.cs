@@ -295,15 +295,15 @@ namespace Stx.ThreeSixtyfyer
                         return true;
                     }
 
-                    BeatMapNote leftRightNotes = notesInFrame.FirstOrDefault((note) => (note.cutDirection >= 2 && note.cutDirection <= 5) && (note.type == 0 || note.type == 1));
+                    BeatMapNote leftRightNotes = notesInFrame.FirstOrDefault((note) => (note.cutDirection >= 4 && note.cutDirection <= 7) && (note.type == 0 || note.type == 1));
                     if (leftRightNotes != null)
                     {
-                        if ((leftRightNotes.cutDirection == 2 || leftRightNotes.cutDirection == 4) && enableGoLeft)
+                        if ((leftRightNotes.cutDirection == 6 || leftRightNotes.cutDirection == 4) && enableGoLeft)
                         {
                             ShouldGoLeft();
                             return true;
                         }
-                        else if ((leftRightNotes.cutDirection == 3 || leftRightNotes.cutDirection == 5) && enableGoRight)
+                        else if ((leftRightNotes.cutDirection == 7 || leftRightNotes.cutDirection == 5) && enableGoRight)
                         {
                             ShouldGoRight();
                             return true;
