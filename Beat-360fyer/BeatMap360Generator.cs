@@ -364,29 +364,21 @@ namespace Stx.ThreeSixtyfyer
                 bool generateWall = shouldGenerateWall && Settings.wallGenerator == BeatMap360GeneratorSettings.WallGeneratorMode.Enabled;
                 if (GetGoDirection(rotateAmount)) // direction > 0 : left
                 {
-                    if (rotateAmount > 0)
-                    {
-                        CutOffWalls(time, leftObstacles);
-                        map.AddGoLeftEvent(generateWall ? time - Settings.frameLength : time, rotateAmount); // insert before this wall comes
-                    }
+                    CutOffWalls(time, leftObstacles);
 
+                    if (rotateAmount > 0)
+                        map.AddGoLeftEvent(generateWall ? time - Settings.frameLength : time, rotateAmount); // insert before this wall comes
                     if (generateWall)
-                    {
                         TryGenerateWall(time, 3, beatsPerSecond); // max wall duration of 1 second
-                    }
                 }
                 else
                 {
-                    if (rotateAmount > 0)
-                    {
-                        CutOffWalls(time, rightObstacles);
-                        map.AddGoRightEvent(generateWall ? time - Settings.frameLength : time, rotateAmount);
-                    }
+                    CutOffWalls(time, rightObstacles);
 
+                    if (rotateAmount > 0)
+                        map.AddGoRightEvent(generateWall ? time - Settings.frameLength : time, rotateAmount);
                     if (generateWall)
-                    { 
                         TryGenerateWall(time, 0, beatsPerSecond);
-                    }
                 }
             }
 
