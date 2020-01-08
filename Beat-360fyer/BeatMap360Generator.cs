@@ -127,7 +127,7 @@ namespace Stx.ThreeSixtyfyer
                 if (duration <= 0.05f * beatsPerSecond)
                     return;
 
-                map.AddWall(time - Settings.frameLength, lineIndex, duration, 1);
+                map.AddWall(time/* - Settings.frameLength*/, lineIndex, duration, 1);
             }
 
             int spinsRemaining = 0;
@@ -185,6 +185,7 @@ namespace Stx.ThreeSixtyfyer
                 List<BeatMapNote> notesInSecond = GetNotes(time, beatsPerSecond);
                 bool heat = notesInSecond.Count > 6; // is heat when there are more than x notes in one second
 
+                // This function returns the amount the map should rotate and if a wall should be generated.
                 ValueTuple<int, bool> Rotate()
                 {
                     #region SPIN
