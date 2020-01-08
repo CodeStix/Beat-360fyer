@@ -10,15 +10,13 @@ namespace Stx.ThreeSixtyfyer
     [Serializable]
     public class BeatMap360GeneratorSettings
     {
-        public enum WallGenerator
+        public enum WallGeneratorMode
         {
-            Disabled = 0,
-            Calm = 1,
-            Normal = 2,
-            Aggressive = 3
+            Disabled = 0,   // disable the builtin wall generator
+            Enabled = 1     // enable the builtin wall generator
         }
 
-        public enum RemoveWallMode
+        public enum RemoveOriginalWallsMode
         {
             RemoveNotFun,   // remove the walls that are not fun in 360 mode, like walls thicker than 1 lane (default)
             RemoveAll,      // remove all the walls from the original map, the wall generator is the only thing that should cause a wall in the 360 level
@@ -29,12 +27,12 @@ namespace Stx.ThreeSixtyfyer
         public float timeOffset = 0f;                      // the offset of the notes in beats
         public float frameLength = 1f / 16f;               // in beats (default 1f/16f), the length of each generator loop cycle in beats, per this of a beat, a spin is possible
         public float beatLength = 1f;                      // in beats (default 1f), how the generator should interpret each beats length
-        public float obstableBackCutoffSeconds = 0.38f;    // last walls will be cut off if the last wall is in x seconds (0.3f!)
-        public float obstacleFrontCutoffSeconds = 0.18f;
+        public float obstableBackCutoffSeconds = 0.38f;    // x seconds will be cut off a wall's back if it is in activeWallMaySpinPercentage
+        public float obstacleFrontCutoffSeconds = 0.18f;   // x seconds will be cut off a wall's front if it is in activeWallMaySpinPercentage
         public float activeWallMaySpinPercentage = 0.5f;   // the percentage (0f - 1f) of an obstacles duration from which rotation is enabled again (0.4f), and wall cutoff will be used
         public bool enableSpin = true;                     // enable spin effect
-        public RemoveWallMode originalWallsMode = RemoveWallMode.RemoveNotFun;
-        public WallGenerator wallGenerator = WallGenerator.Aggressive;
+        public RemoveOriginalWallsMode originalWallsMode = RemoveOriginalWallsMode.RemoveNotFun;
+        public WallGeneratorMode wallGenerator = WallGeneratorMode.Enabled;
 
         public BeatMap360GeneratorSettings(float bpm, float timeOffset)
         {
@@ -57,12 +55,12 @@ namespace Stx.ThreeSixtyfyer
             if (map.notes.Count == 0)
                 return map;
 
-            if (Settings.originalWallsMode == BeatMap360GeneratorSettings.RemoveWallMode.RemoveNotFun)
+            if (Settings.originalWallsMode == BeatMap360GeneratorSettings.RemoveOriginalWallsMode.RemoveNotFun)
             {
                 // remove all thick walls, and walls in the middle of the playfield, these are not fun in 360
                 map.obstacles.RemoveAll((obst) => obst.type == 0 && (obst.width > 1 || obst.lineIndex == 1 || obst.lineIndex == 2));
             }
-            else if (Settings.originalWallsMode == BeatMap360GeneratorSettings.RemoveWallMode.RemoveAll)
+            else if (Settings.originalWallsMode == BeatMap360GeneratorSettings.RemoveOriginalWallsMode.RemoveAll)
             {
                 map.obstacles.Clear();
             }
@@ -367,7 +365,7 @@ namespace Stx.ThreeSixtyfyer
                         CutOffWalls(time, leftObstacles);
                         map.AddGoLeftEvent(time - Settings.frameLength, 1); // insert before this wall comes
 
-                        if (Settings.wallGenerator == BeatMap360GeneratorSettings.WallGenerator.Aggressive)
+                        if (Settings.wallGenerator == BeatMap360GeneratorSettings.WallGeneratorMode.Enabled)
                             TryGenerateWall(time, 3, beatsPerSecond); // max wall duration of 1 second
                     }
                     else
@@ -375,7 +373,7 @@ namespace Stx.ThreeSixtyfyer
                         CutOffWalls(time, rightObstacles);
                         map.AddGoRightEvent(time - Settings.frameLength, 1);
 
-                        if (Settings.wallGenerator == BeatMap360GeneratorSettings.WallGenerator.Aggressive)
+                        if (Settings.wallGenerator == BeatMap360GeneratorSettings.WallGeneratorMode.Enabled)
                             TryGenerateWall(time, 0, beatsPerSecond);
                     }
                 }
