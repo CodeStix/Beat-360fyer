@@ -41,8 +41,8 @@ namespace Stx.ThreeSixtyfyer
         }
     }
 
-    // TODO
-    // limit spins per second
+    // [/ ] [ \] [\/] [  ] [/\] [\|] [\-] [|/] [-/]
+    // [\ ] [ /] [  ] [/\] [\/] [-\] [|\] [/-] [/|]
 
     public class BeatMap360Generator : IBeatMapGenerator<BeatMap360GeneratorSettings>
     {
@@ -94,7 +94,6 @@ namespace Stx.ThreeSixtyfyer
             {
                 return map.obstacles.FirstOrDefault((obst) => obst.lineIndex == lineIndex && obst.time >= time);
             }
-
             void CutOffWalls(float time, IEnumerable<BeatMapObstacle> obstacles)
             {
                 foreach(BeatMapObstacle obst in obstacles)
@@ -119,7 +118,6 @@ namespace Stx.ThreeSixtyfyer
                     }
                 }
             }
-
             void TryGenerateWall(float time, int lineIndex, float maxDuration)
             {
                 BeatMapNote nextNote = GetNextNote(time, lineIndex);
@@ -144,9 +142,9 @@ namespace Stx.ThreeSixtyfyer
                     direction--;
                 else
                     direction++;
-                if (-direction >= maxSwing)
+                if (-direction > maxSwing)
                     direction = 1;
-                else if (direction >= maxSwing)
+                else if (direction > maxSwing)
                     direction = -1;
                 return direction > 0;
             }
@@ -168,7 +166,6 @@ namespace Stx.ThreeSixtyfyer
                 if (direction > -1)
                     direction = -direction;
             }
-
 
             for (float time = minTime; time < maxTime; time += Settings.frameLength)
             {
