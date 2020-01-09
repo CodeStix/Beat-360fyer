@@ -78,14 +78,6 @@ namespace Stx.ThreeSixtyfyer
             {
                 return map.obstacles.Where((obst) => obst.time >= time && obst.time < time + futureTime).ToList();
             }
-            List<BeatMapObstacle> GetEndingObstacles(float time, float pastTime)
-            {
-                return map.obstacles.Where((obst) => obst.time + obst.duration >= time - pastTime && obst.time + obst.duration < time).ToList();
-            }
-            List<BeatMapObstacle> GetActiveObstacles(float time, float durationIncrease = 0f)
-            {
-                return map.obstacles.Where((obst) => time >= obst.time && time < obst.time + obst.duration + durationIncrease).ToList();
-            }
             BeatMapNote GetNextNote(float time, int lineIndex)
             {
                 return map.notes.FirstOrDefault((note) => note.lineIndex == lineIndex && note.time >= time);
@@ -127,7 +119,7 @@ namespace Stx.ThreeSixtyfyer
                 if (duration <= 0.05f * beatsPerSecond)
                     return;
 
-                map.AddWall(time/* - Settings.frameLength*/, lineIndex, duration, 1);
+                map.AddWall(time, lineIndex, duration, 1);
             }
 
             int spinsRemaining = 0;
@@ -370,7 +362,7 @@ namespace Stx.ThreeSixtyfyer
                     if (generateWall)
                     {
                         CutOffWalls(time, rightObstacles); // cut off walls in the place where we wish to generate
-                        TryGenerateWall(time, 3, beatsPerSecond); // max wall duration of 1 second
+                        TryGenerateWall(time - Settings.frameLength, 3, beatsPerSecond); // max wall duration of 1 second
                     }
                 }
                 else
@@ -383,7 +375,7 @@ namespace Stx.ThreeSixtyfyer
                     if (generateWall)
                     {
                         CutOffWalls(time, leftObstacles); // cut off walls in the place where we wish to generate
-                        TryGenerateWall(time, 0, beatsPerSecond);
+                        TryGenerateWall(time - Settings.frameLength, 0, beatsPerSecond);
                     }
                 }
             }
