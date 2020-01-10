@@ -15,6 +15,9 @@ namespace Stx.ThreeSixtyfyer
         [STAThread]
         static void Main()
         {
+            Application.Run(new FormGeneratorSettings(new BeatMap360GeneratorSettings(120f, 0f)));
+            return;
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -49,7 +52,6 @@ namespace Stx.ThreeSixtyfyer
                "What would you like to do?";
 
             TaskDialogButton pressed = dialog.ShowDialog();
-
             if (pressed.ButtonType == ButtonType.Custom)
             {
                 if (pressed.Text == "Music Pack")
