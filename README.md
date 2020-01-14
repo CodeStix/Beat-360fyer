@@ -3,6 +3,7 @@
 This tool is used to generate 360 levels from standard Beat Saber levels.
 
 ![Jaroslav Beck - Beat Saber, converted on the right, standard on the left](https://github.com/CodeStix/Beat-360fyer/raw/master/Build/Demos/beatsaber.gif)
+
 *(Jaroslav Beck - Beat Saber) Left: Standard; Right: Generated 360 mode*
 
 ## :computer: How to use it?
@@ -26,10 +27,6 @@ This tool is used to generate 360 levels from standard Beat Saber levels.
 6. Press the generate button, it will modify the `Info.dat` of the chosen levels, and then generate new gamemodes.
 7. Wait for the process to finish.
 8. The selected maps now have a 360 mode.
-
-
-
-
 
 ## :mag: Demos
 Here are some demo levels, generated with this tool: (created with this tool at version 2.0.0)
