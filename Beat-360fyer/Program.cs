@@ -1,7 +1,9 @@
 ﻿using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -20,6 +22,17 @@ namespace Stx.ThreeSixtyfyer
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            GitHubBasedUpdateCheck updateChecker = new GitHubBasedUpdateCheck("CodeStix", "Beat-360fyer", "Build/latestVersion.txt");
+            updateChecker.CheckForUpdate(Assembly.GetExecutingAssembly().GetName().Version.ToString(3)).ContinueWith((update) => {
+
+                if (update.Result && MessageBox.Show("There is an update available for Beat-360fyer, please download the newest version " +
+                        "to ensure that everything can work correctly. Go to the download page right now?", "An update!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                {
+                    Process.Start(@"https://github.com/CodeStix/Beat-360fyer/releases");
+                    Environment.Exit(0);
+                }
+            });
 
             TaskDialog dialog = new TaskDialog();
             dialog.Buttons.Add(new TaskDialogButton()

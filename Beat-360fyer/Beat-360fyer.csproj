@@ -43,6 +43,9 @@
       <HintPath>packages\Ookii.Dialogs.1.0\lib\net35\Ookii.Dialogs.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework" />
+    <Reference Include="Semver, Version=2.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Semver.2.0.6\lib\net452\Semver.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
@@ -79,6 +82,7 @@
     <Compile Include="FormGeneratorSettings.Designer.cs">
       <DependentUpon>FormGeneratorSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="GitHubBasedUpdateCheck.cs" />
     <Compile Include="IBeatMapGenerator.cs" />
     <Compile Include="Jobs.cs" />
     <Compile Include="BeatMapGenerator.cs" />
