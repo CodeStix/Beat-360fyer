@@ -34,4 +34,4 @@ Here are some demo levels, generated with this tool: (created with this tool at 
 - [Boulevard of Broken Dreams](https://github.com/CodeStix/Beat-360fyer/raw/master/Build/Demos/Boulevard%20of%20Broken%20Dreams.zip)
 - [Pokemon Theme Song](https://github.com/CodeStix/Beat-360fyer/raw/master/Build/Demos/Pokemon%20Theme%20Song.zip)
 - [Riot - Overkill](https://github.com/CodeStix/Beat-360fyer/raw/master/Build/Demos/Riot%20-%20Overkill.zip)
-- [Beat It](https://github.com/CodeStix/Beat-360fyer/raw/master/Build/Demos/Beat%20It.zip)
+- [Beat It](https://github.com/CodeStix/Beat-360fyer/raw/master/Build/Demos/Beat%20it.zip)
