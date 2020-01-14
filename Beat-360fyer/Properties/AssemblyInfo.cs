@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Beat-360fyer")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Tool to convert a normal Beat Saber level into a 360 one!")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CodeStix; Stijn Rogiest")]
 [assembly: AssemblyProduct("Beat-360fyer")]

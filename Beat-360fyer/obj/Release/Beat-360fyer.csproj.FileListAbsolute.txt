@@ -35,7 +35,6 @@ C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\bin\Release\Ne
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\bin\Release\Ookii.Dialogs.Wpf.dll
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\bin\Release\Newtonsoft.Json.xml
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\bin\Release\Ookii.Dialogs.Wpf.xml
-C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\obj\Release\Beat-360fyer.csprojAssemblyReference.cache
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\obj\Release\Stx.ThreeSixtyfyer.FormGeneratePack.resources
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\obj\Release\Stx.ThreeSixtyfyer.FormGenerateBulk.resources
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\obj\Release\Stx.ThreeSixtyfyer.FormGeneratorSettings.resources

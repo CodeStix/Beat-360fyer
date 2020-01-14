@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,9 +31,12 @@ namespace Stx.ThreeSixtyfyer
         {
             try
             {
-                using (WebClient client = new WebClient())
+                using (HttpClient client = new HttpClient())
                 {
-                    string redVersion = await client.DownloadStringTaskAsync(VersionFileUrl);
+                    Console.WriteLine(VersionFileUrl);
+                    string redVersion = await client.GetStringAsync(VersionFileUrl);
+                    Console.WriteLine("Current version: " + currentVersion);
+                    Console.WriteLine("Red version: " + redVersion);
 
                     if (SemVersion.Parse(redVersion) > currentVersion)
                     {
