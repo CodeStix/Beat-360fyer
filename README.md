@@ -2,6 +2,9 @@
 
 This tool is used to generate 360 levels from standard Beat Saber levels.
 
+![Jaroslav Beck - Beat Saber, converted on the right, standard on the left](https://github.com/CodeStix/Beat-360fyer/raw/master/Build/Demos/beatsaber.gif)
+*(Jaroslav Beck - Beat Saber) Left: Standard; Right: Generated 360 mode*
+
 ## :computer: How to use it?
 ### Generate a Music Pack (recommended) (requires *SongCore*)
 1. Make sure you have the [SongCore (by Kylemc1413)](https://github.com/Kylemc1413/SongCore) mod installed, this is required to create custom music packs.
@@ -25,7 +28,7 @@ This tool is used to generate 360 levels from standard Beat Saber levels.
 8. The selected maps now have a 360 mode.
 
 
-![Jaroslav Beck - Beat Saber, converted on the right, standard on the left](https://github.com/CodeStix/Beat-360fyer/raw/master/Build/Demos/beatsaber.gif)
+
 
 
 ## :mag: Demos
