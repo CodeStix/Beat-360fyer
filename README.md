@@ -24,12 +24,11 @@ This tool is used to generate 360 levels from standard Beat Saber levels.
 7. Wait for the process to finish.
 8. The selected maps now have a 360 mode.
 
-## :question: How well does this work?
-:heavy_check_mark: **It works great with** not too spammy levels with a lot of cut direction variation. This is a great tool to spice up the easy levels!
 
-:warning: **It works not as good with** spammy levels, this works, but it will a have hard time of knowning when to safely rotate the level, so don't expect sick 360 no-scopes when converting, for example, GHOST. I am not saying you shouldn't try it tho!
+![Jaroslav Beck - Beat Saber, converted on the right, standard on the left](https://github.com/CodeStix/Beat-360fyer/raw/master/Build/Demos/beatsaber.gif)
 
-## :mag: Demo
+
+## :mag: Demos
 Here are some demo levels, generated with this tool: (created with this tool at version 2.0.0)
 - [Boulevard of Broken Dreams](https://github.com/CodeStix/Beat-360fyer/raw/master/Build/Demos/Boulevard%20of%20Broken%20Dreams.zip)
 - [Pokemon Theme Song](https://github.com/CodeStix/Beat-360fyer/raw/master/Build/Demos/Pokemon%20Theme%20Song.zip)
