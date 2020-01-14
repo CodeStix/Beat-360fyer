@@ -45,6 +45,7 @@
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.label4 = new System.Windows.Forms.Label();
             this.textBoxPackName = new System.Windows.Forms.TextBox();
+            this.buttonUpdatePack = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -171,6 +172,7 @@
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
             this.toolStripStatusLabel2.Size = new System.Drawing.Size(45, 17);
             this.toolStripStatusLabel2.Text = "GitHub";
+            this.toolStripStatusLabel2.Click += new System.EventHandler(this.toolStripStatusLabel2_Click);
             // 
             // label4
             // 
@@ -189,11 +191,22 @@
             this.textBoxPackName.TabIndex = 17;
             this.textBoxPackName.Text = "Generated 360 Levels";
             // 
+            // buttonUpdatePack
+            // 
+            this.buttonUpdatePack.Location = new System.Drawing.Point(321, 9);
+            this.buttonUpdatePack.Name = "buttonUpdatePack";
+            this.buttonUpdatePack.Size = new System.Drawing.Size(188, 23);
+            this.buttonUpdatePack.TabIndex = 18;
+            this.buttonUpdatePack.Text = "Update previous generated pack";
+            this.buttonUpdatePack.UseVisualStyleBackColor = true;
+            this.buttonUpdatePack.Click += new System.EventHandler(this.buttonUpdatePack_Click);
+            // 
             // FormGeneratePack
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(521, 551);
+            this.Controls.Add(this.buttonUpdatePack);
             this.Controls.Add(this.textBoxPackName);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.buttonGeneratorSettings);
@@ -235,5 +248,6 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBoxPackName;
+        private System.Windows.Forms.Button buttonUpdatePack;
     }
 }

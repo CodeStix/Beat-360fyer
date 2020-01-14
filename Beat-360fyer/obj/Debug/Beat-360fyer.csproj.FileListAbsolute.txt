@@ -28,6 +28,5 @@ C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\obj\Debug\Beat
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\obj\Debug\Beat-360fyer.pdb
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\obj\Debug\Stx.ThreeSixtyfyer.FormGeneratePack.resources
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\obj\Debug\Stx.ThreeSixtyfyer.FormGenerateBulk.resources
-C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\obj\Debug\Beat-360fyer.csprojAssemblyReference.cache
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\obj\Debug\Stx.ThreeSixtyfyer.FormGeneratorSettings.resources
-C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\obj\Debug\Beat-360fyer.csproj.CoreCompileInputs.cache
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\obj\Debug\Beat-360fyer.csprojAssemblyReference.cache

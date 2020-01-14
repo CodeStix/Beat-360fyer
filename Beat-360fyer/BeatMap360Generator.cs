@@ -25,12 +25,12 @@ namespace Stx.ThreeSixtyfyer
 
         public float bpm = 130f;                           // change this to song bpm!
         public float timeOffset = 0f;                      // the offset of the notes in beats
-        public float frameLength = 1f / 16f;               // in beats (default 1f/16f), the length of each generator loop cycle in beats, per this of a beat, a spin is possible
+        public float frameLength = 1f / 16f;               // in beats (default 1f/16f), the length of each generator loop cycle in beats, per this of a beat, a single spin rotation is possible
         public float beatLength = 1f;                      // in beats (default 1f), how the generator should interpret each beats length
         public float obstableBackCutoffSeconds = 0.38f;    // x seconds will be cut off a wall's back if it is in activeWallMaySpinPercentage
         public float obstacleFrontCutoffSeconds = 0.18f;   // x seconds will be cut off a wall's front if it is in activeWallMaySpinPercentage
         public float activeWallMaySpinPercentage = 0.5f;   // the percentage (0f - 1f) of an obstacles duration from which rotation is enabled again (0.4f), and wall cutoff will be used
-        public bool enableSpin = true;                     // enable spin effect
+        public bool enableSpin = false;                     // enable spin effect
         public RemoveOriginalWallsMode originalWallsMode = RemoveOriginalWallsMode.RemoveNotFun;
         public WallGeneratorMode wallGenerator = WallGeneratorMode.Enabled;
 
@@ -46,7 +46,7 @@ namespace Stx.ThreeSixtyfyer
 
     public class BeatMap360Generator : IBeatMapGenerator<BeatMap360GeneratorSettings>
     {
-        public int Version => 1;
+        public int Version => 5;
         public BeatMap360GeneratorSettings Settings { get; set; }
 
         public BeatMap FromNormal(BeatMap standardMap)
@@ -169,13 +169,13 @@ namespace Stx.ThreeSixtyfyer
                 ValueTuple<int, bool> Rotate()
                 {
                     List<BeatMapNote> notesInFrame = GetNotes(time, Settings.frameLength);
+                    List<BeatMapNote> notesInSecond = GetNotes(time, beatsPerSecond);
                     bool enableGoLeft =
                         leftObstacles.All((obst) => time <= obst.time || time >= obst.time + obst.duration * Settings.activeWallMaySpinPercentage)
-                        && !notesInFrame.Any((note) => note.type == 3 && note.lineIndex <= 1);
+                        && !notesInSecond.Any((note) => note.type == 3 && note.lineIndex <= 1);
                     bool enableGoRight =
                         rightObstacles.All((obst) => time <= obst.time || time >= obst.time + obst.duration * Settings.activeWallMaySpinPercentage)
-                        && !notesInFrame.Any((note) => note.type == 3 && note.lineIndex >= 2);
-                    List<BeatMapNote> notesInSecond = GetNotes(time, beatsPerSecond);
+                        && !notesInSecond.Any((note) => note.type == 3 && note.lineIndex >= 2);
                     bool calm = notesInSecond.Count == 0 || notesInSecond.All((note) => Math.Abs(note.time - notesInSecond[0].time) < Settings.frameLength);
 
                     #region SPIN
@@ -228,6 +228,19 @@ namespace Stx.ThreeSixtyfyer
                     }
                     else if (obstaclesInFrame.Count >= 2 && obstaclesInFrame.All((obst) => obst.type == 0))
                     {
+                        if (!enableGoRight && !enableGoLeft)
+                        {
+                            return (0, false);
+                        }
+                        else if (!enableGoLeft)
+                        {
+                            EnsureGoRight();
+                        }
+                        else if (!enableGoRight)
+                        {
+                            EnsureGoLeft();
+                        }
+
                         return (calm ? 2 : 1, false);
                     }
 

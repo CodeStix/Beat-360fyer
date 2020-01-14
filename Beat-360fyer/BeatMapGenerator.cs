@@ -13,11 +13,18 @@ namespace Stx.ThreeSixtyfyer
     {
         public static string ContributorImagePath { get; set; } = null;
 
-        public static bool Generate360ModeAndSave(BeatMapInfo info, BeatMapDifficultyLevel[] difficulties, bool replaceExising360Mode = false)
+        public static bool Generate360ModeAndOverwrite(BeatMapInfo info, BeatMapDifficultyLevel[] difficulties, bool replaceExising360Mode = false)
         {
             info.CreateBackup();
 
             BeatMap360GeneratorSettings settings = new BeatMap360GeneratorSettings(info.beatsPerMinute, info.songTimeOffset) {/* default generator settings */};
+            string generatorConfigFile = Path.Combine(info.mapDirectoryPath, "Generator.dat");
+            if (File.Exists(generatorConfigFile))
+            {
+                BeatMap360GeneratorConfig config = BeatMap360GeneratorConfig.FromFile(generatorConfigFile);
+                settings = config.settings;
+            }
+
             BeatMap360Generator generator = new BeatMap360Generator()
             {
                 Settings = settings
@@ -88,20 +95,51 @@ namespace Stx.ThreeSixtyfyer
             return true;
         }
 
-        public static bool Update360Modes(string mapLocation)
+        public static bool EnsureUpdated360Mode(string existingModeMapLocation)
         {
-            string generatorConfigFile = Path.Combine(mapLocation, "Generator.dat");
+            string generatorConfigFile = Path.Combine(existingModeMapLocation, "Generator.dat");
             if (!File.Exists(generatorConfigFile))
                 return false;
 
             BeatMap360GeneratorConfig generatorConfig = BeatMap360GeneratorConfig.FromFile(generatorConfigFile);
+            BeatMap360Generator generator = new BeatMap360Generator()
+            {
+                Settings = generatorConfig.settings
+            };
+
+            if (generatorConfig.version >= generator.Version)
+                return true;
+
+            if (!Directory.Exists(generatorConfig.originalMapLocation))
+            {
+                File.Delete(generatorConfigFile);
+                return false;
+            }
+
+            string[] modeInfoFiles = Directory.GetFiles(existingModeMapLocation, "?nfo.dat");
+            if (modeInfoFiles.Length == 0)
+                return false;
+            BeatMapInfo modeMapInfo = BeatMapInfo.FromFile(modeInfoFiles[0]);
 
             string[] standardInfoFiles = Directory.GetFiles(generatorConfig.originalMapLocation, "?nfo.dat");
             if (standardInfoFiles.Length == 0)
                 return false;
+            BeatMapInfo originalMapInfo = BeatMapInfo.FromFile(standardInfoFiles[0]);
 
-            BeatMapInfo info = BeatMapInfo.FromFile(standardInfoFiles[0]);
-            return Generate360ModeAndCopy(info, mapLocation, generatorConfig.difficulties, generatorConfig.settings);
+            foreach (BeatMapDifficultyLevel diff in generatorConfig.difficulties)
+            {
+                BeatMapDifficulty difficulty = modeMapInfo.GetGameModeDifficulty(diff, "360Degree");
+                BeatMapDifficulty normalDifficulty = originalMapInfo.GetGameModeDifficulty(diff, "Standard");
+
+                if (difficulty == null || normalDifficulty == null)
+                    continue;
+
+                difficulty.SaveBeatMap(existingModeMapLocation, generator.FromNormal(normalDifficulty.LoadBeatMap(generatorConfig.originalMapLocation)));
+            }
+
+            generatorConfig.version = generator.Version;
+            generatorConfig.SaveToFile(generatorConfigFile);
+            return true;
         }
     }
 }

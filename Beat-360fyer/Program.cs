@@ -15,8 +15,8 @@ namespace Stx.ThreeSixtyfyer
         [STAThread]
         static void Main()
         {
-            Application.Run(new FormGeneratorSettings(new BeatMap360GeneratorSettings(120f, 0f)));
-            return;
+            //Application.Run(new FormGeneratorSettings(new BeatMap360GeneratorSettings(120f, 0f)));
+            //return;
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -33,12 +33,12 @@ namespace Stx.ThreeSixtyfyer
             {
                 Text = "Update Music Pack",
                 ButtonType = ButtonType.Custom,
-                Enabled = false,
-                CommandLinkNote = "Update the existing music pack, generate a mode in the pack for all new imported songs."
+                Enabled = !string.IsNullOrEmpty(Properties.Settings.Default.LastGeneratedMusicPackPath),
+                CommandLinkNote = "Update the previously generated music pack, generate a mode in the pack for all new imported songs."
             });
             dialog.Buttons.Add(new TaskDialogButton()
             {
-                Text = "Generate And Modify",
+                Text = "Generate And Overwrite",
                 ButtonType = ButtonType.Custom,
                 CommandLinkNote = "Add generated modes to a existing maps and modify them directly."
             });
@@ -58,7 +58,11 @@ namespace Stx.ThreeSixtyfyer
                 {
                     Application.Run(new FormGeneratePack());
                 }
-                else if (pressed.Text == "Generate And Modify")
+                else if (pressed.Text == "Update Music Pack")
+                {
+                    Application.Run(new FormGeneratePack(true));
+                }
+                else if (pressed.Text == "Generate And Overwrite")
                 {
                     Application.Run(new FormGenerateBulk());
                 }

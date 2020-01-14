@@ -47,7 +47,7 @@ namespace Stx.ThreeSixtyfyer
                 }
                 else if (value is int || value is long || value is float || value is double || value is decimal)
                 {
-                    NumericUpDown numeric;
+                    NumericUpDown numeric = null;
                     if (value is int)
                     {
                         numeric = new NumericUpDown()

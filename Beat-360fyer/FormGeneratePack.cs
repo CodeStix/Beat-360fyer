@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -17,9 +18,13 @@ namespace Stx.ThreeSixtyfyer
 {
     public partial class FormGeneratePack : Form
     {
-        public FormGeneratePack()
+        public bool updateExistingMapsOnLoad = false;
+
+        public FormGeneratePack(bool updateExistingMapsOnLoad = false)
         {
             InitializeComponent();
+
+            this.updateExistingMapsOnLoad = updateExistingMapsOnLoad;
         }
 
         private string CustomGenerated360LevelsPack => textBoxPackName.Text;
@@ -113,6 +118,7 @@ namespace Stx.ThreeSixtyfyer
             listSongs.Enabled = enable;
             buttonGeneratorSettings.Enabled = enable && false;
             textBoxPackName.Enabled = enable;
+            buttonUpdatePack.Enabled = enable;
         }
 
         private void ListSongs_KeyDown(object sender, KeyEventArgs e)
@@ -138,6 +144,11 @@ namespace Stx.ThreeSixtyfyer
         private void FormGenerate_Load(object sender, EventArgs e)
         {
             this.Height = 165;
+
+            this.buttonUpdatePack.Visible = !string.IsNullOrEmpty(Properties.Settings.Default.LastGeneratedMusicPackPath);
+
+            if (updateExistingMapsOnLoad)
+                buttonUpdatePack.PerformClick();
         }
 
         private void ButtonGenerate_Click(object sender, EventArgs e)
@@ -156,6 +167,9 @@ namespace Stx.ThreeSixtyfyer
                 if (!File.Exists(imagePath))
                     File.Copy("360.png", imagePath, true);
                 BeatMapGenerator.ContributorImagePath = imagePath;
+
+                Properties.Settings.Default.LastGeneratedMusicPackPath = CustomGenerated360LevelsPath;
+                Properties.Settings.Default.Save();
 
                 EnsureCustomPack(CustomGenerated360LevelsPack, CustomGenerated360LevelsPath, imagePath);
                 ConvertCheckedSongs(Enum.GetValues(typeof(BeatMapDifficultyLevel)).Cast<BeatMapDifficultyLevel>().ToList());
@@ -223,6 +237,21 @@ namespace Stx.ThreeSixtyfyer
 
                 BeginInvoke(new MethodInvoker(() => SetUI(true)));
             });
+        }
+
+        private void buttonUpdatePack_Click(object sender, EventArgs e)
+        {
+            SetUI(false);
+            Jobs.UpdateExisting360Maps(Properties.Settings.Default.LastGeneratedMusicPackPath, (s) =>
+            {
+                MessageBox.Show($"{s.result.mapsUpdated} generated maps are up to date now.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                SetUI(true);
+            });
+        }
+
+        private void toolStripStatusLabel2_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/CodeStix/Beat-360fyer");
         }
     }
 }
