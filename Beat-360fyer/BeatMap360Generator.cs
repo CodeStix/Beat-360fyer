@@ -46,7 +46,7 @@ namespace Stx.ThreeSixtyfyer
 
     public class BeatMap360Generator : IBeatMapGenerator<BeatMap360GeneratorSettings>
     {
-        public int Version => 5;
+        public int Version => 6;
         public BeatMap360GeneratorSettings Settings { get; set; }
 
         public BeatMap FromNormal(BeatMap standardMap)

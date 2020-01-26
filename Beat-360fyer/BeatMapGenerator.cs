@@ -13,22 +13,27 @@ namespace Stx.ThreeSixtyfyer
     {
         public static string ContributorImagePath { get; set; } = null;
 
-        public static bool Generate360ModeAndOverwrite(BeatMapInfo info, BeatMapDifficultyLevel[] difficulties, bool replaceExising360Mode = false)
+        public static bool Generate360ModeAndOverwrite(BeatMapInfo info, BeatMapDifficultyLevel[] difficulties, bool replaceExising360Mode = false, BeatMap360GeneratorSettings generatorSettings = null)
         {
             info.CreateBackup();
 
-            BeatMap360GeneratorSettings settings = new BeatMap360GeneratorSettings(info.beatsPerMinute, info.songTimeOffset) {/* default generator settings */};
+            BeatMap360Generator generator = new BeatMap360Generator()
+            {
+                Settings = generatorSettings ?? new BeatMap360GeneratorSettings(info.beatsPerMinute, info.songTimeOffset) {/* default generator settings */}
+            };
+
+            bool saveNewInfo = true;
             string generatorConfigFile = Path.Combine(info.mapDirectoryPath, "Generator.dat");
             if (File.Exists(generatorConfigFile))
             {
-                BeatMap360GeneratorConfig config = BeatMap360GeneratorConfig.FromFile(generatorConfigFile);
-                settings = config.settings;
-            }
+                BeatMap360GeneratorConfig generatorConfig = BeatMap360GeneratorConfig.FromFile(generatorConfigFile);
 
-            BeatMap360Generator generator = new BeatMap360Generator()
-            {
-                Settings = settings
-            };
+                saveNewInfo = !generatorConfig.difficulties.SequenceEqual(difficulties);
+                if (generator.Version <= generatorConfig.version && !saveNewInfo)
+                    return true; // Already up to date!
+
+                generator.Settings = generatorConfig.settings;
+            }
 
             int ok = 0;
             foreach(BeatMapDifficultyLevel difficulty in difficulties)
@@ -47,8 +52,11 @@ namespace Stx.ThreeSixtyfyer
             if (ok == 0)
                 return false;
 
-            info.AddContributor("CodeStix's 360fyer", "360 degree mode", ContributorImagePath);
-            info.SaveToFile(info.mapInfoPath);
+            if (saveNewInfo)
+            {
+                info.AddContributor("CodeStix's 360fyer", "360 degree mode", ContributorImagePath);
+                info.SaveToFile(info.mapInfoPath);
+            }
 
             BeatMap360GeneratorConfig.FromGenerator(generator, info.mapDirectoryPath, difficulties).SaveToFile(Path.Combine(info.mapDirectoryPath, "Generator.dat"));
             return true;
@@ -56,13 +64,26 @@ namespace Stx.ThreeSixtyfyer
 
         public static bool Generate360ModeAndCopy(BeatMapInfo info, string destination, BeatMapDifficultyLevel[] difficulties, BeatMap360GeneratorSettings generatorSettings = null)
         {
-            BeatMap360GeneratorSettings settings = generatorSettings ?? new BeatMap360GeneratorSettings(info.beatsPerMinute, info.songTimeOffset) {/* default generator settings */};
+            string mapDestination = Path.Combine(destination, new DirectoryInfo(info.mapDirectoryPath).Name);
+
             BeatMap360Generator generator = new BeatMap360Generator()
             {
-                Settings = settings
+                Settings = generatorSettings ?? new BeatMap360GeneratorSettings(info.beatsPerMinute, info.songTimeOffset) {/* default generator settings */}
             };
 
-            string mapDestination = Path.Combine(destination, new DirectoryInfo(info.mapDirectoryPath).Name);
+            bool saveNewInfo = true;
+            string generatorConfigFile = Path.Combine(mapDestination, "Generator.dat");
+            if (File.Exists(generatorConfigFile))
+            {
+                BeatMap360GeneratorConfig generatorConfig = BeatMap360GeneratorConfig.FromFile(generatorConfigFile);
+
+                saveNewInfo = !generatorConfig.difficulties.SequenceEqual(difficulties);
+                if (generator.Version <= generatorConfig.version && !saveNewInfo)
+                    return true; // Already up to date!
+
+                generator.Settings = generatorConfig.settings;
+            }
+
             Directory.CreateDirectory(mapDestination);
 
             int ok = 0;
@@ -84,18 +105,21 @@ namespace Stx.ThreeSixtyfyer
 
             info.difficultyBeatmapSets.RemoveAll((diffSet) => diffSet.beatmapCharacteristicName != "360Degree");
 
-            string coverImagePath = Path.Combine(info.mapDirectoryPath, info.coverImageFilename); // There are some songs without cover images
-            if (File.Exists(coverImagePath))
-                File.Copy(coverImagePath, Path.Combine(mapDestination, info.coverImageFilename), true);
-            File.Copy(Path.Combine(info.mapDirectoryPath, info.songFilename), Path.Combine(mapDestination, info.songFilename), true);
-            info.AddContributor("CodeStix's 360fyer", "360 degree mode", ContributorImagePath);
-            info.SaveToFile(Path.Combine(mapDestination, "Info.dat"));
+            if (saveNewInfo)
+            {
+                string coverImagePath = Path.Combine(info.mapDirectoryPath, info.coverImageFilename); // There are some songs without cover images
+                if (File.Exists(coverImagePath))
+                    File.Copy(coverImagePath, Path.Combine(mapDestination, info.coverImageFilename), true);
+                File.Copy(Path.Combine(info.mapDirectoryPath, info.songFilename), Path.Combine(mapDestination, info.songFilename), true);
+                info.AddContributor("CodeStix's 360fyer", "360 degree mode", ContributorImagePath);
+                info.SaveToFile(Path.Combine(mapDestination, "Info.dat"));
+            }
 
             BeatMap360GeneratorConfig.FromGenerator(generator, info.mapDirectoryPath, difficulties).SaveToFile(Path.Combine(mapDestination, "Generator.dat"));
             return true;
         }
 
-        public static bool EnsureUpdated360Mode(string existingModeMapLocation)
+        public static bool UpdateGenerated360Modes(string existingModeMapLocation)
         {
             string generatorConfigFile = Path.Combine(existingModeMapLocation, "Generator.dat");
             if (!File.Exists(generatorConfigFile))

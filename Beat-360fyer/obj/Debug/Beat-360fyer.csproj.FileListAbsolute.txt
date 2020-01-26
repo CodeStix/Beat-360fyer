@@ -30,3 +30,5 @@ C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\obj\Debug\Stx.
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\obj\Debug\Stx.ThreeSixtyfyer.FormGenerateBulk.resources
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\obj\Debug\Stx.ThreeSixtyfyer.FormGeneratorSettings.resources
 C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\obj\Debug\Beat-360fyer.csprojAssemblyReference.cache
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\bin\Debug\Semver.dll
+C:\Users\Stijn Rogiest\Documents\GitHub\Beat-360fyer\Beat-360fyer\bin\Debug\Semver.xml

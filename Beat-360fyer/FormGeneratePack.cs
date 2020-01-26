@@ -18,18 +18,19 @@ namespace Stx.ThreeSixtyfyer
 {
     public partial class FormGeneratePack : Form
     {
-        public bool updateExistingMapsOnLoad = false;
+        public bool updateMusicPackOnStart = false;
 
-        public FormGeneratePack(bool updateExistingMapsOnLoad = false)
+        public FormGeneratePack(bool updateMusicPackOnStart = false)
         {
             InitializeComponent();
 
-            this.updateExistingMapsOnLoad = updateExistingMapsOnLoad;
+            this.updateMusicPackOnStart = updateMusicPackOnStart;
         }
 
         private string CustomGenerated360LevelsPack => textBoxPackName.Text;
         private string CustomGenerated360LevelsPath => Path.Combine(textBoxBeatSaberPath.Text, "Beat Saber_Data", "Custom" + textBoxPackName.Text.Replace(" ", ""));
-          
+        private string CustomSongsPath => Path.Combine(textBoxBeatSaberPath.Text, "Beat Saber_Data", "CustomLevels");  
+
         private void ButtonSelectBeatSaber_Click(object sender, EventArgs e)
         {
             VistaFolderBrowserDialog folderBrowser = new VistaFolderBrowserDialog()
@@ -43,24 +44,29 @@ namespace Stx.ThreeSixtyfyer
             if (!folderBrowser.ShowDialog().Value)
                 return;
 
-            if (!File.Exists(Path.Combine(folderBrowser.SelectedPath, "Beat Saber.exe")))
+            SetBeatSaberPath(folderBrowser.SelectedPath);
+        }
+
+        private void SetBeatSaberPath(string path)
+        {
+            if (!File.Exists(Path.Combine(path, "Beat Saber.exe")))
             {
                 if (MessageBox.Show("The selected directory does not contain 'Beat Saber.exe', which is required.", "Not found",
                     MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning) == DialogResult.Retry)
                     buttonSelectBeatSaber.PerformClick();
                 return;
             }
-            if (!File.Exists(Path.Combine(folderBrowser.SelectedPath, "UserData", "SongCore", "folders.xml")))
+            if (!File.Exists(Path.Combine(path, "UserData", "SongCore", "folders.xml")))
             {
                 MessageBox.Show("You don't have SongCore installed, please use your mod installer of choise to install SongCore into BeatSaber, then come back here to generate a music pack.", "SongCore not found",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            Properties.Settings.Default.RememberPathPack = folderBrowser.SelectedPath;
+            Properties.Settings.Default.RememberPathPack = path;
             Properties.Settings.Default.Save();
 
-            textBoxBeatSaberPath.Text = folderBrowser.SelectedPath;
+            textBoxBeatSaberPath.Text = path;
             this.Height = 590;
 
             RefreshSongs();
@@ -70,9 +76,7 @@ namespace Stx.ThreeSixtyfyer
         {
             listSongs.Items.Clear();
 
-            string customSongsPath = Path.Combine(textBoxBeatSaberPath.Text, "Beat Saber_Data", "CustomLevels");
-
-            Jobs.FindSongsUnderPath(customSongsPath, (job) =>
+            Jobs.FindSongsUnderPath(CustomSongsPath, (job) =>
             {
                 listSongs.Items.AddRange(job.result.beatMaps.Select((bm) =>
                     new ListViewItem(new string[] { bm.songName, bm.songAuthorName }) {
@@ -147,7 +151,12 @@ namespace Stx.ThreeSixtyfyer
 
             this.buttonUpdatePack.Visible = !string.IsNullOrEmpty(Properties.Settings.Default.LastGeneratedMusicPackPath);
 
-            if (updateExistingMapsOnLoad)
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.RememberPathPack))
+            {
+                SetBeatSaberPath(Properties.Settings.Default.RememberPathPack);
+            }
+
+            if (updateMusicPackOnStart)
                 buttonUpdatePack.PerformClick();
         }
 
@@ -230,7 +239,8 @@ namespace Stx.ThreeSixtyfyer
                     else
                     {
                         MessageBox.Show($"No modes were added, this can be due to:\n" +
-                            $" - The selected songs didn't have the standard mode, this is required for the conversion.\n",
+                            " - All the maps are alreay up to date.\n" +
+                            " - The selected songs didn't have the standard mode, this is required for the conversion.\n",
                             "Nothing happened", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                 }
@@ -241,12 +251,50 @@ namespace Stx.ThreeSixtyfyer
 
         private void buttonUpdatePack_Click(object sender, EventArgs e)
         {
-            SetUI(false);
-            Jobs.UpdateExisting360Maps(Properties.Settings.Default.LastGeneratedMusicPackPath, (s) =>
+            Console.WriteLine(CustomSongsPath);
+
+            Jobs.FindSongsUnderPath(CustomSongsPath, (findSongsJob) =>
+            {
+                Jobs.Generate360Maps(new Jobs.Generate360ModesOptions()
+                {
+                    difficultyLevels = Enum.GetValues(typeof(BeatMapDifficultyLevel)).Cast<BeatMapDifficultyLevel>().ToArray(),
+                    destination = Properties.Settings.Default.LastGeneratedMusicPackPath,
+                    toGenerateFor = findSongsJob.result.beatMaps
+                }, (updateJob) =>
+                {
+                    if (updateJob.result.mapsChanged > 0)
+                    {
+                        MessageBox.Show($"{updateJob.result.mapsChanged} different levels are up to date with the latest generator version.",
+                            "Completed!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        if (updateJob.exceptions.Count > 0)
+                        {
+                            StringBuilder str = new StringBuilder();
+                            for (int i = 0; i < updateJob.exceptions.Count && i < 10; i++)
+                                str.AppendLine(updateJob.exceptions[i].Message);
+                            if (updateJob.exceptions.Count > 10)
+                                str.AppendLine($"\nAnd {updateJob.exceptions.Count - 10} more...");
+
+                            MessageBox.Show(str.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else
+                        {
+                            MessageBox.Show($"All levels are already up to date!",
+                                "Nothing happened", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
+                    }
+
+                    BeginInvoke(new MethodInvoker(() => SetUI(true)));
+                });
+            });
+
+            /*Jobs.UpdateExisting360Maps(Properties.Settings.Default.LastGeneratedMusicPackPath, (s) =>
             {
                 MessageBox.Show($"{s.result.mapsUpdated} generated maps are up to date now.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 SetUI(true);
-            });
+            });*/
         }
 
         private void toolStripStatusLabel2_Click(object sender, EventArgs e)

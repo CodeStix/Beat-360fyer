@@ -47,7 +47,7 @@ namespace Stx.ThreeSixtyfyer
                 Text = "Update Music Pack",
                 ButtonType = ButtonType.Custom,
                 Enabled = !string.IsNullOrEmpty(Properties.Settings.Default.LastGeneratedMusicPackPath),
-                CommandLinkNote = "Update the previously generated music pack, generate a mode in the pack for all new imported songs."
+                CommandLinkNote = "Update the previously generated music pack, generate modes for newly imported songs."
             });
             dialog.Buttons.Add(new TaskDialogButton()
             {

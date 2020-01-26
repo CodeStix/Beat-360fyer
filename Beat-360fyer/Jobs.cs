@@ -165,7 +165,7 @@ namespace Stx.ThreeSixtyfyer
                 if (job.result.cancelled)
                     return;
 
-                if (BeatMapGenerator.EnsureUpdated360Mode(mapPaths[i]))
+                if (BeatMapGenerator.UpdateGenerated360Modes(mapPaths[i]))
                     job.result.mapsUpdated++;
 
                 job.result.mapsIterated++;

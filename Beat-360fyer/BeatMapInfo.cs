@@ -139,16 +139,6 @@ namespace Stx.ThreeSixtyfyer
                 });
         }
 
-        /*public void Set360Generator(BeatMap360Generator generator)
-        {
-            if (customData == null)
-                customData = new BeatMapInfoCustomData();
-            if (customData.generator360 == null)
-                customData.generator360 = new BeatMap360GeneratorConfig();
-            customData.generator360.settings = generator.Settings;
-            customData.generator360.version = generator.Version;
-        }*/
-
         public override string ToString()
         {
             return string.IsNullOrEmpty(songAuthorName) ? songName : $"{songName} - {songAuthorName}";
@@ -164,8 +154,6 @@ namespace Stx.ThreeSixtyfyer
         public string customEnvironmentHash;
         [JsonProperty("_contributors", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<BeatMapContributor> contributors;
-        /*[JsonProperty("_generator360", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public BeatMapCustomData360GeneratorSettings generator360;*/
     }
 
     [Serializable]
