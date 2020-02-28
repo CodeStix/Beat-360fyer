@@ -58,5 +58,17 @@ namespace Stx.ThreeSixtyfyer.Properties {
                 this["LastGeneratedMusicPackPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RememberPathExport {
+            get {
+                return ((string)(this["RememberPathExport"]));
+            }
+            set {
+                this["RememberPathExport"] = value;
+            }
+        }
     }
 }

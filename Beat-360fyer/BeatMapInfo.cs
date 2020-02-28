@@ -166,9 +166,9 @@ namespace Stx.ThreeSixtyfyer
         [JsonProperty("_originalMapLocation")]
         public string originalMapLocation;
         [JsonProperty("_difficulties")]
-        public BeatMapDifficultyLevel[] difficulties;
+        public HashSet<BeatMapDifficultyLevel> difficulties;
 
-        public static BeatMap360GeneratorConfig FromGenerator(BeatMap360Generator generator, string originalMapLocation, BeatMapDifficultyLevel[] difficulties)
+        public static BeatMap360GeneratorConfig FromGenerator(BeatMap360Generator generator, string originalMapLocation, HashSet<BeatMapDifficultyLevel> difficulties)
         {
             return new BeatMap360GeneratorConfig()
             {
@@ -182,6 +182,16 @@ namespace Stx.ThreeSixtyfyer
         public void SaveToFile(string file)
         {
             File.WriteAllText(file, JsonConvert.SerializeObject(this));
+        }
+
+        public bool HasDifficulties(IReadOnlyCollection<BeatMapDifficultyLevel> all)
+        {
+            foreach (BeatMapDifficultyLevel diff in all)
+            {
+                if (!difficulties.Contains(diff))
+                    return false;
+            }
+            return true;
         }
 
         public static BeatMap360GeneratorConfig FromFile(string file)
@@ -225,6 +235,8 @@ namespace Stx.ThreeSixtyfyer
         public float noteJumpStartBeatOffset;
         [JsonProperty("_customData", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public object customData;
+
+        public static IEnumerable<BeatMapDifficultyLevel> AllLevels => Enum.GetValues(typeof(BeatMapDifficultyLevel)).Cast<BeatMapDifficultyLevel>();
 
         public BeatMap LoadBeatMap(string mapDirectory)
         {

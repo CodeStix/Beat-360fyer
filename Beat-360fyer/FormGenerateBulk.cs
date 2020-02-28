@@ -31,7 +31,6 @@ namespace Stx.ThreeSixtyfyer
         }
 
         private List<BeatMapInfo> beatMaps = new List<BeatMapInfo>();
-        private List<BeatMapDifficultyLevel> beatMapDifficulties = new List<BeatMapDifficultyLevel>((BeatMapDifficultyLevel[])Enum.GetValues(typeof(BeatMapDifficultyLevel)));
 
         private void SetUI(bool enabled)
         {
@@ -39,17 +38,19 @@ namespace Stx.ThreeSixtyfyer
             textBoxSearch.Enabled = enabled;
             groupBoxDifficulties.Enabled = enabled;
             buttonOpenMap.Enabled = enabled;
+            radioButtonExport.Enabled = enabled;
+            radioButtonModify.Enabled = enabled;
         }
 
         private void ButtonOpenMap_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
+            VistaFolderBrowserDialog folderBrowser = new VistaFolderBrowserDialog();
             folderBrowser.Description = "Select your BeatSaber_Data/CustomLevels directory or select a single custom level, " +
                 "it will look for *.dat files, so either will work.\n" +
                 "The selected path will be remembered.";
             folderBrowser.SelectedPath = Properties.Settings.Default.RememberPathBulk;//Directory.GetCurrentDirectory();
 
-            if (folderBrowser.ShowDialog() != DialogResult.OK)
+            if (!(folderBrowser.ShowDialog() ?? false))
                 return;
 
             textBoxMapPath.Text = folderBrowser.SelectedPath;
@@ -58,7 +59,7 @@ namespace Stx.ThreeSixtyfyer
             Properties.Settings.Default.RememberPathBulk = textBoxMapPath.Text;
             Properties.Settings.Default.Save();
 
-            this.Height = 572;
+            this.Height = 650;
 
             Jobs.FindSongsUnderPath(textBoxMapPath.Text, FindSongsUnderPath_Completed);
         }
@@ -94,15 +95,15 @@ namespace Stx.ThreeSixtyfyer
 
         private void ButtonConvert_Click(object sender, EventArgs e)
         {
-            ConvertCheckedSongs(new List<BeatMapDifficultyLevel>() { (BeatMapDifficultyLevel)comboBoxDifficulty.SelectedItem });
+            ConvertCheckedSongs(new HashSet<BeatMapDifficultyLevel>() { (BeatMapDifficultyLevel)comboBoxDifficulty.SelectedItem });
         }
 
         private void ButtonConvertAllDifficulties_Click(object sender, EventArgs e)
         {
-            ConvertCheckedSongs(beatMapDifficulties);
+            ConvertCheckedSongs(BeatMapDifficulty.AllLevels.ToHashSet());
         }
 
-        private void ConvertCheckedSongs(List<BeatMapDifficultyLevel> difficultyLevels)
+        private void ConvertCheckedSongs(HashSet<BeatMapDifficultyLevel> difficultyLevels)
         {
             if (listBoxMaps.CheckedItems.Count == 0)
             {
@@ -117,11 +118,27 @@ namespace Stx.ThreeSixtyfyer
             BeatMapInfo[] maps = new BeatMapInfo[listBoxMaps.CheckedItems.Count];
             listBoxMaps.CheckedItems.CopyTo(maps, 0);
 
+            string destination = null;
+            if (radioButtonExport.Checked)
+            {
+                VistaFolderBrowserDialog folderBrowser = new VistaFolderBrowserDialog();
+                folderBrowser.SelectedPath = Properties.Settings.Default.RememberPathExport;
+                folderBrowser.Description = "Select a root directory where all the generated 360 songs should be exported to. Each exported song will be placed in his own directory under this path.";
+            
+                if (!(folderBrowser.ShowDialog() ?? false))
+                    return;
+
+                destination = folderBrowser.SelectedPath;
+                Properties.Settings.Default.RememberPathExport = destination;
+                Properties.Settings.Default.Save();
+            }
+
             Jobs.Generate360ModesOptions options = new Jobs.Generate360ModesOptions()
             {
-                difficultyLevels = difficultyLevels.ToArray(),
-                replacePreviousModes = checkBoxReplace.Checked,
-                toGenerateFor = new List<BeatMapInfo>(maps)
+                difficultyLevels = difficultyLevels,
+                toGenerateFor = new List<BeatMapInfo>(maps),
+                destination = destination,
+                forceGenerate = checkBoxForceGenerate.Checked
             };
 
             Jobs.Generate360Maps(options, (job) =>
@@ -149,7 +166,7 @@ namespace Stx.ThreeSixtyfyer
                     {
                         MessageBox.Show($"No modes were added, this can be due to:\n" +
                             $" - The selected songs didn't have the standard mode, this is required for the conversion.\n" +
-                            $" - The selected songs already have the 360 modes, you can override this by checking 'replacing already existing 360 mode'.\n",
+                            $" - The selected songs already have the newest 360 mode generated; generation not needed for the second time.\n",
                             "Nothing happened", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                 }
@@ -230,7 +247,7 @@ namespace Stx.ThreeSixtyfyer
         {
             this.Height = 180;
 
-            foreach (BeatMapDifficultyLevel diff in beatMapDifficulties)
+            foreach (BeatMapDifficultyLevel diff in BeatMapDifficulty.AllLevels)
                 comboBoxDifficulty.Items.Add(diff);
         }
     }

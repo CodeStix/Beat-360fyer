@@ -29,7 +29,10 @@ namespace Stx.ThreeSixtyfyer
 
         private string CustomGenerated360LevelsPack => textBoxPackName.Text;
         private string CustomGenerated360LevelsPath => Path.Combine(textBoxBeatSaberPath.Text, "Beat Saber_Data", "Custom" + textBoxPackName.Text.Replace(" ", ""));
-        private string CustomSongsPath => Path.Combine(textBoxBeatSaberPath.Text, "Beat Saber_Data", "CustomLevels");  
+        private string CustomSongsPath => Path.Combine(textBoxBeatSaberPath.Text, "Beat Saber_Data", "CustomLevels");
+
+
+        
 
         private void ButtonSelectBeatSaber_Click(object sender, EventArgs e)
         {
@@ -41,7 +44,7 @@ namespace Stx.ThreeSixtyfyer
                 UseDescriptionForTitle = false
             };
 
-            if (!folderBrowser.ShowDialog().Value)
+            if (!(folderBrowser.ShowDialog() ?? false))
                 return;
 
             SetBeatSaberPath(folderBrowser.SelectedPath);
@@ -67,7 +70,7 @@ namespace Stx.ThreeSixtyfyer
             Properties.Settings.Default.Save();
 
             textBoxBeatSaberPath.Text = path;
-            this.Height = 590;
+            this.Height = 627;
 
             RefreshSongs();
         }
@@ -181,7 +184,7 @@ namespace Stx.ThreeSixtyfyer
                 Properties.Settings.Default.Save();
 
                 EnsureCustomPack(CustomGenerated360LevelsPack, CustomGenerated360LevelsPath, imagePath);
-                ConvertCheckedSongs(Enum.GetValues(typeof(BeatMapDifficultyLevel)).Cast<BeatMapDifficultyLevel>().ToList());
+                ConvertCheckedSongs(BeatMapDifficulty.AllLevels.ToHashSet());
             }
             catch(Exception ex)
             {
@@ -190,7 +193,7 @@ namespace Stx.ThreeSixtyfyer
             }
         }
 
-        private void ConvertCheckedSongs(List<BeatMapDifficultyLevel> difficultyLevels)
+        private void ConvertCheckedSongs(HashSet<BeatMapDifficultyLevel> difficultyLevels)
         {
             if (listSongs.CheckedItems.Count == 0)
             {
@@ -208,9 +211,10 @@ namespace Stx.ThreeSixtyfyer
 
             Jobs.Generate360ModesOptions options = new Jobs.Generate360ModesOptions()
             {
-                difficultyLevels = difficultyLevels.ToArray(),
+                difficultyLevels = difficultyLevels,
                 destination = CustomGenerated360LevelsPath,
-                toGenerateFor = new List<BeatMapInfo>(maps)
+                toGenerateFor = new List<BeatMapInfo>(maps),
+                forceGenerate = checkBoxForceGenerate.Checked
             };
 
             Jobs.Generate360Maps(options, (job) =>
@@ -249,6 +253,7 @@ namespace Stx.ThreeSixtyfyer
             });
         }
 
+
         private void buttonUpdatePack_Click(object sender, EventArgs e)
         {
             Console.WriteLine(CustomSongsPath);
@@ -257,9 +262,10 @@ namespace Stx.ThreeSixtyfyer
             {
                 Jobs.Generate360Maps(new Jobs.Generate360ModesOptions()
                 {
-                    difficultyLevels = Enum.GetValues(typeof(BeatMapDifficultyLevel)).Cast<BeatMapDifficultyLevel>().ToArray(),
+                    difficultyLevels = BeatMapDifficulty.AllLevels.ToHashSet(),
                     destination = Properties.Settings.Default.LastGeneratedMusicPackPath,
-                    toGenerateFor = findSongsJob.result.beatMaps
+                    toGenerateFor = findSongsJob.result.beatMaps,
+                    forceGenerate = checkBoxForceGenerate.Checked
                 }, (updateJob) =>
                 {
                     if (updateJob.result.mapsChanged > 0)

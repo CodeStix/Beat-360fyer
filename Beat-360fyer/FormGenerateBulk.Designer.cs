@@ -35,11 +35,9 @@
             this.comboBoxDifficulty = new System.Windows.Forms.ComboBox();
             this.buttonConvertAllDifficulties = new System.Windows.Forms.Button();
             this.groupBoxDifficulties = new System.Windows.Forms.GroupBox();
-            this.buttonGeneratorSettings = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.checkBoxReplace = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.buttonGeneratorSettings = new System.Windows.Forms.Button();
             this.listBoxMaps = new System.Windows.Forms.CheckedListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxSearch = new System.Windows.Forms.TextBox();
@@ -48,6 +46,9 @@
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.radioButtonModify = new System.Windows.Forms.RadioButton();
+            this.radioButtonExport = new System.Windows.Forms.RadioButton();
+            this.checkBoxForceGenerate = new System.Windows.Forms.CheckBox();
             this.groupBoxDifficulties.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -106,52 +107,18 @@
             // 
             // groupBoxDifficulties
             // 
-            this.groupBoxDifficulties.Controls.Add(this.buttonGeneratorSettings);
-            this.groupBoxDifficulties.Controls.Add(this.label5);
-            this.groupBoxDifficulties.Controls.Add(this.checkBoxReplace);
             this.groupBoxDifficulties.Controls.Add(this.label3);
             this.groupBoxDifficulties.Controls.Add(this.label2);
             this.groupBoxDifficulties.Controls.Add(this.comboBoxDifficulty);
             this.groupBoxDifficulties.Controls.Add(this.buttonConvertAllDifficulties);
             this.groupBoxDifficulties.Controls.Add(this.buttonConvert);
             this.groupBoxDifficulties.Enabled = false;
-            this.groupBoxDifficulties.Location = new System.Drawing.Point(11, 402);
+            this.groupBoxDifficulties.Location = new System.Drawing.Point(11, 479);
             this.groupBoxDifficulties.Name = "groupBoxDifficulties";
-            this.groupBoxDifficulties.Size = new System.Drawing.Size(479, 99);
+            this.groupBoxDifficulties.Size = new System.Drawing.Size(300, 99);
             this.groupBoxDifficulties.TabIndex = 5;
             this.groupBoxDifficulties.TabStop = false;
             this.groupBoxDifficulties.Text = "Generate modes";
-            // 
-            // buttonGeneratorSettings
-            // 
-            this.buttonGeneratorSettings.Enabled = false;
-            this.buttonGeneratorSettings.Location = new System.Drawing.Point(335, 66);
-            this.buttonGeneratorSettings.Name = "buttonGeneratorSettings";
-            this.buttonGeneratorSettings.Size = new System.Drawing.Size(122, 23);
-            this.buttonGeneratorSettings.TabIndex = 15;
-            this.buttonGeneratorSettings.Text = "Generator settings...";
-            this.buttonGeneratorSettings.UseVisualStyleBackColor = true;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.BackColor = System.Drawing.SystemColors.Control;
-            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label5.Location = new System.Drawing.Point(332, 17);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(48, 13);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "Settings:";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
-            // checkBoxReplace
-            // 
-            this.checkBoxReplace.Location = new System.Drawing.Point(335, 33);
-            this.checkBoxReplace.Name = "checkBoxReplace";
-            this.checkBoxReplace.Size = new System.Drawing.Size(118, 31);
-            this.checkBoxReplace.TabIndex = 13;
-            this.checkBoxReplace.Text = "Replace already existing 360 mode";
-            this.checkBoxReplace.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
@@ -176,6 +143,16 @@
             this.label2.TabIndex = 5;
             this.label2.Text = "Only for this difficulty:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // buttonGeneratorSettings
+            // 
+            this.buttonGeneratorSettings.Enabled = false;
+            this.buttonGeneratorSettings.Location = new System.Drawing.Point(325, 542);
+            this.buttonGeneratorSettings.Name = "buttonGeneratorSettings";
+            this.buttonGeneratorSettings.Size = new System.Drawing.Size(161, 24);
+            this.buttonGeneratorSettings.TabIndex = 15;
+            this.buttonGeneratorSettings.Text = "Generator settings...";
+            this.buttonGeneratorSettings.UseVisualStyleBackColor = true;
             // 
             // listBoxMaps
             // 
@@ -213,7 +190,7 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 511);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 589);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(504, 22);
             this.statusStrip1.TabIndex = 13;
@@ -254,11 +231,50 @@
             this.label6.Text = "Use (Ctrl+A) to select all and (Ctrl+D) to deselect all. Use the text input on to" +
     "p to search.";
             // 
+            // radioButtonModify
+            // 
+            this.radioButtonModify.AutoSize = true;
+            this.radioButtonModify.Checked = true;
+            this.radioButtonModify.Location = new System.Drawing.Point(11, 410);
+            this.radioButtonModify.Name = "radioButtonModify";
+            this.radioButtonModify.Size = new System.Drawing.Size(475, 30);
+            this.radioButtonModify.TabIndex = 15;
+            this.radioButtonModify.TabStop = true;
+            this.radioButtonModify.Text = "Modify maps directly, this will place the new difficulty files in the original \r\n" +
+    "map\'s directory and modify the info.dat file. (A backup of info.dat is created, " +
+    "named info.dat.bak)";
+            this.radioButtonModify.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonExport
+            // 
+            this.radioButtonExport.AutoSize = true;
+            this.radioButtonExport.Location = new System.Drawing.Point(12, 446);
+            this.radioButtonExport.Name = "radioButtonExport";
+            this.radioButtonExport.Size = new System.Drawing.Size(393, 17);
+            this.radioButtonExport.TabIndex = 16;
+            this.radioButtonExport.Text = "Export to location, the location will be asked for when you start the convertion." +
+    "\r\n";
+            this.radioButtonExport.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxForceGenerate
+            // 
+            this.checkBoxForceGenerate.AutoSize = true;
+            this.checkBoxForceGenerate.Location = new System.Drawing.Point(325, 506);
+            this.checkBoxForceGenerate.Name = "checkBoxForceGenerate";
+            this.checkBoxForceGenerate.Size = new System.Drawing.Size(167, 30);
+            this.checkBoxForceGenerate.TabIndex = 17;
+            this.checkBoxForceGenerate.Text = "Force generate\r\n(regenerates up-to-date maps)";
+            this.checkBoxForceGenerate.UseVisualStyleBackColor = true;
+            // 
             // FormGenerateBulk
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(504, 533);
+            this.ClientSize = new System.Drawing.Size(504, 611);
+            this.Controls.Add(this.checkBoxForceGenerate);
+            this.Controls.Add(this.buttonGeneratorSettings);
+            this.Controls.Add(this.radioButtonExport);
+            this.Controls.Add(this.radioButtonModify);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.statusStrip1);
@@ -296,14 +312,15 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBoxSearch;
-        private System.Windows.Forms.CheckBox checkBoxReplace;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button buttonGeneratorSettings;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.RadioButton radioButtonModify;
+        private System.Windows.Forms.RadioButton radioButtonExport;
+        private System.Windows.Forms.CheckBox checkBoxForceGenerate;
     }
 }
 

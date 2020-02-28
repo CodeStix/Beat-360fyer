@@ -83,6 +83,7 @@
       <DependentUpon>FormGeneratorSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="GitHubBasedUpdateCheck.cs" />
+    <Compile Include="HashSetExtensions.cs" />
     <Compile Include="IBeatMapGenerator.cs" />
     <Compile Include="Jobs.cs" />
     <Compile Include="BeatMapGenerator.cs" />

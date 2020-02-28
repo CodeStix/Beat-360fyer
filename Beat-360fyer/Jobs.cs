@@ -68,10 +68,11 @@ namespace Stx.ThreeSixtyfyer
 
         public struct Generate360ModesOptions
         {
-            public BeatMapDifficultyLevel[] difficultyLevels;
+            public HashSet<BeatMapDifficultyLevel> difficultyLevels;
             public List<BeatMapInfo> toGenerateFor;
-            public bool replacePreviousModes;
             public string destination;
+            public bool forceGenerate;
+            public BeatMap360GeneratorSettings generatorSettings;
         }
 
         public struct Generate360ModesResult
@@ -112,12 +113,12 @@ namespace Stx.ThreeSixtyfyer
 
                 if (string.IsNullOrEmpty(job.argument.destination))
                 {
-                    if (BeatMapGenerator.Generate360ModeAndOverwrite(info, job.argument.difficultyLevels, job.argument.replacePreviousModes))
+                    if (BeatMapGenerator.Generate360ModeAndOverwrite(info, job.argument.difficultyLevels, job.argument.forceGenerate, job.argument.generatorSettings))
                         job.result.mapsChanged++;
                 }
                 else
                 {
-                    if (BeatMapGenerator.Generate360ModeAndCopy(info, job.argument.destination, job.argument.difficultyLevels))
+                    if (BeatMapGenerator.Generate360ModeAndCopy(info, job.argument.destination, job.argument.difficultyLevels, job.argument.forceGenerate, job.argument.generatorSettings))
                         job.result.mapsChanged++;
                 }
 
@@ -131,6 +132,7 @@ namespace Stx.ThreeSixtyfyer
 
         #endregion
 
+        [Obsolete]
         public struct Update360ModesResult
         {
             public int mapsUpdated;
@@ -138,6 +140,7 @@ namespace Stx.ThreeSixtyfyer
             public bool cancelled;
         }
 
+        [Obsolete]
         public static void UpdateExisting360Maps(string dirContainingGeneratedMaps, WorkerJobCompleted<string, Update360ModesResult> completed)
         {
             ProgressDialog progressDialog = new ProgressDialog();
@@ -150,6 +153,7 @@ namespace Stx.ThreeSixtyfyer
             progressDialog.ShowDialog(null, new WorkerJob<string, Update360ModesResult>(progressDialog, dirContainingGeneratedMaps));
         }
 
+        [Obsolete]
         private static void UpdateExisting360Maps_DoWork(object sender, DoWorkEventArgs e)
         {
             WorkerJob<string, Update360ModesResult> job = (WorkerJob<string, Update360ModesResult>)e.Argument;

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGeneratePack));
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Songs", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Songs", System.Windows.Forms.HorizontalAlignment.Left);
             this.buttonSelectBeatSaber = new System.Windows.Forms.Button();
             this.textBoxBeatSaberPath = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -43,15 +43,16 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.label4 = new System.Windows.Forms.Label();
-            this.textBoxPackName = new System.Windows.Forms.TextBox();
             this.buttonUpdatePack = new System.Windows.Forms.Button();
+            this.checkBoxForceGenerate = new System.Windows.Forms.CheckBox();
+            this.textBoxPackName = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonSelectBeatSaber
             // 
-            this.buttonSelectBeatSaber.Location = new System.Drawing.Point(12, 71);
+            this.buttonSelectBeatSaber.Location = new System.Drawing.Point(12, 77);
             this.buttonSelectBeatSaber.Name = "buttonSelectBeatSaber";
             this.buttonSelectBeatSaber.Size = new System.Drawing.Size(155, 23);
             this.buttonSelectBeatSaber.TabIndex = 0;
@@ -61,7 +62,7 @@
             // 
             // textBoxBeatSaberPath
             // 
-            this.textBoxBeatSaberPath.Location = new System.Drawing.Point(173, 73);
+            this.textBoxBeatSaberPath.Location = new System.Drawing.Point(173, 79);
             this.textBoxBeatSaberPath.Name = "textBoxBeatSaberPath";
             this.textBoxBeatSaberPath.ReadOnly = true;
             this.textBoxBeatSaberPath.Size = new System.Drawing.Size(335, 20);
@@ -89,7 +90,7 @@
             // buttonGeneratorSettings
             // 
             this.buttonGeneratorSettings.Enabled = false;
-            this.buttonGeneratorSettings.Location = new System.Drawing.Point(386, 497);
+            this.buttonGeneratorSettings.Location = new System.Drawing.Point(386, 503);
             this.buttonGeneratorSettings.Name = "buttonGeneratorSettings";
             this.buttonGeneratorSettings.Size = new System.Drawing.Size(122, 23);
             this.buttonGeneratorSettings.TabIndex = 3;
@@ -100,7 +101,7 @@
             // 
             this.buttonGenerate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.buttonGenerate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonGenerate.Location = new System.Drawing.Point(367, 458);
+            this.buttonGenerate.Location = new System.Drawing.Point(367, 464);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(141, 33);
             this.buttonGenerate.TabIndex = 2;
@@ -115,12 +116,12 @@
             this.columnHeaderSongName,
             this.columnHeaderAuthor});
             this.listSongs.FullRowSelect = true;
-            listViewGroup3.Header = "Songs";
-            listViewGroup3.Name = "listViewGroup1";
+            listViewGroup1.Header = "Songs";
+            listViewGroup1.Name = "listViewGroup1";
             this.listSongs.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup3});
+            listViewGroup1});
             this.listSongs.HideSelection = false;
-            this.listSongs.Location = new System.Drawing.Point(12, 110);
+            this.listSongs.Location = new System.Drawing.Point(12, 116);
             this.listSongs.Name = "listSongs";
             this.listSongs.Size = new System.Drawing.Size(496, 342);
             this.listSongs.Sorting = System.Windows.Forms.SortOrder.Ascending;
@@ -142,7 +143,7 @@
             // label3
             // 
             this.label3.ForeColor = System.Drawing.Color.Gray;
-            this.label3.Location = new System.Drawing.Point(9, 455);
+            this.label3.Location = new System.Drawing.Point(9, 461);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(352, 65);
             this.label3.TabIndex = 7;
@@ -154,7 +155,7 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 529);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 566);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(521, 22);
             this.statusStrip1.TabIndex = 14;
@@ -174,23 +175,6 @@
             this.toolStripStatusLabel2.Text = "GitHub";
             this.toolStripStatusLabel2.Click += new System.EventHandler(this.toolStripStatusLabel2_Click);
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 503);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(64, 13);
-            this.label4.TabIndex = 16;
-            this.label4.Text = "Pack name:";
-            // 
-            // textBoxPackName
-            // 
-            this.textBoxPackName.Location = new System.Drawing.Point(82, 500);
-            this.textBoxPackName.Name = "textBoxPackName";
-            this.textBoxPackName.Size = new System.Drawing.Size(167, 20);
-            this.textBoxPackName.TabIndex = 17;
-            this.textBoxPackName.Text = "Generated 360 Levels";
-            // 
             // buttonUpdatePack
             // 
             this.buttonUpdatePack.Location = new System.Drawing.Point(321, 9);
@@ -201,14 +185,43 @@
             this.buttonUpdatePack.UseVisualStyleBackColor = true;
             this.buttonUpdatePack.Click += new System.EventHandler(this.buttonUpdatePack_Click);
             // 
+            // checkBoxForceGenerate
+            // 
+            this.checkBoxForceGenerate.AutoSize = true;
+            this.checkBoxForceGenerate.Location = new System.Drawing.Point(12, 529);
+            this.checkBoxForceGenerate.Name = "checkBoxForceGenerate";
+            this.checkBoxForceGenerate.Size = new System.Drawing.Size(167, 30);
+            this.checkBoxForceGenerate.TabIndex = 19;
+            this.checkBoxForceGenerate.Text = "Force generate\r\n(regenerates up-to-date maps)\r\n";
+            this.checkBoxForceGenerate.UseVisualStyleBackColor = true;
+            // 
+            // textBoxPackName
+            // 
+            this.textBoxPackName.Location = new System.Drawing.Point(82, 505);
+            this.textBoxPackName.MaxLength = 32;
+            this.textBoxPackName.Name = "textBoxPackName";
+            this.textBoxPackName.Size = new System.Drawing.Size(138, 20);
+            this.textBoxPackName.TabIndex = 20;
+            this.textBoxPackName.Text = "Generated 360 Levels";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(12, 508);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(64, 13);
+            this.label4.TabIndex = 21;
+            this.label4.Text = "Pack name:";
+            // 
             // FormGeneratePack
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(521, 551);
-            this.Controls.Add(this.buttonUpdatePack);
-            this.Controls.Add(this.textBoxPackName);
+            this.ClientSize = new System.Drawing.Size(521, 588);
             this.Controls.Add(this.label4);
+            this.Controls.Add(this.textBoxPackName);
+            this.Controls.Add(this.checkBoxForceGenerate);
+            this.Controls.Add(this.buttonUpdatePack);
             this.Controls.Add(this.buttonGeneratorSettings);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.label3);
@@ -246,8 +259,9 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBoxPackName;
         private System.Windows.Forms.Button buttonUpdatePack;
+        private System.Windows.Forms.CheckBox checkBoxForceGenerate;
+        private System.Windows.Forms.TextBox textBoxPackName;
+        private System.Windows.Forms.Label label4;
     }
 }

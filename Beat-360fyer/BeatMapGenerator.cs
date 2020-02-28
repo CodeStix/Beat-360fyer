@@ -13,8 +13,9 @@ namespace Stx.ThreeSixtyfyer
     {
         public static string ContributorImagePath { get; set; } = null;
 
-        public static bool Generate360ModeAndOverwrite(BeatMapInfo info, BeatMapDifficultyLevel[] difficulties, bool replaceExising360Mode = false, BeatMap360GeneratorSettings generatorSettings = null)
+        public static bool Generate360ModeAndOverwrite(BeatMapInfo info, IReadOnlyCollection<BeatMapDifficultyLevel> difficultyLevels, bool forceGenerate = false, BeatMap360GeneratorSettings generatorSettings = null)
         {
+            HashSet<BeatMapDifficultyLevel> difficulties = new HashSet<BeatMapDifficultyLevel>(difficultyLevels);
             info.CreateBackup();
 
             BeatMap360Generator generator = new BeatMap360Generator()
@@ -28,11 +29,12 @@ namespace Stx.ThreeSixtyfyer
             {
                 BeatMap360GeneratorConfig generatorConfig = BeatMap360GeneratorConfig.FromFile(generatorConfigFile);
 
-                saveNewInfo = !generatorConfig.difficulties.SequenceEqual(difficulties);
+                saveNewInfo = forceGenerate || !generatorConfig.HasDifficulties(difficulties);
                 if (generator.Version <= generatorConfig.version && !saveNewInfo)
                     return true; // Already up to date!
 
                 generator.Settings = generatorConfig.settings;
+                difficulties.AddRange(generatorConfig.difficulties);
             }
 
             int ok = 0;
@@ -43,7 +45,7 @@ namespace Stx.ThreeSixtyfyer
                     continue;
 
                 BeatMapDifficulty newDiff = BeatMapDifficulty.CopyFrom(standardDiff, "360Degree");
-                if (!info.AddGameModeDifficulty(newDiff, "360Degree", replaceExising360Mode))
+                if (!info.AddGameModeDifficulty(newDiff, "360Degree", true))
                     continue;
 
                 newDiff.SaveBeatMap(info.mapDirectoryPath, generator.FromNormal(standardDiff.LoadBeatMap(info.mapDirectoryPath)));
@@ -62,8 +64,9 @@ namespace Stx.ThreeSixtyfyer
             return true;
         }
 
-        public static bool Generate360ModeAndCopy(BeatMapInfo info, string destination, BeatMapDifficultyLevel[] difficulties, BeatMap360GeneratorSettings generatorSettings = null)
+        public static bool Generate360ModeAndCopy(BeatMapInfo info, string destination, IReadOnlyCollection<BeatMapDifficultyLevel> difficultyLevels, bool forceGenerate = false, BeatMap360GeneratorSettings generatorSettings = null)
         {
+            HashSet<BeatMapDifficultyLevel> difficulties = new HashSet<BeatMapDifficultyLevel>(difficultyLevels);
             string mapDestination = Path.Combine(destination, new DirectoryInfo(info.mapDirectoryPath).Name);
 
             BeatMap360Generator generator = new BeatMap360Generator()
@@ -77,11 +80,12 @@ namespace Stx.ThreeSixtyfyer
             {
                 BeatMap360GeneratorConfig generatorConfig = BeatMap360GeneratorConfig.FromFile(generatorConfigFile);
 
-                saveNewInfo = !generatorConfig.difficulties.SequenceEqual(difficulties);
+                saveNewInfo = forceGenerate || !generatorConfig.HasDifficulties(difficulties);
                 if (generator.Version <= generatorConfig.version && !saveNewInfo)
                     return true; // Already up to date!
 
                 generator.Settings = generatorConfig.settings;
+                difficulties.AddRange(generatorConfig.difficulties);
             }
 
             Directory.CreateDirectory(mapDestination);
@@ -119,6 +123,7 @@ namespace Stx.ThreeSixtyfyer
             return true;
         }
 
+        [Obsolete]
         public static bool UpdateGenerated360Modes(string existingModeMapLocation)
         {
             string generatorConfigFile = Path.Combine(existingModeMapLocation, "Generator.dat");
