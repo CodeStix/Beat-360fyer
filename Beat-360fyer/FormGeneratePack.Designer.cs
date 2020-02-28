@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGeneratePack));
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Songs", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Songs", System.Windows.Forms.HorizontalAlignment.Left);
             this.buttonSelectBeatSaber = new System.Windows.Forms.Button();
             this.textBoxBeatSaberPath = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -116,10 +116,10 @@
             this.columnHeaderSongName,
             this.columnHeaderAuthor});
             this.listSongs.FullRowSelect = true;
-            listViewGroup3.Header = "Songs";
-            listViewGroup3.Name = "listViewGroup1";
+            listViewGroup1.Header = "Songs";
+            listViewGroup1.Name = "listViewGroup1";
             this.listSongs.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup3});
+            listViewGroup1});
             this.listSongs.HideSelection = false;
             this.listSongs.Location = new System.Drawing.Point(12, 116);
             this.listSongs.Name = "listSongs";

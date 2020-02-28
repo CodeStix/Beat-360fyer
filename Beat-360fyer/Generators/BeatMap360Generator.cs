@@ -1,21 +1,25 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Stx.ThreeSixtyfyer
+namespace Stx.ThreeSixtyfyer.Generators
 {
     [Serializable]
     public class BeatMap360GeneratorSettings
     {
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum WallGeneratorMode
         {
             Disabled = 0,   // disable the builtin wall generator
             Enabled = 1     // enable the builtin wall generator
         }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum RemoveOriginalWallsMode
         {
             RemoveNotFun,   // remove the walls that are not fun in 360 mode, like walls thicker than 1 lane (default)
@@ -36,25 +40,26 @@ namespace Stx.ThreeSixtyfyer
     // [/ ] [ \] [\/] [  ] [/\] [\|] [\-] [|/] [-/]
     // [\ ] [ /] [  ] [/\] [\/] [-\] [|\] [/-] [/|]
 
-    public class BeatMap360Generator : IBeatMapGenerator<BeatMap360GeneratorSettings>
+    public class BeatMap360Generator : IBeatMapGenerator
     {
-        public int Version => 9;
+        public int Version => 10;
         public string Author => "CodeStix's 360fyer";
         public string GeneratedGameModeName => "360Degree";
-        public BeatMap360GeneratorSettings Settings { get; set; }
+        public object Settings { get; set; }
 
         public BeatMap FromStandard(BeatMap standardMap, float bpm, float timeOffset)
         {
+            BeatMap360GeneratorSettings settings = (BeatMap360GeneratorSettings)Settings;
             BeatMap map = new BeatMap(standardMap);
             if (map.notes.Count == 0)
                 return map;
 
-            if (Settings.originalWallsMode == BeatMap360GeneratorSettings.RemoveOriginalWallsMode.RemoveNotFun)
+            if (settings.originalWallsMode == BeatMap360GeneratorSettings.RemoveOriginalWallsMode.RemoveNotFun)
             {
                 // remove all thick walls, and walls in the middle of the playfield, these are not fun in 360
                 map.obstacles.RemoveAll((obst) => obst.type == 0 && (obst.width > 1 || obst.lineIndex == 1 || obst.lineIndex == 2));
             }
-            else if (Settings.originalWallsMode == BeatMap360GeneratorSettings.RemoveOriginalWallsMode.RemoveAll)
+            else if (settings.originalWallsMode == BeatMap360GeneratorSettings.RemoveOriginalWallsMode.RemoveAll)
             {
                 map.obstacles.Clear();
             }
@@ -62,7 +67,7 @@ namespace Stx.ThreeSixtyfyer
             float beatsPerSecond = bpm / 60f;
             float minTime = timeOffset;
             float firstNoteTime = map.notes[0].time;
-            float maxTime = map.notes.Last().time + 24f * Settings.frameLength; // will spin once on end
+            float maxTime = map.notes.Last().time + 24f * settings.frameLength; // will spin once on end
 
             List<BeatMapNote> GetNotes(float time, float futureTime) // <- look in the future for notes coming
             {
@@ -87,7 +92,7 @@ namespace Stx.ThreeSixtyfyer
                     float q = obst.time + 0.5f * obst.duration;
                     if (time < q) // cut front
                     {
-                        float frontCut = time + Settings.obstacleFrontCutoffSeconds * beatsPerSecond - obst.time;
+                        float frontCut = time + settings.obstacleFrontCutoffSeconds * beatsPerSecond - obst.time;
 #if DEBUG
                         Debug.Assert(frontCut >= 0f);
 #endif
@@ -96,7 +101,7 @@ namespace Stx.ThreeSixtyfyer
                     }
                     else // cut back
                     {
-                        float backCut = (obst.time + obst.duration) - (time - Settings.obstableBackCutoffSeconds * beatsPerSecond);
+                        float backCut = (obst.time + obst.duration) - (time - settings.obstableBackCutoffSeconds * beatsPerSecond);
 #if DEBUG
                         Debug.Assert(backCut >= 0f);
 #endif
@@ -109,7 +114,7 @@ namespace Stx.ThreeSixtyfyer
                 BeatMapNote nextNote = GetNextNote(time, lineIndex);
                 BeatMapObstacle nextObstacle = GetNextObstacle(time, lineIndex);
 
-                float duration = Math.Min(maxDuration, Math.Min(nextObstacle?.time - time - Settings.obstacleFrontCutoffSeconds * beatsPerSecond ?? float.MaxValue, nextNote?.time - time - Settings.obstacleFrontCutoffSeconds * beatsPerSecond ?? float.MaxValue));
+                float duration = Math.Min(maxDuration, Math.Min(nextObstacle?.time - time - settings.obstacleFrontCutoffSeconds * beatsPerSecond ?? float.MaxValue, nextNote?.time - time - settings.obstacleFrontCutoffSeconds * beatsPerSecond ?? float.MaxValue));
                 if (duration <= 0.05f * beatsPerSecond)
                     return;
 
@@ -153,34 +158,34 @@ namespace Stx.ThreeSixtyfyer
                     direction = -direction;
             }
 
-            for (float time = minTime; time < maxTime; time += Settings.frameLength)
+            for (float time = minTime; time < maxTime; time += settings.frameLength)
             {
-                IEnumerable<BeatMapObstacle> activeObstacles = map.obstacles.Where((obst) => time >= obst.time - Settings.obstacleFrontCutoffSeconds * beatsPerSecond && time <= obst.time + obst.duration + Settings.obstableBackCutoffSeconds * beatsPerSecond);
+                IEnumerable<BeatMapObstacle> activeObstacles = map.obstacles.Where((obst) => time >= obst.time - settings.obstacleFrontCutoffSeconds * beatsPerSecond && time <= obst.time + obst.duration + settings.obstableBackCutoffSeconds * beatsPerSecond);
                 IEnumerable<BeatMapObstacle> leftObstacles = activeObstacles.Where((obst) => obst.lineIndex <= 1 || obst.width >= 3);
                 IEnumerable<BeatMapObstacle> rightObstacles = activeObstacles.Where((obst) => obst.lineIndex >= 2 || obst.width >= 3);
 
                 // This function returns the amount the map should rotate and if a wall should be generated.
                 ValueTuple<int, bool> Rotate()
                 {
-                    List<BeatMapNote> notesInFrame = GetNotes(time, Settings.frameLength);
+                    List<BeatMapNote> notesInFrame = GetNotes(time, settings.frameLength);
                     List<BeatMapNote> notesInSecond = GetNotes(time, beatsPerSecond);
                     bool enableGoLeft =
-                        leftObstacles.All((obst) => time <= obst.time || time >= obst.time + obst.duration * Settings.activeWallMaySpinPercentage)
+                        leftObstacles.All((obst) => time <= obst.time || time >= obst.time + obst.duration * settings.activeWallMaySpinPercentage)
                         && !notesInSecond.Any((note) => note.type == 3 && note.lineIndex <= 1);
                     bool enableGoRight =
-                        rightObstacles.All((obst) => time <= obst.time || time >= obst.time + obst.duration * Settings.activeWallMaySpinPercentage)
+                        rightObstacles.All((obst) => time <= obst.time || time >= obst.time + obst.duration * settings.activeWallMaySpinPercentage)
                         && !notesInSecond.Any((note) => note.type == 3 && note.lineIndex >= 2);
-                    bool calm = notesInSecond.Count == 0 || notesInSecond.All((note) => Math.Abs(note.time - notesInSecond[0].time) < Settings.frameLength);
+                    bool calm = notesInSecond.Count == 0 || notesInSecond.All((note) => Math.Abs(note.time - notesInSecond[0].time) < settings.frameLength);
 
                     #region SPIN
 
                     if (notesInFrame.Count > 0)
                         allowSpin = true;
 
-                    bool shouldSpin = Settings.enableSpin
+                    bool shouldSpin = settings.enableSpin
                         && allowSpin
-                        && GetStartingObstacles(time, 24f * Settings.frameLength).Count == 0
-                        && GetNotes(time, 24f * Settings.frameLength).Count == 0;
+                        && GetStartingObstacles(time, 24f * settings.frameLength).Count == 0
+                        && GetNotes(time, 24f * settings.frameLength).Count == 0;
 
                     if (spinsRemaining > 0)
                     {
@@ -205,7 +210,7 @@ namespace Stx.ThreeSixtyfyer
 
                     #region OBSTACLE ROTATION
 
-                    List<BeatMapObstacle> obstaclesInFrame = GetStartingObstacles(time, Settings.frameLength);
+                    List<BeatMapObstacle> obstaclesInFrame = GetStartingObstacles(time, settings.frameLength);
                     if (obstaclesInFrame.Count == 1)
                     {
                         BeatMapObstacle obstacle = obstaclesInFrame[0];
@@ -243,9 +248,9 @@ namespace Stx.ThreeSixtyfyer
                     #region ONCE PER BEAT EFFECTS   
 
                     // This only activates one time per beat, not per frame
-                    if ((time - minTime) % Settings.beatLength == 0)
+                    if ((time - minTime) % settings.beatLength == 0)
                     {
-                        List<BeatMapNote> notesInBeat = GetNotes(time, Settings.beatLength);
+                        List<BeatMapNote> notesInBeat = GetNotes(time, settings.beatLength);
 
                         // Add movement for all direction notes, only if they are the only one in the beat
                         if (notesInBeat.Count > 0 && notesInBeat.All((note) => note.cutDirection == 8 && (note.type == 0 || note.type == 1)))
@@ -312,8 +317,8 @@ namespace Stx.ThreeSixtyfyer
                         noBeatRotateStreak = 0;
                     }
 
-                    List<BeatMapNote> notes = GetNotes(time, Settings.beatLength * beatTimeScalar);
-                    if (notes.Count > 0 && notes.All((note) => Math.Abs(note.time - notes[0].time) < Settings.frameLength))
+                    List<BeatMapNote> notes = GetNotes(time, settings.beatLength * beatTimeScalar);
+                    if (notes.Count > 0 && notes.All((note) => Math.Abs(note.time - notes[0].time) < settings.frameLength))
                     {
                         noBeatRotateStreak = 0;
                         if (beatTimeScalar < 1f)
@@ -358,18 +363,18 @@ namespace Stx.ThreeSixtyfyer
                 if (rotateAmount == 0 && !shouldGenerateWall)
                     continue;
 
-                bool generateWall = shouldGenerateWall && Settings.wallGenerator == BeatMap360GeneratorSettings.WallGeneratorMode.Enabled;
+                bool generateWall = shouldGenerateWall && settings.wallGenerator == BeatMap360GeneratorSettings.WallGeneratorMode.Enabled;
                 if (GetGoDirection(rotateAmount)) // direction > 0 : left
                 {
                     if (rotateAmount > 0)
                     {
                         CutOffWalls(time, leftObstacles); // cut off walls in the direction we will be going
-                        map.AddGoLeftEvent(generateWall ? time - Settings.frameLength : time, rotateAmount); // insert before this wall comes
+                        map.AddGoLeftEvent(generateWall ? time - settings.frameLength : time, rotateAmount); // insert before this wall comes
                     }
                     if (generateWall)
                     {
                         CutOffWalls(time, rightObstacles); // cut off walls in the place where we wish to generate
-                        TryGenerateWall(time - Settings.frameLength, 3, beatsPerSecond); // max wall duration of 1 second
+                        TryGenerateWall(time - settings.frameLength, 3, beatsPerSecond); // max wall duration of 1 second
                     }
                 }
                 else
@@ -377,12 +382,12 @@ namespace Stx.ThreeSixtyfyer
                     if (rotateAmount > 0)
                     {
                         CutOffWalls(time, rightObstacles); // cut off walls in the direction we will be going
-                        map.AddGoRightEvent(generateWall ? time - Settings.frameLength : time, rotateAmount);
+                        map.AddGoRightEvent(generateWall ? time - settings.frameLength : time, rotateAmount);
                     }
                     if (generateWall)
                     {
                         CutOffWalls(time, leftObstacles); // cut off walls in the place where we wish to generate
-                        TryGenerateWall(time - Settings.frameLength, 0, beatsPerSecond);
+                        TryGenerateWall(time - settings.frameLength, 0, beatsPerSecond);
                     }
                 }
             }

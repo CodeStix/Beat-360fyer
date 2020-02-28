@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Stx.ThreeSixtyfyer.Generators;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -160,21 +161,32 @@ namespace Stx.ThreeSixtyfyer
     public class BeatMapGeneratorConfig
     {
         [JsonProperty("_settings")]
-        public BeatMap360GeneratorSettings settings;
+        public object settings;
         [JsonProperty("_version")]
         public int version;
-        [JsonProperty("_originalMapLocation")]
-        public string originalMapLocation;
         [JsonProperty("_difficulties")]
         public HashSet<BeatMapDifficultyLevel> difficulties;
 
-        public static BeatMapGeneratorConfig FromGenerator(IBeatMapGenerator generator, string originalMapLocation, HashSet<BeatMapDifficultyLevel> difficulties)
+        public bool ShouldRegenerate(object newSettings, int newVersion)
+        {
+            if (newVersion > version)
+                return true;
+            if (JsonConvert.SerializeObject(newSettings) != JsonConvert.SerializeObject(settings)) // Slow should fix!
+                return true;
+            return false;
+        }
+
+        public bool ShouldSaveInfo(HashSet<BeatMapDifficultyLevel> newDifficulties)
+        {
+            return !HasDifficulties(newDifficulties);
+        }
+
+        public static BeatMapGeneratorConfig FromGenerator(IBeatMapGenerator generator, HashSet<BeatMapDifficultyLevel> difficulties)
         {
             return new BeatMapGeneratorConfig()
             {
-                //settings = generator.Settings,
+                settings = generator.Settings,
                 version = generator.Version,
-                originalMapLocation = originalMapLocation,
                 difficulties = difficulties
             };
         }

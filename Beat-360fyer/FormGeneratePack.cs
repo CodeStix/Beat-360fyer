@@ -1,4 +1,5 @@
 ﻿using Ookii.Dialogs.Wpf;
+using Stx.ThreeSixtyfyer.Generators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -119,15 +120,16 @@ namespace Stx.ThreeSixtyfyer
             document.Save(foldersFile);
         }
 
-        private void SetUI(bool enable)
+        private void SetUI(bool enabled)
         {
-            buttonGenerate.Enabled = enable;
-            buttonSelectBeatSaber.Enabled = enable;
-            textBoxBeatSaberPath.Enabled = enable;
-            listSongs.Enabled = enable;
-            buttonGeneratorSettings.Enabled = enable && false;
-            textBoxPackName.Enabled = enable;
-            buttonUpdatePack.Enabled = enable;
+            buttonGenerate.Enabled = enabled;
+            buttonSelectBeatSaber.Enabled = enabled;
+            textBoxBeatSaberPath.Enabled = enabled;
+            listSongs.Enabled = enabled;
+            buttonGeneratorSettings.Enabled = enabled;
+            textBoxPackName.Enabled = enabled;
+            buttonUpdatePack.Enabled = enabled;
+            checkBoxForceGenerate.Enabled = enabled;
         }
 
         private void ListSongs_KeyDown(object sender, KeyEventArgs e)
@@ -173,13 +175,14 @@ namespace Stx.ThreeSixtyfyer
                     throw new Exception($"The pack name '{textBoxPackName.Text}' is too short.");
                 if (!Regex.IsMatch(textBoxPackName.Text, "^[a-zA-Z0-9 ]+$"))
                     throw new Exception($"The pack name '{textBoxPackName.Text}' contains illegal characters, it should only contain A-Z and spaces.");
-                if (!File.Exists("360.png"))
-                    throw new Exception("The cover image '360.png' was not found in the current directory, please place the '360.png' next to this tool.");
+                //if (!File.Exists("360.png"))
+                //    throw new Exception("The cover image '360.png' was not found in the current directory, please place the '360.png' next to this tool.");
 
                 Directory.CreateDirectory(CustomGenerated360LevelsPath);
                 string imagePath = Path.Combine(CustomGenerated360LevelsPath, "cover.png");
-                if (!File.Exists(imagePath))
-                    File.Copy("360.png", imagePath, true);
+                Properties.Resources.PackThumbnail.Save(imagePath);
+                //if (!File.Exists(imagePath))
+                //    File.Copy("360.png", imagePath, true);
                 BeatMapGenerator.ContributorImagePath = imagePath;
 
                 Properties.Settings.Default.LastGeneratedMusicPackPath = CustomGenerated360LevelsPath;
@@ -314,7 +317,7 @@ namespace Stx.ThreeSixtyfyer
 
         private void buttonGeneratorSettings_Click(object sender, EventArgs e)
         {
-            new FormGeneratorSettings(new BeatMap360GeneratorSettings()).ShowDialog();
+            new FormGeneratorSettings(generator).ShowDialog();
         }
     }
 }

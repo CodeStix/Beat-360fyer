@@ -34,9 +34,6 @@
             this.buttonConvert = new System.Windows.Forms.Button();
             this.comboBoxDifficulty = new System.Windows.Forms.ComboBox();
             this.buttonConvertAllDifficulties = new System.Windows.Forms.Button();
-            this.groupBoxDifficulties = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.buttonGeneratorSettings = new System.Windows.Forms.Button();
             this.listBoxMaps = new System.Windows.Forms.CheckedListBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -49,7 +46,6 @@
             this.radioButtonModify = new System.Windows.Forms.RadioButton();
             this.radioButtonExport = new System.Windows.Forms.RadioButton();
             this.checkBoxForceGenerate = new System.Windows.Forms.CheckBox();
-            this.groupBoxDifficulties.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -76,9 +72,9 @@
             // 
             this.buttonConvert.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.buttonConvert.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonConvert.Location = new System.Drawing.Point(133, 35);
+            this.buttonConvert.Location = new System.Drawing.Point(328, 410);
             this.buttonConvert.Name = "buttonConvert";
-            this.buttonConvert.Size = new System.Drawing.Size(151, 23);
+            this.buttonConvert.Size = new System.Drawing.Size(158, 30);
             this.buttonConvert.TabIndex = 2;
             this.buttonConvert.Text = "Convert selected difficulty";
             this.buttonConvert.UseVisualStyleBackColor = false;
@@ -88,71 +84,32 @@
             // 
             this.comboBoxDifficulty.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDifficulty.FormattingEnabled = true;
-            this.comboBoxDifficulty.Location = new System.Drawing.Point(6, 36);
+            this.comboBoxDifficulty.Location = new System.Drawing.Point(328, 446);
             this.comboBoxDifficulty.Name = "comboBoxDifficulty";
-            this.comboBoxDifficulty.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxDifficulty.Size = new System.Drawing.Size(158, 21);
             this.comboBoxDifficulty.TabIndex = 3;
             // 
             // buttonConvertAllDifficulties
             // 
             this.buttonConvertAllDifficulties.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.buttonConvertAllDifficulties.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonConvertAllDifficulties.Location = new System.Drawing.Point(133, 64);
+            this.buttonConvertAllDifficulties.Location = new System.Drawing.Point(328, 473);
             this.buttonConvertAllDifficulties.Name = "buttonConvertAllDifficulties";
-            this.buttonConvertAllDifficulties.Size = new System.Drawing.Size(151, 23);
+            this.buttonConvertAllDifficulties.Size = new System.Drawing.Size(158, 30);
             this.buttonConvertAllDifficulties.TabIndex = 4;
             this.buttonConvertAllDifficulties.Text = "Convert all difficulties\r\n";
             this.buttonConvertAllDifficulties.UseVisualStyleBackColor = false;
             this.buttonConvertAllDifficulties.Click += new System.EventHandler(this.ButtonConvertAllDifficulties_Click);
             // 
-            // groupBoxDifficulties
-            // 
-            this.groupBoxDifficulties.Controls.Add(this.label3);
-            this.groupBoxDifficulties.Controls.Add(this.label2);
-            this.groupBoxDifficulties.Controls.Add(this.comboBoxDifficulty);
-            this.groupBoxDifficulties.Controls.Add(this.buttonConvertAllDifficulties);
-            this.groupBoxDifficulties.Controls.Add(this.buttonConvert);
-            this.groupBoxDifficulties.Enabled = false;
-            this.groupBoxDifficulties.Location = new System.Drawing.Point(11, 479);
-            this.groupBoxDifficulties.Name = "groupBoxDifficulties";
-            this.groupBoxDifficulties.Size = new System.Drawing.Size(300, 99);
-            this.groupBoxDifficulties.TabIndex = 5;
-            this.groupBoxDifficulties.TabStop = false;
-            this.groupBoxDifficulties.Text = "Generate modes";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.SystemColors.Control;
-            this.label3.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label3.Location = new System.Drawing.Point(6, 69);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(115, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "<All difficulties>";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.BackColor = System.Drawing.SystemColors.Control;
-            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label2.Location = new System.Drawing.Point(3, 17);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(106, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Only for this difficulty:";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
-            // 
             // buttonGeneratorSettings
             // 
-            this.buttonGeneratorSettings.Enabled = false;
-            this.buttonGeneratorSettings.Location = new System.Drawing.Point(325, 542);
+            this.buttonGeneratorSettings.Location = new System.Drawing.Point(349, 509);
             this.buttonGeneratorSettings.Name = "buttonGeneratorSettings";
-            this.buttonGeneratorSettings.Size = new System.Drawing.Size(161, 24);
+            this.buttonGeneratorSettings.Size = new System.Drawing.Size(137, 24);
             this.buttonGeneratorSettings.TabIndex = 15;
             this.buttonGeneratorSettings.Text = "Generator settings...";
             this.buttonGeneratorSettings.UseVisualStyleBackColor = true;
+            this.buttonGeneratorSettings.Click += new System.EventHandler(this.buttonGeneratorSettings_Click);
             // 
             // listBoxMaps
             // 
@@ -190,7 +147,7 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 589);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 543);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(504, 22);
             this.statusStrip1.TabIndex = 13;
@@ -237,29 +194,29 @@
             this.radioButtonModify.Checked = true;
             this.radioButtonModify.Location = new System.Drawing.Point(11, 410);
             this.radioButtonModify.Name = "radioButtonModify";
-            this.radioButtonModify.Size = new System.Drawing.Size(475, 30);
+            this.radioButtonModify.Size = new System.Drawing.Size(294, 43);
             this.radioButtonModify.TabIndex = 15;
             this.radioButtonModify.TabStop = true;
-            this.radioButtonModify.Text = "Modify maps directly, this will place the new difficulty files in the original \r\n" +
-    "map\'s directory and modify the info.dat file. (A backup of info.dat is created, " +
-    "named info.dat.bak)";
+            this.radioButtonModify.Text = "Modify maps directly, this will place the new difficulty files \r\nin the original " +
+    "map\'s directory and modify the info.dat file.\r\n(A backup of info.dat is created," +
+    " named info.dat.bak)";
             this.radioButtonModify.UseVisualStyleBackColor = true;
             // 
             // radioButtonExport
             // 
             this.radioButtonExport.AutoSize = true;
-            this.radioButtonExport.Location = new System.Drawing.Point(12, 446);
+            this.radioButtonExport.Location = new System.Drawing.Point(11, 459);
             this.radioButtonExport.Name = "radioButtonExport";
-            this.radioButtonExport.Size = new System.Drawing.Size(393, 17);
+            this.radioButtonExport.Size = new System.Drawing.Size(279, 30);
             this.radioButtonExport.TabIndex = 16;
-            this.radioButtonExport.Text = "Export to location, the location will be asked for when you start the convertion." +
-    "\r\n";
+            this.radioButtonExport.Text = "Export to location, the location will be asked for when \r\nyou start the convertio" +
+    "n.\r\n";
             this.radioButtonExport.UseVisualStyleBackColor = true;
             // 
             // checkBoxForceGenerate
             // 
             this.checkBoxForceGenerate.AutoSize = true;
-            this.checkBoxForceGenerate.Location = new System.Drawing.Point(325, 506);
+            this.checkBoxForceGenerate.Location = new System.Drawing.Point(11, 503);
             this.checkBoxForceGenerate.Name = "checkBoxForceGenerate";
             this.checkBoxForceGenerate.Size = new System.Drawing.Size(167, 30);
             this.checkBoxForceGenerate.TabIndex = 17;
@@ -270,18 +227,20 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(504, 611);
+            this.ClientSize = new System.Drawing.Size(504, 565);
             this.Controls.Add(this.checkBoxForceGenerate);
             this.Controls.Add(this.buttonGeneratorSettings);
+            this.Controls.Add(this.comboBoxDifficulty);
             this.Controls.Add(this.radioButtonExport);
+            this.Controls.Add(this.buttonConvertAllDifficulties);
             this.Controls.Add(this.radioButtonModify);
+            this.Controls.Add(this.buttonConvert);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.textBoxSearch);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.listBoxMaps);
-            this.Controls.Add(this.groupBoxDifficulties);
             this.Controls.Add(this.textBoxMapPath);
             this.Controls.Add(this.buttonOpenMap);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -290,8 +249,6 @@
             this.Name = "FormGenerateBulk";
             this.Text = "Beat-360fyer - A 360 level generator";
             this.Load += new System.EventHandler(this.FormGenerateBulk_Load);
-            this.groupBoxDifficulties.ResumeLayout(false);
-            this.groupBoxDifficulties.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -306,11 +263,8 @@
         private System.Windows.Forms.Button buttonConvert;
         private System.Windows.Forms.ComboBox comboBoxDifficulty;
         private System.Windows.Forms.Button buttonConvertAllDifficulties;
-        private System.Windows.Forms.GroupBox groupBoxDifficulties;
         private System.Windows.Forms.CheckedListBox listBoxMaps;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBoxSearch;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;

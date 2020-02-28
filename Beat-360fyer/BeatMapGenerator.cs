@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Stx.ThreeSixtyfyer.Generators;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,22 +14,23 @@ namespace Stx.ThreeSixtyfyer
     {
         public static string ContributorImagePath { get; set; } = null;
 
+        private const string GENERATOR_CONFIG_NAME = "Generator.dat";
+
         public static bool UseGeneratorAndOverwrite(IBeatMapGenerator generator, BeatMapInfo info, IReadOnlyCollection<BeatMapDifficultyLevel> difficultyLevels, bool forceGenerate = false)
         {
             HashSet<BeatMapDifficultyLevel> difficulties = new HashSet<BeatMapDifficultyLevel>(difficultyLevels);
             info.CreateBackup();
 
             bool saveNewInfo = true;
-            string generatorConfigFile = Path.Combine(info.mapDirectoryPath, "Generator.dat");
+            string generatorConfigFile = Path.Combine(info.mapDirectoryPath, GENERATOR_CONFIG_NAME);
             if (File.Exists(generatorConfigFile))
             {
                 BeatMapGeneratorConfig generatorConfig = BeatMapGeneratorConfig.FromFile(generatorConfigFile);
 
-                saveNewInfo = forceGenerate || !generatorConfig.HasDifficulties(difficulties);
-                if (generator.Version <= generatorConfig.version && !saveNewInfo)
+                saveNewInfo = generatorConfig.ShouldSaveInfo(difficulties);
+                if (!saveNewInfo && !forceGenerate && !generatorConfig.ShouldRegenerate(generator.Settings, generator.Version))
                     return true; // Already up to date!
 
-                //generator.Settings = generatorConfig.settings;
                 difficulties.AddRange(generatorConfig.difficulties);
             }
 
@@ -55,7 +57,7 @@ namespace Stx.ThreeSixtyfyer
                 info.SaveToFile(info.mapInfoPath);
             }
 
-            BeatMapGeneratorConfig.FromGenerator(generator, info.mapDirectoryPath, difficulties).SaveToFile(Path.Combine(info.mapDirectoryPath, "Generator.dat"));
+            BeatMapGeneratorConfig.FromGenerator(generator, difficulties).SaveToFile(Path.Combine(info.mapDirectoryPath, GENERATOR_CONFIG_NAME));
             return true;
         }
 
@@ -65,16 +67,15 @@ namespace Stx.ThreeSixtyfyer
             string mapDestination = Path.Combine(destination, new DirectoryInfo(info.mapDirectoryPath).Name);
 
             bool saveNewInfo = true;
-            string generatorConfigFile = Path.Combine(mapDestination, "Generator.dat");
+            string generatorConfigFile = Path.Combine(mapDestination, GENERATOR_CONFIG_NAME);
             if (File.Exists(generatorConfigFile))
             {
                 BeatMapGeneratorConfig generatorConfig = BeatMapGeneratorConfig.FromFile(generatorConfigFile);
 
-                saveNewInfo = forceGenerate || !generatorConfig.HasDifficulties(difficulties);
-                if (generator.Version <= generatorConfig.version && !saveNewInfo)
+                saveNewInfo = generatorConfig.ShouldSaveInfo(difficulties);
+                if (!saveNewInfo && !forceGenerate && !generatorConfig.ShouldRegenerate(generator.Settings, generator.Version))
                     return true; // Already up to date!
 
-                //generator.Settings = generatorConfig.settings;
                 difficulties.AddRange(generatorConfig.difficulties);
             }
 
@@ -109,11 +110,11 @@ namespace Stx.ThreeSixtyfyer
                 info.SaveToFile(Path.Combine(mapDestination, "Info.dat"));
             }
 
-            BeatMapGeneratorConfig.FromGenerator(generator, info.mapDirectoryPath, difficulties).SaveToFile(Path.Combine(mapDestination, "Generator.dat"));
+            BeatMapGeneratorConfig.FromGenerator(generator, difficulties).SaveToFile(Path.Combine(mapDestination, GENERATOR_CONFIG_NAME));
             return true;
         }
 
-        [Obsolete]
+        /*[Obsolete]
         public static bool UpdateGenerated360Modes(string existingModeMapLocation)
         {
             string generatorConfigFile = Path.Combine(existingModeMapLocation, "Generator.dat");
@@ -159,6 +160,6 @@ namespace Stx.ThreeSixtyfyer
             generatorConfig.version = generator.Version;
             generatorConfig.SaveToFile(generatorConfigFile);
             return true;
-        }
+        }*/
     }
 }

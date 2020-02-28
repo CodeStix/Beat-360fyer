@@ -61,7 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BeatMap.cs" />
-    <Compile Include="BeatMap360Generator.cs" />
+    <Compile Include="Generators\BeatMap360Generator.cs" />
     <Compile Include="BeatMapInfo.cs" />
     <Compile Include="FileEnumerator.cs" />
     <Compile Include="FormGeneratePack.cs">
@@ -82,6 +82,7 @@
     <Compile Include="FormGeneratorSettings.Designer.cs">
       <DependentUpon>FormGeneratorSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Generators\ExampleGenerator.cs" />
     <Compile Include="GitHubBasedUpdateCheck.cs" />
     <Compile Include="HashSetExtensions.cs" />
     <Compile Include="IBeatMapGenerator.cs" />
@@ -124,6 +125,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="360.png" />
     <Content Include="Everaldo-Starwars-Darth-Mauls-light-sabers.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

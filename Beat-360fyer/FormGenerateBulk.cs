@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Ookii.Dialogs.Wpf;
+using Stx.ThreeSixtyfyer.Generators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -45,6 +46,7 @@ namespace Stx.ThreeSixtyfyer
             buttonOpenMap.Enabled = enabled;
             radioButtonExport.Enabled = enabled;
             radioButtonModify.Enabled = enabled;
+            checkBoxForceGenerate.Enabled = enabled;
         }
 
         private void ButtonOpenMap_Click(object sender, EventArgs e)
@@ -250,6 +252,11 @@ namespace Stx.ThreeSixtyfyer
 
             foreach (BeatMapDifficultyLevel diff in BeatMapDifficulty.AllLevels)
                 comboBoxDifficulty.Items.Add(diff);
+        }
+
+        private void buttonGeneratorSettings_Click(object sender, EventArgs e)
+        {
+            new FormGeneratorSettings(generator).ShowDialog();
         }
     }
 }

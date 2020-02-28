@@ -12,6 +12,11 @@ namespace Stx.ThreeSixtyfyer
 {
     public static class Jobs
     {
+        public static ParallelOptions MultithreadingOptions => new ParallelOptions() 
+        { 
+            MaxDegreeOfParallelism = Environment.ProcessorCount
+        };
+
         #region Finding songs
 
         public struct FindSongsJobResult
@@ -99,8 +104,7 @@ namespace Stx.ThreeSixtyfyer
             WorkerJob<GenerateMapsOptions, GeneratorMapsResult> job = (WorkerJob<GenerateMapsOptions, GeneratorMapsResult>)e.Argument;
             e.Result = job;
 
-            ParallelOptions options = new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount };
-            Parallel.For(0, job.argument.toGenerateFor.Count, options, (i) => {
+            Parallel.For(0, job.argument.toGenerateFor.Count, MultithreadingOptions, (i) => {
 
                 if (job.employer.CancellationPending && !job.result.cancelled)
                     job.result.cancelled = true;
@@ -131,53 +135,5 @@ namespace Stx.ThreeSixtyfyer
         }
 
         #endregion
-
-        [Obsolete]
-        public struct Update360ModesResult
-        {
-            public int mapsUpdated;
-            public int mapsIterated;
-            public bool cancelled;
-        }
-
-        [Obsolete]
-        public static void UpdateExisting360Maps(string dirContainingGeneratedMaps, WorkerJobCompleted<string, Update360ModesResult> completed)
-        {
-            ProgressDialog progressDialog = new ProgressDialog();
-            progressDialog.ShowCancelButton = true;
-            progressDialog.WindowTitle = "Updating existing modes...";
-            progressDialog.UseCompactPathsForDescription = true;
-            progressDialog.DoWork += UpdateExisting360Maps_DoWork;
-            progressDialog.ShowTimeRemaining = true;
-            progressDialog.RunWorkerCompleted += (sender, e) => completed.Invoke((WorkerJob<string, Update360ModesResult>)e.Result); 
-            progressDialog.ShowDialog(null, new WorkerJob<string, Update360ModesResult>(progressDialog, dirContainingGeneratedMaps));
-        }
-
-        [Obsolete]
-        private static void UpdateExisting360Maps_DoWork(object sender, DoWorkEventArgs e)
-        {
-            WorkerJob<string, Update360ModesResult> job = (WorkerJob<string, Update360ModesResult>)e.Argument;
-            e.Result = job;
-
-            string[] mapPaths = Directory.GetDirectories(job.argument);
-
-            ParallelOptions options = new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount };
-            Parallel.For(0, mapPaths.Length, options, (i) => {
-
-                if (job.employer.CancellationPending && !job.result.cancelled)
-                    job.result.cancelled = true;
-                if (job.result.cancelled)
-                    return;
-
-                if (BeatMapGenerator.UpdateGenerated360Modes(mapPaths[i]))
-                    job.result.mapsUpdated++;
-
-                job.result.mapsIterated++;
-                job.Report((int)((float)job.result.mapsIterated / mapPaths.Length * 100f), mapPaths[i], $"{job.result.mapsIterated}/{mapPaths.Length} maps iterated. {job.result.mapsUpdated} got updated.");
-            });
-
-            if (job.result.cancelled)
-                job.exceptions.Add(new Exception("The generation process was cancelled."));
-        }
     }
 }
