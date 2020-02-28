@@ -64,39 +64,39 @@ namespace Stx.ThreeSixtyfyer
 
         #endregion // Finding songs
 
-        #region Generating 360 modes
+        #region Generating modes
 
-        public struct Generate360ModesOptions
+        public struct GenerateMapsOptions
         {
             public HashSet<BeatMapDifficultyLevel> difficultyLevels;
             public List<BeatMapInfo> toGenerateFor;
             public string destination;
             public bool forceGenerate;
-            public BeatMap360GeneratorSettings generatorSettings;
+            public IBeatMapGenerator generator;
         }
 
-        public struct Generate360ModesResult
+        public struct GeneratorMapsResult
         {
             public int mapsChanged;
             public int mapsIterated;
             public bool cancelled;
         }
 
-        public static void Generate360Maps(Generate360ModesOptions options, WorkerJobCompleted<Generate360ModesOptions, Generate360ModesResult> completed)
+        public static void GenerateMaps(GenerateMapsOptions options, WorkerJobCompleted<GenerateMapsOptions, GeneratorMapsResult> completed)
         {
             ProgressDialog progressDialog = new ProgressDialog();
             progressDialog.ShowCancelButton = true;
-            progressDialog.WindowTitle = "Generating modes...";
+            progressDialog.WindowTitle = $"Generating modes using the {options.generator.GeneratedGameModeName}-generator...";
             progressDialog.UseCompactPathsForDescription = true;
             progressDialog.DoWork += Generate360Maps_DoWork;
             progressDialog.ShowTimeRemaining = true;
-            progressDialog.RunWorkerCompleted += (sender, e) => completed.Invoke((WorkerJob<Generate360ModesOptions, Generate360ModesResult>)e.Result);
-            progressDialog.ShowDialog(null, new WorkerJob<Generate360ModesOptions, Generate360ModesResult>(progressDialog, options));
+            progressDialog.RunWorkerCompleted += (sender, e) => completed.Invoke((WorkerJob<GenerateMapsOptions, GeneratorMapsResult>)e.Result);
+            progressDialog.ShowDialog(null, new WorkerJob<GenerateMapsOptions, GeneratorMapsResult>(progressDialog, options));
         }
 
         private static void Generate360Maps_DoWork(object sender, DoWorkEventArgs e)
         {
-            WorkerJob<Generate360ModesOptions, Generate360ModesResult> job = (WorkerJob<Generate360ModesOptions, Generate360ModesResult>)e.Argument;
+            WorkerJob<GenerateMapsOptions, GeneratorMapsResult> job = (WorkerJob<GenerateMapsOptions, GeneratorMapsResult>)e.Argument;
             e.Result = job;
 
             ParallelOptions options = new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount };
@@ -113,12 +113,12 @@ namespace Stx.ThreeSixtyfyer
 
                 if (string.IsNullOrEmpty(job.argument.destination))
                 {
-                    if (BeatMapGenerator.Generate360ModeAndOverwrite(info, job.argument.difficultyLevels, job.argument.forceGenerate, job.argument.generatorSettings))
+                    if (BeatMapGenerator.UseGeneratorAndOverwrite(job.argument.generator, info, job.argument.difficultyLevels, job.argument.forceGenerate))
                         job.result.mapsChanged++;
                 }
                 else
                 {
-                    if (BeatMapGenerator.Generate360ModeAndCopy(info, job.argument.destination, job.argument.difficultyLevels, job.argument.forceGenerate, job.argument.generatorSettings))
+                    if (BeatMapGenerator.UseGeneratorAndCopy(job.argument.generator, info, job.argument.difficultyLevels, job.argument.destination, job.argument.forceGenerate))
                         job.result.mapsChanged++;
                 }
 

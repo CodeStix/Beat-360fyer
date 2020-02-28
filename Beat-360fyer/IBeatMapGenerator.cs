@@ -6,10 +6,19 @@ using System.Threading.Tasks;
 
 namespace Stx.ThreeSixtyfyer
 {
-    public interface IBeatMapGenerator<TSettings>
+    public interface IBeatMapGenerator
     {
         int Version { get; }
+        string GeneratedGameModeName { get; }
+        string Author { get; }
+        BeatMap FromStandard(BeatMap standard, float bpm, float timeOffset);
+    }
+
+    public interface IBeatMapGeneratorSettingsProvider
+    { }
+
+    public interface IBeatMapGenerator<TSettings> : IBeatMapGenerator, IBeatMapGeneratorSettingsProvider
+    {
         TSettings Settings { get; set; }
-        BeatMap FromNormal(BeatMap normal, float bpm, float timeOffset);
     }
 }

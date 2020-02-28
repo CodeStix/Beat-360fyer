@@ -30,7 +30,7 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.flowPanelSettings = new System.Windows.Forms.FlowLayoutPanel();
+            this.textBoxJson = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -52,21 +52,21 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "blah";
             // 
-            // flowPanelSettings
+            // textBoxJson
             // 
-            this.flowPanelSettings.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowPanelSettings.Location = new System.Drawing.Point(15, 47);
-            this.flowPanelSettings.Name = "flowPanelSettings";
-            this.flowPanelSettings.Size = new System.Drawing.Size(462, 381);
-            this.flowPanelSettings.TabIndex = 2;
-            this.flowPanelSettings.WrapContents = false;
+            this.textBoxJson.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxJson.Location = new System.Drawing.Point(12, 38);
+            this.textBoxJson.Multiline = true;
+            this.textBoxJson.Name = "textBoxJson";
+            this.textBoxJson.Size = new System.Drawing.Size(465, 400);
+            this.textBoxJson.TabIndex = 2;
             // 
             // FormGeneratorSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(489, 450);
-            this.Controls.Add(this.flowPanelSettings);
+            this.Controls.Add(this.textBoxJson);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "FormGeneratorSettings";
@@ -81,6 +81,6 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.FlowLayoutPanel flowPanelSettings;
+        private System.Windows.Forms.TextBox textBoxJson;
     }
 }

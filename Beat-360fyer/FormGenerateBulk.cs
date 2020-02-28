@@ -25,6 +25,11 @@ namespace Stx.ThreeSixtyfyer
 
     public partial class FormGenerateBulk : Form
     {
+        public IBeatMapGenerator generator = new BeatMap360Generator()
+        {
+            Settings = new BeatMap360GeneratorSettings()
+        }; 
+
         public FormGenerateBulk()
         {
             InitializeComponent();
@@ -133,15 +138,16 @@ namespace Stx.ThreeSixtyfyer
                 Properties.Settings.Default.Save();
             }
 
-            Jobs.Generate360ModesOptions options = new Jobs.Generate360ModesOptions()
+            Jobs.GenerateMapsOptions options = new Jobs.GenerateMapsOptions()
             {
                 difficultyLevels = difficultyLevels,
                 toGenerateFor = new List<BeatMapInfo>(maps),
                 destination = destination,
-                forceGenerate = checkBoxForceGenerate.Checked
+                forceGenerate = checkBoxForceGenerate.Checked,
+                generator = generator
             };
 
-            Jobs.Generate360Maps(options, (job) =>
+            Jobs.GenerateMaps(options, (job) =>
             {
                 if (job.result.mapsChanged > 0)
                 {
@@ -201,11 +207,6 @@ namespace Stx.ThreeSixtyfyer
         private void ButtonSelectNone_Click(object sender, EventArgs e)
         {
             SelectAll(false);
-        }
-
-        private void ButtonSelectAll_Click(object sender, EventArgs e)
-        {
-           
         }
 
         private void TextBoxMapPath_KeyDown(object sender, KeyEventArgs e)

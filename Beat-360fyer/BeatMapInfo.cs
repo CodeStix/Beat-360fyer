@@ -157,7 +157,7 @@ namespace Stx.ThreeSixtyfyer
     }
 
     [Serializable]
-    public class BeatMap360GeneratorConfig
+    public class BeatMapGeneratorConfig
     {
         [JsonProperty("_settings")]
         public BeatMap360GeneratorSettings settings;
@@ -168,11 +168,11 @@ namespace Stx.ThreeSixtyfyer
         [JsonProperty("_difficulties")]
         public HashSet<BeatMapDifficultyLevel> difficulties;
 
-        public static BeatMap360GeneratorConfig FromGenerator(BeatMap360Generator generator, string originalMapLocation, HashSet<BeatMapDifficultyLevel> difficulties)
+        public static BeatMapGeneratorConfig FromGenerator(IBeatMapGenerator generator, string originalMapLocation, HashSet<BeatMapDifficultyLevel> difficulties)
         {
-            return new BeatMap360GeneratorConfig()
+            return new BeatMapGeneratorConfig()
             {
-                settings = generator.Settings,
+                //settings = generator.Settings,
                 version = generator.Version,
                 originalMapLocation = originalMapLocation,
                 difficulties = difficulties
@@ -194,9 +194,9 @@ namespace Stx.ThreeSixtyfyer
             return true;
         }
 
-        public static BeatMap360GeneratorConfig FromFile(string file)
+        public static BeatMapGeneratorConfig FromFile(string file)
         {
-            return JsonConvert.DeserializeObject<BeatMap360GeneratorConfig>(File.ReadAllText(file));
+            return JsonConvert.DeserializeObject<BeatMapGeneratorConfig>(File.ReadAllText(file));
         }
     }
 

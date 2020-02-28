@@ -18,6 +18,11 @@ namespace Stx.ThreeSixtyfyer
 {
     public partial class FormGeneratePack : Form
     {
+        public IBeatMapGenerator generator = new BeatMap360Generator()
+        {
+            Settings = new BeatMap360GeneratorSettings()
+        };
+
         public bool updateMusicPackOnStart = false;
 
         public FormGeneratePack(bool updateMusicPackOnStart = false)
@@ -30,9 +35,6 @@ namespace Stx.ThreeSixtyfyer
         private string CustomGenerated360LevelsPack => textBoxPackName.Text;
         private string CustomGenerated360LevelsPath => Path.Combine(textBoxBeatSaberPath.Text, "Beat Saber_Data", "Custom" + textBoxPackName.Text.Replace(" ", ""));
         private string CustomSongsPath => Path.Combine(textBoxBeatSaberPath.Text, "Beat Saber_Data", "CustomLevels");
-
-
-        
 
         private void ButtonSelectBeatSaber_Click(object sender, EventArgs e)
         {
@@ -209,15 +211,16 @@ namespace Stx.ThreeSixtyfyer
             for (int i = 0; i < listSongs.CheckedItems.Count; i++)
                 maps[i] = (BeatMapInfo)listSongs.CheckedItems[i].Tag;
 
-            Jobs.Generate360ModesOptions options = new Jobs.Generate360ModesOptions()
+            Jobs.GenerateMapsOptions options = new Jobs.GenerateMapsOptions()
             {
                 difficultyLevels = difficultyLevels,
                 destination = CustomGenerated360LevelsPath,
                 toGenerateFor = new List<BeatMapInfo>(maps),
-                forceGenerate = checkBoxForceGenerate.Checked
+                forceGenerate = checkBoxForceGenerate.Checked,
+                generator = generator
             };
 
-            Jobs.Generate360Maps(options, (job) =>
+            Jobs.GenerateMaps(options, (job) =>
             {
                 if (job.result.mapsChanged > 0)
                 {
@@ -260,12 +263,13 @@ namespace Stx.ThreeSixtyfyer
 
             Jobs.FindSongsUnderPath(CustomSongsPath, (findSongsJob) =>
             {
-                Jobs.Generate360Maps(new Jobs.Generate360ModesOptions()
+                Jobs.GenerateMaps(new Jobs.GenerateMapsOptions()
                 {
                     difficultyLevels = BeatMapDifficulty.AllLevels.ToHashSet(),
                     destination = Properties.Settings.Default.LastGeneratedMusicPackPath,
                     toGenerateFor = findSongsJob.result.beatMaps,
-                    forceGenerate = checkBoxForceGenerate.Checked
+                    forceGenerate = checkBoxForceGenerate.Checked,
+                    generator = generator
                 }, (updateJob) =>
                 {
                     if (updateJob.result.mapsChanged > 0)
@@ -306,6 +310,11 @@ namespace Stx.ThreeSixtyfyer
         private void toolStripStatusLabel2_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/CodeStix/Beat-360fyer");
+        }
+
+        private void buttonGeneratorSettings_Click(object sender, EventArgs e)
+        {
+            new FormGeneratorSettings(new BeatMap360GeneratorSettings()).ShowDialog();
         }
     }
 }

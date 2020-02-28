@@ -28,7 +28,7 @@ namespace Stx.ThreeSixtyfyer
         public float obstableBackCutoffSeconds = 0.38f;    // x seconds will be cut off a wall's back if it is in activeWallMaySpinPercentage
         public float obstacleFrontCutoffSeconds = 0.18f;   // x seconds will be cut off a wall's front if it is in activeWallMaySpinPercentage
         public float activeWallMaySpinPercentage = 0.6f;   // the percentage (0f - 1f) of an obstacles duration from which rotation is enabled again (0.4f), and wall cutoff will be used
-        public bool enableSpin = false;                     // enable spin effect
+        public bool enableSpin = false;                    // enable spin effect
         public RemoveOriginalWallsMode originalWallsMode = RemoveOriginalWallsMode.RemoveNotFun;
         public WallGeneratorMode wallGenerator = WallGeneratorMode.Enabled;
     }
@@ -39,9 +39,11 @@ namespace Stx.ThreeSixtyfyer
     public class BeatMap360Generator : IBeatMapGenerator<BeatMap360GeneratorSettings>
     {
         public int Version => 9;
+        public string Author => "CodeStix's 360fyer";
+        public string GeneratedGameModeName => "360Degree";
         public BeatMap360GeneratorSettings Settings { get; set; }
 
-        public BeatMap FromNormal(BeatMap standardMap, float bpm, float timeOffset)
+        public BeatMap FromStandard(BeatMap standardMap, float bpm, float timeOffset)
         {
             BeatMap map = new BeatMap(standardMap);
             if (map.notes.Count == 0)
