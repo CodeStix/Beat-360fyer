@@ -23,8 +23,6 @@ namespace Stx.ThreeSixtyfyer
             Keep            // do not remove any walls from the original map
         }
 
-        public float bpm = 130f;                           // change this to song bpm!
-        public float timeOffset = 0f;                      // the offset of the notes in beats
         public float frameLength = 1f / 16f;               // in beats (default 1f/16f), the length of each generator loop cycle in beats, per this of a beat, a single spin rotation is possible
         public float beatLength = 1f;                      // in beats (default 1f), how the generator should interpret each beats length
         public float obstableBackCutoffSeconds = 0.38f;    // x seconds will be cut off a wall's back if it is in activeWallMaySpinPercentage
@@ -33,12 +31,6 @@ namespace Stx.ThreeSixtyfyer
         public bool enableSpin = false;                     // enable spin effect
         public RemoveOriginalWallsMode originalWallsMode = RemoveOriginalWallsMode.RemoveNotFun;
         public WallGeneratorMode wallGenerator = WallGeneratorMode.Enabled;
-
-        public BeatMap360GeneratorSettings(float bpm, float timeOffset)
-        {
-            this.bpm = bpm;
-            this.timeOffset = timeOffset;
-        }
     }
 
     // [/ ] [ \] [\/] [  ] [/\] [\|] [\-] [|/] [-/]
@@ -46,10 +38,10 @@ namespace Stx.ThreeSixtyfyer
 
     public class BeatMap360Generator : IBeatMapGenerator<BeatMap360GeneratorSettings>
     {
-        public int Version => 8;
+        public int Version => 9;
         public BeatMap360GeneratorSettings Settings { get; set; }
 
-        public BeatMap FromNormal(BeatMap standardMap)
+        public BeatMap FromNormal(BeatMap standardMap, float bpm, float timeOffset)
         {
             BeatMap map = new BeatMap(standardMap);
             if (map.notes.Count == 0)
@@ -65,8 +57,8 @@ namespace Stx.ThreeSixtyfyer
                 map.obstacles.Clear();
             }
 
-            float beatsPerSecond = Settings.bpm / 60f;
-            float minTime = Settings.timeOffset;
+            float beatsPerSecond = bpm / 60f;
+            float minTime = timeOffset;
             float firstNoteTime = map.notes[0].time;
             float maxTime = map.notes.Last().time + 24f * Settings.frameLength; // will spin once on end
 

@@ -10,6 +10,6 @@ namespace Stx.ThreeSixtyfyer
     {
         int Version { get; }
         TSettings Settings { get; set; }
-        BeatMap FromNormal(BeatMap normal);
+        BeatMap FromNormal(BeatMap normal, float bpm, float timeOffset);
     }
 }

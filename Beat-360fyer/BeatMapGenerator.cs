@@ -20,7 +20,7 @@ namespace Stx.ThreeSixtyfyer
 
             BeatMap360Generator generator = new BeatMap360Generator()
             {
-                Settings = generatorSettings ?? new BeatMap360GeneratorSettings(info.beatsPerMinute, info.songTimeOffset) {/* default generator settings */}
+                Settings = generatorSettings ?? new BeatMap360GeneratorSettings() {/* default generator settings */}
             };
 
             bool saveNewInfo = true;
@@ -48,7 +48,7 @@ namespace Stx.ThreeSixtyfyer
                 if (!info.AddGameModeDifficulty(newDiff, "360Degree", true))
                     continue;
 
-                newDiff.SaveBeatMap(info.mapDirectoryPath, generator.FromNormal(standardDiff.LoadBeatMap(info.mapDirectoryPath)));
+                newDiff.SaveBeatMap(info.mapDirectoryPath, generator.FromNormal(standardDiff.LoadBeatMap(info.mapDirectoryPath), info.beatsPerMinute, info.songTimeOffset));
                 ok++;
             }
             if (ok == 0)
@@ -71,7 +71,7 @@ namespace Stx.ThreeSixtyfyer
 
             BeatMap360Generator generator = new BeatMap360Generator()
             {
-                Settings = generatorSettings ?? new BeatMap360GeneratorSettings(info.beatsPerMinute, info.songTimeOffset) {/* default generator settings */}
+                Settings = generatorSettings ?? new BeatMap360GeneratorSettings() {/* default generator settings */}
             };
 
             bool saveNewInfo = true;
@@ -101,7 +101,7 @@ namespace Stx.ThreeSixtyfyer
                 if (!info.AddGameModeDifficulty(newDiff, "360Degree", true)) // always replace when making a copy
                     continue;
 
-                newDiff.SaveBeatMap(mapDestination, generator.FromNormal(standardDiff.LoadBeatMap(info.mapDirectoryPath)));
+                newDiff.SaveBeatMap(mapDestination, generator.FromNormal(standardDiff.LoadBeatMap(info.mapDirectoryPath), info.beatsPerMinute, info.songTimeOffset));
                 ok++;
             }
             if (ok == 0)
@@ -163,7 +163,7 @@ namespace Stx.ThreeSixtyfyer
                 if (difficulty == null || normalDifficulty == null)
                     continue;
 
-                difficulty.SaveBeatMap(existingModeMapLocation, generator.FromNormal(normalDifficulty.LoadBeatMap(generatorConfig.originalMapLocation)));
+                difficulty.SaveBeatMap(existingModeMapLocation, generator.FromNormal(normalDifficulty.LoadBeatMap(generatorConfig.originalMapLocation), originalMapInfo.beatsPerMinute, originalMapInfo.songTimeOffset));
             }
 
             generatorConfig.version = generator.Version;
