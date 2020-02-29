@@ -9,17 +9,9 @@ namespace Stx.ThreeSixtyfyer
     public interface IBeatMapGenerator
     {
         int Version { get; }
+        string Name { get; }
         string GeneratedGameModeName { get; }
-        string Author { get; }
         BeatMap FromStandard(BeatMap standard, float bpm, float timeOffset);
         object Settings { get; set; }
-    }
-
-    public static class IBeatMapGeneratorExtensions
-    {
-        public static TSettings GetSettings<TSettings>(this IBeatMapGenerator generator)
-        {
-            return (TSettings)generator;
-        }
     }
 }

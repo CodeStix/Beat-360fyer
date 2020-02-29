@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BeatMap.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Generators\BeatMap360Generator.cs" />
     <Compile Include="BeatMapInfo.cs" />
     <Compile Include="FileEnumerator.cs" />

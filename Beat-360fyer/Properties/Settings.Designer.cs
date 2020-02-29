@@ -22,53 +22,5 @@ namespace Stx.ThreeSixtyfyer.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string RememberPathPack {
-            get {
-                return ((string)(this["RememberPathPack"]));
-            }
-            set {
-                this["RememberPathPack"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string RememberPathBulk {
-            get {
-                return ((string)(this["RememberPathBulk"]));
-            }
-            set {
-                this["RememberPathBulk"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string LastGeneratedMusicPackPath {
-            get {
-                return ((string)(this["LastGeneratedMusicPackPath"]));
-            }
-            set {
-                this["LastGeneratedMusicPackPath"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string RememberPathExport {
-            get {
-                return ((string)(this["RememberPathExport"]));
-            }
-            set {
-                this["RememberPathExport"] = value;
-            }
-        }
     }
 }

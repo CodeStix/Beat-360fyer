@@ -248,7 +248,7 @@ namespace Stx.ThreeSixtyfyer
         [JsonProperty("_customData", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public object customData;
 
-        public static IEnumerable<BeatMapDifficultyLevel> AllLevels => Enum.GetValues(typeof(BeatMapDifficultyLevel)).Cast<BeatMapDifficultyLevel>();
+        public static IEnumerable<BeatMapDifficultyLevel> AllDiffultyLevels => Enum.GetValues(typeof(BeatMapDifficultyLevel)).Cast<BeatMapDifficultyLevel>();
 
         public BeatMap LoadBeatMap(string mapDirectory)
         {

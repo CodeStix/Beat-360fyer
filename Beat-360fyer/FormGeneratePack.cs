@@ -19,12 +19,9 @@ namespace Stx.ThreeSixtyfyer
 {
     public partial class FormGeneratePack : Form
     {
-        public IBeatMapGenerator generator = new BeatMap360Generator()
-        {
-            Settings = new BeatMap360GeneratorSettings()
-        };
-
-        public bool updateMusicPackOnStart = false;
+        private IBeatMapGenerator generator;
+        private ThreeSixtyfyerConfig config;
+        private bool updateMusicPackOnStart = false;
 
         public FormGeneratePack(bool updateMusicPackOnStart = false)
         {
@@ -41,7 +38,7 @@ namespace Stx.ThreeSixtyfyer
         {
             VistaFolderBrowserDialog folderBrowser = new VistaFolderBrowserDialog()
             {
-                SelectedPath = Properties.Settings.Default.RememberPathPack,
+                SelectedPath = config.packPath,
                 Description = "Please select the directory containing 'Beat Saber.exe'.",
                 ShowNewFolderButton = false,
                 UseDescriptionForTitle = false
@@ -69,8 +66,7 @@ namespace Stx.ThreeSixtyfyer
                 return;
             }
 
-            Properties.Settings.Default.RememberPathPack = path;
-            Properties.Settings.Default.Save();
+            config.packPath = path;
 
             textBoxBeatSaberPath.Text = path;
             this.Height = 627;
@@ -156,11 +152,25 @@ namespace Stx.ThreeSixtyfyer
         {
             this.Height = 165;
 
-            this.buttonUpdatePack.Visible = !string.IsNullOrEmpty(Properties.Settings.Default.LastGeneratedMusicPackPath);
-
-            if (!string.IsNullOrEmpty(Properties.Settings.Default.RememberPathPack))
+            if (!Config.TryLoad(out config))
             {
-                SetBeatSaberPath(Properties.Settings.Default.RememberPathPack);
+                MessageBox.Show("Could not load the config file, no permission? Maybe run as administrator?", "Could not load config.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            generator = BeatMapGenerator.GetGeneratorWithName(config.generatorToUse);
+            if (generator == null)
+            {
+                config.generatorToUse = BeatMapGenerator.DEFAULT_GENERATOR;
+                MessageBox.Show($"Generator with name {config.generatorToUse} not found. Setting to default generator {config.generatorToUse}.");
+                generator = BeatMapGenerator.GetGeneratorWithName(config.generatorToUse);
+            }
+            generator.Settings = config.generatorSettings;
+
+            this.buttonUpdatePack.Visible = !string.IsNullOrEmpty(config.lastGeneratedMusicPackPath);
+
+            if (!string.IsNullOrEmpty(config.packPath))
+            {
+                SetBeatSaberPath(config.packPath);
             }
 
             if (updateMusicPackOnStart)
@@ -175,21 +185,16 @@ namespace Stx.ThreeSixtyfyer
                     throw new Exception($"The pack name '{textBoxPackName.Text}' is too short.");
                 if (!Regex.IsMatch(textBoxPackName.Text, "^[a-zA-Z0-9 ]+$"))
                     throw new Exception($"The pack name '{textBoxPackName.Text}' contains illegal characters, it should only contain A-Z and spaces.");
-                //if (!File.Exists("360.png"))
-                //    throw new Exception("The cover image '360.png' was not found in the current directory, please place the '360.png' next to this tool.");
 
                 Directory.CreateDirectory(CustomGenerated360LevelsPath);
                 string imagePath = Path.Combine(CustomGenerated360LevelsPath, "cover.png");
                 Properties.Resources.PackThumbnail.Save(imagePath);
-                //if (!File.Exists(imagePath))
-                //    File.Copy("360.png", imagePath, true);
                 BeatMapGenerator.ContributorImagePath = imagePath;
 
-                Properties.Settings.Default.LastGeneratedMusicPackPath = CustomGenerated360LevelsPath;
-                Properties.Settings.Default.Save();
+                config.lastGeneratedMusicPackPath = CustomGenerated360LevelsPath;
 
                 EnsureCustomPack(CustomGenerated360LevelsPack, CustomGenerated360LevelsPath, imagePath);
-                ConvertCheckedSongs(BeatMapDifficulty.AllLevels.ToHashSet());
+                ConvertCheckedSongs(BeatMapDifficulty.AllDiffultyLevels.ToHashSet());
             }
             catch(Exception ex)
             {
@@ -262,14 +267,18 @@ namespace Stx.ThreeSixtyfyer
 
         private void buttonUpdatePack_Click(object sender, EventArgs e)
         {
-            Console.WriteLine(CustomSongsPath);
+            if (string.IsNullOrEmpty(config.lastGeneratedMusicPackPath))
+            {
+                Console.WriteLine("Update pack button was pressed but nothing to update.");
+                return;
+            }
 
             Jobs.FindSongsUnderPath(CustomSongsPath, (findSongsJob) =>
             {
                 Jobs.GenerateMaps(new Jobs.GenerateMapsOptions()
                 {
-                    difficultyLevels = BeatMapDifficulty.AllLevels.ToHashSet(),
-                    destination = Properties.Settings.Default.LastGeneratedMusicPackPath,
+                    difficultyLevels = BeatMapDifficulty.AllDiffultyLevels.ToHashSet(),
+                    destination = config.lastGeneratedMusicPackPath,
                     toGenerateFor = findSongsJob.result.beatMaps,
                     forceGenerate = checkBoxForceGenerate.Checked,
                     generator = generator
@@ -277,7 +286,7 @@ namespace Stx.ThreeSixtyfyer
                 {
                     if (updateJob.result.mapsChanged > 0)
                     {
-                        MessageBox.Show($"{updateJob.result.mapsChanged} different levels are up to date with the latest generator version.",
+                        MessageBox.Show($"{updateJob.result.mapsChanged} different levels are up to date with the latest generator version. (Will include newly imported songs)",
                             "Completed!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
@@ -302,12 +311,6 @@ namespace Stx.ThreeSixtyfyer
                     BeginInvoke(new MethodInvoker(() => SetUI(true)));
                 });
             });
-
-            /*Jobs.UpdateExisting360Maps(Properties.Settings.Default.LastGeneratedMusicPackPath, (s) =>
-            {
-                MessageBox.Show($"{s.result.mapsUpdated} generated maps are up to date now.", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                SetUI(true);
-            });*/
         }
 
         private void toolStripStatusLabel2_Click(object sender, EventArgs e)
@@ -318,6 +321,13 @@ namespace Stx.ThreeSixtyfyer
         private void buttonGeneratorSettings_Click(object sender, EventArgs e)
         {
             new FormGeneratorSettings(generator).ShowDialog();
+            config.generatorToUse = generator.Name;
+            config.generatorSettings = generator.Settings;
+        }
+
+        private void FormGeneratePack_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            config.TrySave();
         }
     }
 }

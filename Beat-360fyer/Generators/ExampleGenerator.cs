@@ -8,8 +8,8 @@
     public class ExampleGenerator : IBeatMapGenerator
     {
         public int Version => 1;
+        public string Name => "CodeStix's Example Generator";
         public string GeneratedGameModeName => "90Degree";
-        public string Author => "CodeStix";
         public object Settings { get; set; }
 
         public BeatMap FromStandard(BeatMap standard, float bpm, float timeOffset)

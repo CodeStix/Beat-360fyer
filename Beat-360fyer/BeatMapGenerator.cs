@@ -13,8 +13,24 @@ namespace Stx.ThreeSixtyfyer
     public static class BeatMapGenerator
     {
         public static string ContributorImagePath { get; set; } = null;
+        public const string DEFAULT_GENERATOR = "CodeStix's 360fyer";
+        public const string GENERATOR_CONFIG_NAME = "Generator.dat";
 
-        private const string GENERATOR_CONFIG_NAME = "Generator.dat";
+        private static IEnumerable<Type> generatorTypes = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => typeof(IBeatMapGenerator).IsAssignableFrom(p) && !p.IsInterface);
+
+        public static IBeatMapGenerator GetGeneratorWithName(string name)
+        {
+            foreach(Type t in generatorTypes)
+            {
+                IBeatMapGenerator generator = (IBeatMapGenerator)Activator.CreateInstance(t);
+                if (string.Compare(name, generator.Name) == 0)
+                    return generator;
+            }
+
+            return null;
+        }
 
         public static bool UseGeneratorAndOverwrite(IBeatMapGenerator generator, BeatMapInfo info, IReadOnlyCollection<BeatMapDifficultyLevel> difficultyLevels, bool forceGenerate = false)
         {
@@ -53,7 +69,7 @@ namespace Stx.ThreeSixtyfyer
 
             if (saveNewInfo)
             {
-                info.AddContributor(generator.Author, generator.GeneratedGameModeName, ContributorImagePath);
+                info.AddContributor(generator.Name, generator.GeneratedGameModeName, ContributorImagePath);
                 info.SaveToFile(info.mapInfoPath);
             }
 
@@ -106,13 +122,17 @@ namespace Stx.ThreeSixtyfyer
                 if (File.Exists(coverImagePath))
                     File.Copy(coverImagePath, Path.Combine(mapDestination, info.coverImageFilename), true);
                 File.Copy(Path.Combine(info.mapDirectoryPath, info.songFilename), Path.Combine(mapDestination, info.songFilename), true);
-                info.AddContributor(generator.Author, generator.GeneratedGameModeName, ContributorImagePath);
+                info.AddContributor(generator.Name, generator.GeneratedGameModeName, ContributorImagePath);
                 info.SaveToFile(Path.Combine(mapDestination, "Info.dat"));
             }
 
             BeatMapGeneratorConfig.FromGenerator(generator, difficulties).SaveToFile(Path.Combine(mapDestination, GENERATOR_CONFIG_NAME));
             return true;
         }
+
+
+
+
 
         /*[Obsolete]
         public static bool UpdateGenerated360Modes(string existingModeMapLocation)

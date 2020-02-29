@@ -33,15 +33,10 @@ namespace Stx.ThreeSixtyfyer
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    Console.WriteLine(VersionFileUrl);
                     string redVersion = await client.GetStringAsync(VersionFileUrl);
                     Console.WriteLine("Current version: " + currentVersion);
                     Console.WriteLine("Red version: " + redVersion);
-
-                    if (SemVersion.Parse(redVersion) > currentVersion)
-                    {
-                        return true;
-                    }
+                    return SemVersion.Parse(redVersion) > currentVersion;
                 }
             }
             catch
@@ -49,7 +44,6 @@ namespace Stx.ThreeSixtyfyer
                 return false;
             }
 
-            return false;
         }
     }
 }

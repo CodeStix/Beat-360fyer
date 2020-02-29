@@ -75,7 +75,6 @@ namespace Stx.ThreeSixtyfyer
 
         private void buttonDefaults_Click(object sender, EventArgs e)
         {
-            //ConstructorInfo info = generator.Settings.GetType().GetConstructor(new Type[0]);
             generator.Settings = Activator.CreateInstance(generator.Settings.GetType());
             LoadSettings();
             Message("Restored settings to default! (not saved yet)", Color.Green);

@@ -20,6 +20,8 @@ namespace Stx.ThreeSixtyfyer
             //Application.Run(new FormGeneratorSettings(new BeatMap360GeneratorSettings(120f, 0f)));
             //return;
 
+            Config.TryLoad(out ThreeSixtyfyerConfig config);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -46,7 +48,7 @@ namespace Stx.ThreeSixtyfyer
             {
                 Text = "Update Music Pack",
                 ButtonType = ButtonType.Custom,
-                Enabled = !string.IsNullOrEmpty(Properties.Settings.Default.LastGeneratedMusicPackPath),
+                Enabled = !string.IsNullOrEmpty(config.lastGeneratedMusicPackPath),
                 CommandLinkNote = "Update the previously generated music pack, generate modes for newly imported songs."
             });
             dialog.Buttons.Add(new TaskDialogButton()

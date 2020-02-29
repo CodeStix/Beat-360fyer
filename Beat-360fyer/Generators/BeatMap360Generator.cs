@@ -43,7 +43,7 @@ namespace Stx.ThreeSixtyfyer.Generators
     public class BeatMap360Generator : IBeatMapGenerator
     {
         public int Version => 10;
-        public string Author => "CodeStix's 360fyer";
+        public string Name => "CodeStix's 360fyer";
         public string GeneratedGameModeName => "360Degree";
         public object Settings { get; set; }
 

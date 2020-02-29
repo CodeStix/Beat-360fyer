@@ -157,7 +157,7 @@
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(190, 17);
-            this.toolStripStatusLabel1.Text = "by Stijn Rogiest (CodeStix) 2019 (c)";
+            this.toolStripStatusLabel1.Text = "by Stijn Rogiest (CodeStix) 2020 (c)";
             // 
             // toolStripStatusLabel2
             // 
@@ -248,6 +248,7 @@
             this.MaximizeBox = false;
             this.Name = "FormGenerateBulk";
             this.Text = "Beat-360fyer - A 360 level generator";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormGenerateBulk_FormClosing);
             this.Load += new System.EventHandler(this.FormGenerateBulk_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();

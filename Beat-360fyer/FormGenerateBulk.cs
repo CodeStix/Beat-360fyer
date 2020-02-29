@@ -26,23 +26,19 @@ namespace Stx.ThreeSixtyfyer
 
     public partial class FormGenerateBulk : Form
     {
-        public IBeatMapGenerator generator = new BeatMap360Generator()
-        {
-            Settings = new BeatMap360GeneratorSettings()
-        }; 
+        private IBeatMapGenerator generator;
+        private ThreeSixtyfyerConfig config;
+        private List<BeatMapInfo> beatMaps = new List<BeatMapInfo>();
 
         public FormGenerateBulk()
         {
             InitializeComponent();
         }
 
-        private List<BeatMapInfo> beatMaps = new List<BeatMapInfo>();
-
         private void SetUI(bool enabled)
         {
             listBoxMaps.Enabled = enabled;
             textBoxSearch.Enabled = enabled;
-            groupBoxDifficulties.Enabled = enabled;
             buttonOpenMap.Enabled = enabled;
             radioButtonExport.Enabled = enabled;
             radioButtonModify.Enabled = enabled;
@@ -55,20 +51,24 @@ namespace Stx.ThreeSixtyfyer
             folderBrowser.Description = "Select your BeatSaber_Data/CustomLevels directory or select a single custom level, " +
                 "it will look for *.dat files, so either will work.\n" +
                 "The selected path will be remembered.";
-            folderBrowser.SelectedPath = Properties.Settings.Default.RememberPathBulk;//Directory.GetCurrentDirectory();
+            folderBrowser.SelectedPath = config.bulkPath;
 
             if (!(folderBrowser.ShowDialog() ?? false))
                 return;
 
-            textBoxMapPath.Text = folderBrowser.SelectedPath;
-            listBoxMaps.Items.Clear();
+            SetPath(folderBrowser.SelectedPath);
 
-            Properties.Settings.Default.RememberPathBulk = textBoxMapPath.Text;
-            Properties.Settings.Default.Save();
+            config.bulkPath = folderBrowser.SelectedPath;
+        }
+
+        private void SetPath(string path)
+        {
+            textBoxMapPath.Text = path;
+            listBoxMaps.Items.Clear();
 
             this.Height = 650;
 
-            Jobs.FindSongsUnderPath(textBoxMapPath.Text, FindSongsUnderPath_Completed);
+            Jobs.FindSongsUnderPath(path, FindSongsUnderPath_Completed);
         }
 
         private void FindSongsUnderPath_Completed(WorkerJob<string, Jobs.FindSongsJobResult> job)
@@ -107,7 +107,7 @@ namespace Stx.ThreeSixtyfyer
 
         private void ButtonConvertAllDifficulties_Click(object sender, EventArgs e)
         {
-            ConvertCheckedSongs(BeatMapDifficulty.AllLevels.ToHashSet());
+            ConvertCheckedSongs(BeatMapDifficulty.AllDiffultyLevels.ToHashSet());
         }
 
         private void ConvertCheckedSongs(HashSet<BeatMapDifficultyLevel> difficultyLevels)
@@ -129,15 +129,14 @@ namespace Stx.ThreeSixtyfyer
             if (radioButtonExport.Checked)
             {
                 VistaFolderBrowserDialog folderBrowser = new VistaFolderBrowserDialog();
-                folderBrowser.SelectedPath = Properties.Settings.Default.RememberPathExport;
+                folderBrowser.SelectedPath = config.exportPath;
                 folderBrowser.Description = "Select a root directory where all the generated 360 songs should be exported to. Each exported song will be placed in his own directory under this path.";
             
                 if (!(folderBrowser.ShowDialog() ?? false))
                     return;
 
                 destination = folderBrowser.SelectedPath;
-                Properties.Settings.Default.RememberPathExport = destination;
-                Properties.Settings.Default.Save();
+                config.exportPath = destination;
             }
 
             Jobs.GenerateMapsOptions options = new Jobs.GenerateMapsOptions()
@@ -250,13 +249,39 @@ namespace Stx.ThreeSixtyfyer
         {
             this.Height = 180;
 
-            foreach (BeatMapDifficultyLevel diff in BeatMapDifficulty.AllLevels)
+            if (!Config.TryLoad(out config))
+            {
+                MessageBox.Show("Could not load the config file, no permission? Maybe run as administrator?", "Could not load config.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            generator = BeatMapGenerator.GetGeneratorWithName(config.generatorToUse);
+            if (generator == null)
+            {
+                config.generatorToUse = BeatMapGenerator.DEFAULT_GENERATOR;
+                MessageBox.Show($"Generator with name {config.generatorToUse} not found. Setting to default generator {config.generatorToUse}.");
+                generator = BeatMapGenerator.GetGeneratorWithName(config.generatorToUse);
+            }
+            generator.Settings = config.generatorSettings;
+
+            foreach (BeatMapDifficultyLevel diff in BeatMapDifficulty.AllDiffultyLevels)
                 comboBoxDifficulty.Items.Add(diff);
+
+            if (!string.IsNullOrEmpty(config.bulkPath))
+            {
+                SetPath(config.bulkPath);
+            }
         }
 
         private void buttonGeneratorSettings_Click(object sender, EventArgs e)
         {
             new FormGeneratorSettings(generator).ShowDialog();
+            config.generatorToUse = generator.Name;
+            config.generatorSettings = generator.Settings;
+        }
+
+        private void FormGenerateBulk_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            config.TrySave();
         }
     }
 }
