@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Stx.ThreeSixtyfyer
 {
     [Serializable]
-    public class BeatMapInfo
+    public class BeatMapInfo : ICloneable<BeatMapInfo>
     {
         [JsonProperty("_version")]
         public string version;
@@ -127,8 +127,6 @@ namespace Stx.ThreeSixtyfyer
 
         public void AddContributor(string name, string role, string iconPath = "")
         {
-            if (customData == null)
-                customData = new BeatMapInfoCustomData();
             if (customData.contributors == null)
                 customData.contributors = new List<BeatMapContributor>();
             if (!customData.contributors.Any((cont) => cont.name == name))
@@ -144,10 +142,36 @@ namespace Stx.ThreeSixtyfyer
         {
             return string.IsNullOrEmpty(songAuthorName) ? songName : $"{songName} - {songAuthorName}";
         }
+
+        public BeatMapInfo Clone()
+        {
+            return new BeatMapInfo()
+            {
+                version = version,
+                songName = songName,
+                songSubName = songSubName,
+                songAuthorName = songAuthorName,
+                levelAuthorName = levelAuthorName,
+                beatsPerMinute = beatsPerMinute,
+                songTimeOffset = songTimeOffset,
+                shuffle = shuffle,
+                shufflePeriod = shufflePeriod,
+                previewStartTime = previewStartTime,
+                previewDuration = previewDuration,
+                songFilename = songFilename,
+                coverImageFilename = coverImageFilename,
+                environmentName = environmentName,
+                allDirectionsEnvironmentName = allDirectionsEnvironmentName,
+                difficultyBeatmapSets = new List<BeatMapDifficultySet>(difficultyBeatmapSets.Clone()),
+                customData = customData,
+                mapDirectoryPath = mapDirectoryPath,
+                mapInfoPath = mapInfoPath
+            };
+        }
     }
 
     [Serializable]
-    public class BeatMapInfoCustomData
+    public struct BeatMapInfoCustomData
     {
         [JsonProperty("_customEnvironment", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string customEnvironment;
@@ -232,16 +256,25 @@ namespace Stx.ThreeSixtyfyer
     }
 
     [Serializable]
-    public class BeatMapDifficultySet
+    public class BeatMapDifficultySet : ICloneable<BeatMapDifficultySet>
     {
         [JsonProperty("_beatmapCharacteristicName")]
         public string beatmapCharacteristicName;
         [JsonProperty("_difficultyBeatmaps")]
         public List<BeatMapDifficulty> difficultyBeatmaps;
+
+        public BeatMapDifficultySet Clone()
+        {
+            return new BeatMapDifficultySet()
+            {
+                beatmapCharacteristicName = beatmapCharacteristicName,
+                difficultyBeatmaps = new List<BeatMapDifficulty>(difficultyBeatmaps.Clone())
+            };
+        }
     }
 
     [Serializable]
-    public class BeatMapDifficulty
+    public class BeatMapDifficulty : ICloneable<BeatMapDifficulty>
     {
         [JsonProperty("_difficulty")]
         public string difficulty;
@@ -292,6 +325,19 @@ namespace Stx.ThreeSixtyfyer
                 noteJumpMovementSpeed = difficulty.noteJumpMovementSpeed,
                 noteJumpStartBeatOffset = difficulty.noteJumpStartBeatOffset,
                 customData = difficulty.customData
+            };
+        }
+
+        public BeatMapDifficulty Clone()
+        {
+            return new BeatMapDifficulty()
+            {
+                difficulty = difficulty,
+                difficultyRank = difficultyRank,
+                beatmapFilename = beatmapFilename,
+                noteJumpMovementSpeed = noteJumpMovementSpeed,
+                noteJumpStartBeatOffset = noteJumpStartBeatOffset,
+                customData = customData
             };
         }
     }

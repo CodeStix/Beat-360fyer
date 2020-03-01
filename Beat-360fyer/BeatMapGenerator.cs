@@ -50,6 +50,7 @@ namespace Stx.ThreeSixtyfyer
 
         public static Result UseGeneratorAndOverwrite(IBeatMapGenerator generator, BeatMapInfo info, IReadOnlyCollection<BeatMapDifficultyLevel> difficultyLevels, bool forceGenerate = false)
         {
+            info = info.Clone();
             var generatorInfo = generator.GetInformation();
             Result result = new Result();
             HashSet<BeatMapDifficultyLevel> difficulties = new HashSet<BeatMapDifficultyLevel>(difficultyLevels);
@@ -99,6 +100,7 @@ namespace Stx.ThreeSixtyfyer
 
         public static Result UseGeneratorAndCopy(IBeatMapGenerator generator, BeatMapInfo info, IReadOnlyCollection<BeatMapDifficultyLevel> difficultyLevels, string destination, bool forceGenerate = false)
         {
+            info = info.Clone();
             var generatorInfo = generator.GetInformation();
             Result result = new Result();
             HashSet<BeatMapDifficultyLevel> difficulties = new HashSet<BeatMapDifficultyLevel>(difficultyLevels);

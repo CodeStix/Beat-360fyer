@@ -87,6 +87,7 @@
     <Compile Include="GitHubBasedUpdateCheck.cs" />
     <Compile Include="HashSetExtensions.cs" />
     <Compile Include="IBeatMapGenerator.cs" />
+    <Compile Include="ICloneable.cs" />
     <Compile Include="Jobs.cs" />
     <Compile Include="BeatMapGenerator.cs" />
     <Compile Include="Program.cs" />
