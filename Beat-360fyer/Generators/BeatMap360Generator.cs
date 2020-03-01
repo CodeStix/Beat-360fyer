@@ -80,7 +80,7 @@ namespace Stx.ThreeSixtyfyer.Generators
     public class BeatMap360Generator : IBeatMapGenerator
     {
         public string GeneratedGameModeName => "360Degree";
-        public IBeatMapGeneratorSettings Settings { get; set; }
+        public IBeatMapGeneratorSettings Settings { get; set; } = new BeatMap360GeneratorSettings();
 
         public BeatMap FromStandard(BeatMap standardMap, float bpm, float timeOffset)
         {

@@ -261,7 +261,9 @@ namespace Stx.ThreeSixtyfyer
                 MessageBox.Show($"Generator with name {config.generatorToUse} not found. Setting to default generator {config.generatorToUse}.");
                 generator = BeatMapGenerator.GetGeneratorWithName(config.generatorToUse);
             }
-            generator.Settings = config.generatorSettings;
+            if (!config.generatorSettings.ContainsKey(config.generatorToUse))
+                config.generatorSettings.Add(config.generatorToUse, generator.Settings);
+            generator.Settings = config.generatorSettings[config.generatorToUse];
 
             foreach (BeatMapDifficultyLevel diff in BeatMapDifficulty.AllDiffultyLevels)
                 comboBoxDifficulty.Items.Add(diff);
@@ -275,8 +277,13 @@ namespace Stx.ThreeSixtyfyer
         private void buttonGeneratorSettings_Click(object sender, EventArgs e)
         {
             new FormGeneratorSettings(ref generator).ShowDialog();
-            config.generatorToUse = generator.GetInformation().Name;
-            config.generatorSettings = generator.Settings;
+            var info = generator.GetInformation();
+            config.generatorToUse = info.Name;
+
+            if (!config.generatorSettings.ContainsKey(info.Name))
+                config.generatorSettings.Add(info.Name, generator.Settings);
+            else
+                config.generatorSettings[info.Name] = generator.Settings;
         }
 
         private void FormGenerateBulk_FormClosing(object sender, FormClosingEventArgs e)

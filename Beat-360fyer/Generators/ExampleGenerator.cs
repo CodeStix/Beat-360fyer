@@ -39,7 +39,7 @@ namespace Stx.ThreeSixtyfyer.Generators
     public class ExampleGenerator : IBeatMapGenerator
     {
         public string GeneratedGameModeName => "90Degree";
-        public IBeatMapGeneratorSettings Settings { get; set; }
+        public IBeatMapGeneratorSettings Settings { get; set; } = new ExampleGeneratorSettings(); // Set the default settings
 
         public BeatMap FromStandard(BeatMap standard, float bpm, float timeOffset)
         {

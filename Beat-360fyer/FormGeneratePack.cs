@@ -164,17 +164,19 @@ namespace Stx.ThreeSixtyfyer
                 MessageBox.Show("Could not load the config file, no permission? Maybe run as administrator?", "Could not load config.", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            foreach (Type generatorType in BeatMapGenerator.GeneratorTypes)
-                comboBoxGenerator.Items.Add(generatorType.Name);
-
             generator = BeatMapGenerator.GetGeneratorWithName(config.generatorToUse);
             if (generator == null)
             {
-                MessageBox.Show($"Generator with name {config.generatorToUse} not found. Setting to default generator {BeatMapGenerator.DEFAULT_GENERATOR}.", "Unknown generator.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show($"Generator with name {config.generatorToUse} not found (found in config file). Setting to default generator {BeatMapGenerator.DEFAULT_GENERATOR}.", "Unknown generator.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 config.generatorToUse = BeatMapGenerator.DEFAULT_GENERATOR;
                 generator = BeatMapGenerator.GetGeneratorWithName(config.generatorToUse);
             }
-            generator.Settings = config.generatorSettings;
+            if (config.generatorSettings.ContainsKey(config.generatorToUse))
+                generator.Settings = config.generatorSettings[config.generatorToUse];
+
+            foreach (Type generatorType in BeatMapGenerator.GeneratorTypes)
+                comboBoxGenerator.Items.Add(BeatMapGenerator.GetGeneratorInfo(generatorType).Name);
+            comboBoxGenerator.SelectedItem = config.generatorToUse;
 
             UpdateGeneratorSettingsButton();
             buttonUpdatePack.Visible = !string.IsNullOrEmpty(config.lastGeneratedMusicPackPath) && !string.IsNullOrEmpty(config.lastGeneratedMusicPackSourcePath);
@@ -416,8 +418,12 @@ namespace Stx.ThreeSixtyfyer
         private void buttonGeneratorSettings_Click(object sender, EventArgs e)
         {
             new FormGeneratorSettings(ref generator).ShowDialog();
-            config.generatorToUse = generator.GetInformation().Name;
-            config.generatorSettings = generator.Settings;
+            var info = generator.GetInformation();
+            config.generatorToUse = info.Name;
+            if (!config.generatorSettings.ContainsKey(info.Name))
+                config.generatorSettings.Add(info.Name, generator.Settings);
+            else
+                config.generatorSettings[info.Name] = generator.Settings;
             UpdateGeneratorSettingsButton();
         }
 
@@ -447,6 +453,17 @@ namespace Stx.ThreeSixtyfyer
 
             buttonGeneratorSettings.BackColor = isDefault ? Color.White : Color.Yellow;
             buttonGeneratorSettings.Text = isDefault ? "Generator settings... (default)" : "Generator settings... (modified!)";
+        }
+
+        private void comboBoxGenerator_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string generatorName = (string)comboBoxGenerator.SelectedItem;
+            generator = BeatMapGenerator.GetGeneratorWithName(generatorName);
+#if DEBUG
+            Debug.Assert(generator != null);
+#endif
+            if (config.generatorSettings.ContainsKey(generatorName))
+                generator.Settings = config.generatorSettings[generatorName];
         }
     }
 }
