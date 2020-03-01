@@ -67,6 +67,7 @@
             this.textBoxJson.Name = "textBoxJson";
             this.textBoxJson.Size = new System.Drawing.Size(465, 357);
             this.textBoxJson.TabIndex = 2;
+            this.textBoxJson.TextChanged += new System.EventHandler(this.textBoxJson_TextChanged);
             this.textBoxJson.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxJson_KeyDown);
             // 
             // buttonSave
@@ -115,7 +116,7 @@
             this.buttonDefaults.Name = "buttonDefaults";
             this.buttonDefaults.Size = new System.Drawing.Size(131, 23);
             this.buttonDefaults.TabIndex = 7;
-            this.buttonDefaults.Text = "Set to default";
+            this.buttonDefaults.Text = "Revert default settings";
             this.buttonDefaults.UseVisualStyleBackColor = true;
             this.buttonDefaults.Click += new System.EventHandler(this.buttonDefaults_Click);
             // 

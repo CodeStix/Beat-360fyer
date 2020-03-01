@@ -164,6 +164,9 @@ namespace Stx.ThreeSixtyfyer
                 MessageBox.Show("Could not load the config file, no permission? Maybe run as administrator?", "Could not load config.", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+            foreach (Type generatorType in BeatMapGenerator.GeneratorTypes)
+                comboBoxGenerator.Items.Add(generatorType.Name);
+
             generator = BeatMapGenerator.GetGeneratorWithName(config.generatorToUse);
             if (generator == null)
             {
@@ -173,6 +176,7 @@ namespace Stx.ThreeSixtyfyer
             }
             generator.Settings = config.generatorSettings;
 
+            UpdateGeneratorSettingsButton();
             buttonUpdatePack.Visible = !string.IsNullOrEmpty(config.lastGeneratedMusicPackPath) && !string.IsNullOrEmpty(config.lastGeneratedMusicPackSourcePath);
 
             if (!string.IsNullOrEmpty(config.packPath))
@@ -204,10 +208,11 @@ namespace Stx.ThreeSixtyfyer
                     BeatMapGenerator.ContributorImagePath = imagePath;
 
                     EnsureCustomPack(textBoxPackName.Text, customGeneratedLevelsPath, imagePath);
-                    ConvertCheckedSongs(customGeneratedLevelsPath);
 
                     config.lastGeneratedMusicPackSourcePath = CustomSongsPath;
                     config.lastGeneratedMusicPackPath = customGeneratedLevelsPath;
+
+                    ConvertCheckedSongs(customGeneratedLevelsPath);
                 }
                 else if (radioButtonExport.Checked)
                 {
@@ -216,10 +221,11 @@ namespace Stx.ThreeSixtyfyer
                     folderBrowser.Description = "Select a root directory where all the generated 360 songs should be exported to. Each exported song will be placed in his own directory under this path.";
                     if (!(folderBrowser.ShowDialog() ?? false))
                         return;
-                    ConvertCheckedSongs(folderBrowser.SelectedPath);
 
                     config.lastGeneratedMusicPackSourcePath = CustomSongsPath;
                     config.lastGeneratedMusicPackPath = folderBrowser.SelectedPath;
+
+                    ConvertCheckedSongs(folderBrowser.SelectedPath);
                 }
                 else if (radioButtonModify.Checked)
                 {
@@ -228,6 +234,9 @@ namespace Stx.ThreeSixtyfyer
                         if (MessageBox.Show("Are you sure you want to modify maps directly in your BeatSaber/CustomLevels directory? This will break ScoreSaber submission on the selected maps.\nYou should create a music pack instead.", "Sure?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) != DialogResult.Yes)
                             return;
                     }
+
+                    config.lastGeneratedMusicPackSourcePath = null;
+                    config.lastGeneratedMusicPackPath = null;
 
                     ConvertCheckedSongs(null);
                 }
@@ -295,7 +304,7 @@ namespace Stx.ThreeSixtyfyer
                 }
                 else if (job.result.mapsUpToDate > 0)
                 {
-                    message.AppendLine("All the selected maps are already up to date. If you want to force generate modes, please check 'Force Generate' in the menu.");
+                    message.AppendLine("All the selected maps are already up to date. If you want to force mode generation, please check 'Force Generate' in the menu.");
                 }
                 else
                 {
@@ -337,18 +346,20 @@ namespace Stx.ThreeSixtyfyer
                 footer.Append($"No problems occured. ");
             }
 
-            message.AppendLine();
-            message.AppendLine($"{job.result.mapsIterated} maps iterated.");
-            message.AppendLine($"{job.result.mapsGenerated} maps generated.");
-            message.AppendLine($"{job.result.difficultiesGenerated} difficulties generated. ({string.Join(", ", job.argument.difficultyLevels)})");
+            StringBuilder stats = new StringBuilder();
+            stats.AppendLine($"{job.result.mapsIterated} maps iterated.");
+            stats.AppendLine($"{job.result.mapsGenerated} maps generated.");
+            stats.AppendLine($"{job.result.difficultiesGenerated} difficulties generated. ({string.Join(", ", job.argument.difficultyLevels)})");
             if (job.result.mapsUpToDate > 0)
-                message.AppendLine($"{job.result.mapsUpToDate} maps were already up to date.");
+                stats.AppendLine($"{job.result.mapsUpToDate} maps were already up to date.");
 
             TaskDialog dialog = new TaskDialog();
             dialog.WindowTitle = windowTitle;
             dialog.MainIcon = icon;
             dialog.Content = message.ToString();
             dialog.Footer = footer.ToString();
+            dialog.ExpandedByDefault = true;
+            dialog.ExpandedInformation = stats.ToString();
             dialog.Buttons.Add(new TaskDialogButton(ButtonType.Ok));
             if (job.exceptions.Count > 0)
             {
@@ -405,8 +416,9 @@ namespace Stx.ThreeSixtyfyer
         private void buttonGeneratorSettings_Click(object sender, EventArgs e)
         {
             new FormGeneratorSettings(ref generator).ShowDialog();
-            config.generatorToUse = generator.Name;
+            config.generatorToUse = generator.GetInformation().Name;
             config.generatorSettings = generator.Settings;
+            UpdateGeneratorSettingsButton();
         }
 
         private void FormGeneratePack_FormClosing(object sender, FormClosingEventArgs e)
@@ -431,7 +443,10 @@ namespace Stx.ThreeSixtyfyer
 
         private void UpdateGeneratorSettingsButton()
         {
+            bool isDefault = generator.Settings.IsDefault();
 
+            buttonGeneratorSettings.BackColor = isDefault ? Color.White : Color.Yellow;
+            buttonGeneratorSettings.Text = isDefault ? "Generator settings... (default)" : "Generator settings... (modified!)";
         }
     }
 }

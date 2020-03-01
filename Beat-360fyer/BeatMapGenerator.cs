@@ -20,13 +20,23 @@ namespace Stx.ThreeSixtyfyer
                 .SelectMany(s => s.GetTypes())
                 .Where(p => typeof(IBeatMapGenerator).IsAssignableFrom(p) && !p.IsInterface);
 
+        public static BeatMapGeneratorAttribute GetGeneratorInfo(Type generatorType)
+        {
+            var l = generatorType.GetCustomAttributes(typeof(BeatMapGeneratorAttribute), false);
+            if (l.Length == 0)
+                return null;
+            return (BeatMapGeneratorAttribute)l[0];
+        }
+
         public static IBeatMapGenerator GetGeneratorWithName(string name)
         {
             foreach(Type t in GeneratorTypes)
             {
-                IBeatMapGenerator generator = (IBeatMapGenerator)Activator.CreateInstance(t);
-                if (string.Compare(name, generator.Name) == 0)
-                    return generator;
+                var l = t.GetCustomAttributes(typeof(BeatMapGeneratorAttribute), false);
+                if (l.Length == 0)
+                    continue;
+                if (((BeatMapGeneratorAttribute)l[0]).Name == name)
+                    return (IBeatMapGenerator)Activator.CreateInstance(t);
             }
 
             return null;
@@ -40,6 +50,7 @@ namespace Stx.ThreeSixtyfyer
 
         public static Result UseGeneratorAndOverwrite(IBeatMapGenerator generator, BeatMapInfo info, IReadOnlyCollection<BeatMapDifficultyLevel> difficultyLevels, bool forceGenerate = false)
         {
+            var generatorInfo = generator.GetInformation();
             Result result = new Result();
             HashSet<BeatMapDifficultyLevel> difficulties = new HashSet<BeatMapDifficultyLevel>(difficultyLevels);
             info.CreateBackup();
@@ -51,7 +62,7 @@ namespace Stx.ThreeSixtyfyer
                 BeatMapGeneratorConfig generatorConfig = BeatMapGeneratorConfig.FromFile(generatorConfigFile);
 
                 saveNewInfo = generatorConfig.ShouldSaveInfo(difficulties);
-                if (!saveNewInfo && !forceGenerate && !generatorConfig.ShouldRegenerate(generator.Settings, generator.Version))
+                if (!saveNewInfo && !forceGenerate && !generatorConfig.ShouldRegenerate(generator.Settings, generatorInfo.Name, generatorInfo.Version))
                 {
                     result.alreadyUpToDate = true;
                     return result; // Already up to date!
@@ -78,7 +89,7 @@ namespace Stx.ThreeSixtyfyer
 
             if (saveNewInfo)
             {
-                info.AddContributor(generator.Name, generator.GeneratedGameModeName, ContributorImagePath);
+                info.AddContributor(generatorInfo.Name, generator.GeneratedGameModeName, ContributorImagePath);
                 info.SaveToFile(info.mapInfoPath);
             }
 
@@ -88,6 +99,7 @@ namespace Stx.ThreeSixtyfyer
 
         public static Result UseGeneratorAndCopy(IBeatMapGenerator generator, BeatMapInfo info, IReadOnlyCollection<BeatMapDifficultyLevel> difficultyLevels, string destination, bool forceGenerate = false)
         {
+            var generatorInfo = generator.GetInformation();
             Result result = new Result();
             HashSet<BeatMapDifficultyLevel> difficulties = new HashSet<BeatMapDifficultyLevel>(difficultyLevels);
             string mapDestination = Path.Combine(destination, new DirectoryInfo(info.mapDirectoryPath).Name);
@@ -99,7 +111,7 @@ namespace Stx.ThreeSixtyfyer
                 BeatMapGeneratorConfig generatorConfig = BeatMapGeneratorConfig.FromFile(generatorConfigFile);
 
                 saveNewInfo = generatorConfig.ShouldSaveInfo(difficulties);
-                if (!saveNewInfo && !forceGenerate && !generatorConfig.ShouldRegenerate(generator.Settings, generator.Version))
+                if (!saveNewInfo && !forceGenerate && !generatorConfig.ShouldRegenerate(generator.Settings, generatorInfo.Name, generatorInfo.Version))
                 {
                     result.alreadyUpToDate = true;
                     return result; // Already up to date!
@@ -134,7 +146,7 @@ namespace Stx.ThreeSixtyfyer
                 if (File.Exists(coverImagePath))
                     File.Copy(coverImagePath, Path.Combine(mapDestination, info.coverImageFilename), true);
                 File.Copy(Path.Combine(info.mapDirectoryPath, info.songFilename), Path.Combine(mapDestination, info.songFilename), true);
-                info.AddContributor(generator.Name, generator.GeneratedGameModeName, ContributorImagePath);
+                info.AddContributor(generatorInfo.Name, generator.GeneratedGameModeName, ContributorImagePath);
                 info.SaveToFile(Path.Combine(mapDestination, "Info.dat"));
             }
 

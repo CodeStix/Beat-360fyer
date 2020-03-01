@@ -54,6 +54,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.panelMusicPack = new System.Windows.Forms.Panel();
             this.labelBeatSaberStatus = new System.Windows.Forms.Label();
+            this.comboBoxGenerator = new System.Windows.Forms.ComboBox();
             this.statusStrip1.SuspendLayout();
             this.panelMusicPack.SuspendLayout();
             this.SuspendLayout();
@@ -99,21 +100,23 @@
             // 
             // buttonGeneratorSettings
             // 
-            this.buttonGeneratorSettings.Location = new System.Drawing.Point(367, 503);
+            this.buttonGeneratorSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.buttonGeneratorSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonGeneratorSettings.Location = new System.Drawing.Point(330, 503);
             this.buttonGeneratorSettings.Name = "buttonGeneratorSettings";
-            this.buttonGeneratorSettings.Size = new System.Drawing.Size(141, 23);
+            this.buttonGeneratorSettings.Size = new System.Drawing.Size(178, 23);
             this.buttonGeneratorSettings.TabIndex = 3;
             this.buttonGeneratorSettings.Text = "Generator settings...";
-            this.buttonGeneratorSettings.UseVisualStyleBackColor = true;
+            this.buttonGeneratorSettings.UseVisualStyleBackColor = false;
             this.buttonGeneratorSettings.Click += new System.EventHandler(this.buttonGeneratorSettings_Click);
             // 
             // buttonGenerate
             // 
             this.buttonGenerate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.buttonGenerate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonGenerate.Location = new System.Drawing.Point(367, 464);
+            this.buttonGenerate.Location = new System.Drawing.Point(330, 464);
             this.buttonGenerate.Name = "buttonGenerate";
-            this.buttonGenerate.Size = new System.Drawing.Size(141, 33);
+            this.buttonGenerate.Size = new System.Drawing.Size(178, 33);
             this.buttonGenerate.TabIndex = 2;
             this.buttonGenerate.Text = "Generate Music Pack\r\n";
             this.buttonGenerate.UseVisualStyleBackColor = false;
@@ -155,7 +158,7 @@
             this.label3.ForeColor = System.Drawing.Color.Gray;
             this.label3.Location = new System.Drawing.Point(9, 461);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(352, 47);
+            this.label3.Size = new System.Drawing.Size(315, 47);
             this.label3.TabIndex = 7;
             this.label3.Text = "Tip: use shift to select multiple items, then use space to check or uncheck them." +
     "\r\nUse (Ctrl+A) to select all songs and (Ctrl+D) to deselect all songs.";
@@ -198,7 +201,7 @@
             // checkBoxForceGenerate
             // 
             this.checkBoxForceGenerate.AutoSize = true;
-            this.checkBoxForceGenerate.Location = new System.Drawing.Point(342, 632);
+            this.checkBoxForceGenerate.Location = new System.Drawing.Point(354, 628);
             this.checkBoxForceGenerate.Name = "checkBoxForceGenerate";
             this.checkBoxForceGenerate.Size = new System.Drawing.Size(167, 30);
             this.checkBoxForceGenerate.TabIndex = 19;
@@ -226,9 +229,9 @@
             // listDifficulties
             // 
             this.listDifficulties.FormattingEnabled = true;
-            this.listDifficulties.Location = new System.Drawing.Point(367, 532);
+            this.listDifficulties.Location = new System.Drawing.Point(354, 543);
             this.listDifficulties.Name = "listDifficulties";
-            this.listDifficulties.Size = new System.Drawing.Size(142, 94);
+            this.listDifficulties.Size = new System.Drawing.Size(154, 79);
             this.listDifficulties.TabIndex = 22;
             // 
             // radioButtonMusicPack
@@ -296,11 +299,21 @@
             this.labelBeatSaberStatus.Size = new System.Drawing.Size(122, 30);
             this.labelBeatSaberStatus.TabIndex = 28;
             // 
+            // comboBoxGenerator
+            // 
+            this.comboBoxGenerator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxGenerator.FormattingEnabled = true;
+            this.comboBoxGenerator.Location = new System.Drawing.Point(203, 505);
+            this.comboBoxGenerator.Name = "comboBoxGenerator";
+            this.comboBoxGenerator.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxGenerator.TabIndex = 29;
+            // 
             // FormGeneratePack
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(521, 697);
+            this.Controls.Add(this.comboBoxGenerator);
             this.Controls.Add(this.labelBeatSaberStatus);
             this.Controls.Add(this.radioButtonMusicPack);
             this.Controls.Add(this.panelMusicPack);
@@ -361,5 +374,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Panel panelMusicPack;
         private System.Windows.Forms.Label labelBeatSaberStatus;
+        private System.Windows.Forms.ComboBox comboBoxGenerator;
     }
 }

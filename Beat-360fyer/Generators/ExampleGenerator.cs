@@ -35,10 +35,9 @@ namespace Stx.ThreeSixtyfyer.Generators
         }
     }
 
+    [BeatMapGenerator("Example 90Degree Generator", 1)]
     public class ExampleGenerator : IBeatMapGenerator
     {
-        public int Version => 1;
-        public string Name => "Example 90Degree Generator";
         public string GeneratedGameModeName => "90Degree";
         public IBeatMapGeneratorSettings Settings { get; set; }
 

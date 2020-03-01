@@ -1,1 +1,20 @@
-{"packPath":"C:\\FastGames\\steamapps\\common\\Songs\\CustomLevelsNormal","bulkPath":null,"exportPath":null,"lastGeneratedMusicPackPath":"C:\\FastGames\\steamapps\\common\\Beat Saber\\Beat Saber_Data\\CustomGenerated360Levels","generatorToUse":"CodeStix's 360fyer","generatorSettings":{"frameLength":0.0625,"beatLength":1.0,"obstableBackCutoffSeconds":0.38,"obstacleFrontCutoffSeconds":0.18,"activeWallMaySpinPercentage":0.2,"enableSpin":true,"originalWallsMode":"RemoveNotFun","wallGenerator":"Enabled"}}
+{
+  "packPath": "C:\\FastGames\\steamapps\\common\\Beat Saber",
+  "bulkPath": null,
+  "exportPath": null,
+  "lastGeneratedMusicPackSourcePath": "C:\\FastGames\\steamapps\\common\\Beat Saber\\Beat Saber_Data\\CustomLevels",
+  "lastGeneratedMusicPackPath": "C:\\FastGames\\steamapps\\common\\Beat Saber\\Beat Saber_Data\\CustomGenerated360Levels",
+  "generatorToUse": "CodeStix's 360fyer",
+  "generatorSettings": {
+    "$type": "Stx.ThreeSixtyfyer.Generators.BeatMap360GeneratorSettings, Beat-360fyer",
+    "frameLength": 0.0625,
+    "beatLength": 1.0,
+    "obstableBackCutoffSeconds": 0.38,
+    "obstacleFrontCutoffSeconds": 0.18,
+    "activeWallMaySpinPercentage": 0.1,
+    "enableSpin": true,
+    "originalWallsMode": "RemoveNotFun",
+    "wallGenerator": "Enabled"
+  },
+  "version": 1
+}

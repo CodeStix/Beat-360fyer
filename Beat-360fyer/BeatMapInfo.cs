@@ -162,16 +162,20 @@ namespace Stx.ThreeSixtyfyer
     {
         [JsonProperty("_configVersion")]
         public int configVersion = 1;
-        [JsonProperty("_settings")]
+        [JsonProperty("_generatorSettings")]
         public IBeatMapGeneratorSettings generatorSettings;
         [JsonProperty("_generatorVersion")]
         public int generatorVersion;
+        [JsonProperty("_generatorName")]
+        public string generatorName;
         [JsonProperty("_difficulties")]
         public HashSet<BeatMapDifficultyLevel> difficulties;
 
-        public bool ShouldRegenerate(IBeatMapGeneratorSettings newSettings, int newVersion)
+        public bool ShouldRegenerate(IBeatMapGeneratorSettings newSettings, string newGeneratorName, int newGeneratorVersion)
         {
-            if (newVersion > generatorVersion)
+            if (generatorName != newGeneratorName)
+                return true;
+            if (newGeneratorVersion > generatorVersion)
                 return true;
             if (!generatorSettings.Equals(newSettings))
                 return true;
@@ -185,10 +189,12 @@ namespace Stx.ThreeSixtyfyer
 
         public static BeatMapGeneratorConfig FromGenerator(IBeatMapGenerator generator, HashSet<BeatMapDifficultyLevel> difficulties)
         {
+            var info = generator.GetInformation();
             return new BeatMapGeneratorConfig()
             {
                 generatorSettings = generator.Settings,
-                generatorVersion = generator.Version,
+                generatorVersion = info.Version,
+                generatorName = info.Name,
                 difficulties = difficulties
             };
         }

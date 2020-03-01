@@ -275,7 +275,7 @@ namespace Stx.ThreeSixtyfyer
         private void buttonGeneratorSettings_Click(object sender, EventArgs e)
         {
             new FormGeneratorSettings(ref generator).ShowDialog();
-            config.generatorToUse = generator.Name;
+            config.generatorToUse = generator.GetInformation().Name;
             config.generatorSettings = generator.Settings;
         }
 

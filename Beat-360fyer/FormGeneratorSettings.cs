@@ -15,6 +15,7 @@ namespace Stx.ThreeSixtyfyer
     public partial class FormGeneratorSettings : Form
     {
         private IBeatMapGenerator generator;
+        private bool saved = true;
 
         public FormGeneratorSettings(ref IBeatMapGenerator generator)
         {
@@ -33,6 +34,7 @@ namespace Stx.ThreeSixtyfyer
         private void LoadSettings()
         {
             textBoxJson.Text = JsonConvert.SerializeObject(this.generator.Settings, Program.JsonSettings);
+            saved = true;
         }
 
         private void SaveSettings()
@@ -41,6 +43,7 @@ namespace Stx.ThreeSixtyfyer
             {
                 generator.Settings = (IBeatMapGeneratorSettings)JsonConvert.DeserializeObject(textBoxJson.Text, generator.Settings.GetType(), Program.JsonSettings);
                 Message("Saved!", Color.Green);
+                saved = true;
             }
             catch (Exception ex)
             {
@@ -62,6 +65,9 @@ namespace Stx.ThreeSixtyfyer
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
+            if (!saved && MessageBox.Show("You have unsaved changes, are you sure you want to exit?", "Not saved.", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation) != DialogResult.Yes)
+                return;
+
             this.Close();
         }
 
@@ -78,6 +84,11 @@ namespace Stx.ThreeSixtyfyer
             generator.Settings = (IBeatMapGeneratorSettings)Activator.CreateInstance(generator.Settings.GetType());
             LoadSettings();
             Message("Restored settings to default! (not saved yet)", Color.Green);
+        }
+
+        private void textBoxJson_TextChanged(object sender, EventArgs e)
+        {
+            saved = false;
         }
     }
 }
