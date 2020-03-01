@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Stx.ThreeSixtyfyer.Generators
 {
     [Serializable]
-    public class BeatMap360GeneratorSettings
+    public class BeatMap360GeneratorSettings : IBeatMapGeneratorSettings
     {
         [JsonConverter(typeof(StringEnumConverter))]
         public enum WallGeneratorMode
@@ -81,7 +81,7 @@ namespace Stx.ThreeSixtyfyer.Generators
         public int Version => 10;
         public string Name => "CodeStix's 360fyer";
         public string GeneratedGameModeName => "360Degree";
-        public object Settings { get; set; }
+        public IBeatMapGeneratorSettings Settings { get; set; }
 
         public BeatMap FromStandard(BeatMap standardMap, float bpm, float timeOffset)
         {

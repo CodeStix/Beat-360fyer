@@ -1,6 +1,9 @@
-﻿namespace Stx.ThreeSixtyfyer.Generators
+﻿using System;
+
+namespace Stx.ThreeSixtyfyer.Generators
 {
-    public class ExampleGeneratorSettings
+    [Serializable]
+    public class ExampleGeneratorSettings : IBeatMapGeneratorSettings
     {
         public int rotateEachNoteCount = 2;
         public int rotateCountPerDirectionSwitch = 4;
@@ -37,7 +40,7 @@
         public int Version => 1;
         public string Name => "Example 90Degree Generator";
         public string GeneratedGameModeName => "90Degree";
-        public object Settings { get; set; }
+        public IBeatMapGeneratorSettings Settings { get; set; }
 
         public BeatMap FromStandard(BeatMap standard, float bpm, float timeOffset)
         {

@@ -54,7 +54,7 @@ namespace Stx.ThreeSixtyfyer
 
         public static BeatMapInfo FromFile(string absoluteInfoFilePath)
         {
-            BeatMapInfo info = JsonConvert.DeserializeObject<BeatMapInfo>(File.ReadAllText(absoluteInfoFilePath));
+            BeatMapInfo info = JsonConvert.DeserializeObject<BeatMapInfo>(File.ReadAllText(absoluteInfoFilePath), Program.JsonSettings);
             info.mapInfoPath = absoluteInfoFilePath;
             info.mapDirectoryPath = new FileInfo(absoluteInfoFilePath).Directory.FullName;
             return info;
@@ -62,7 +62,7 @@ namespace Stx.ThreeSixtyfyer
 
         public void SaveToFile(string file)
         {
-            File.WriteAllText(file, JsonConvert.SerializeObject(this));
+            File.WriteAllText(file, JsonConvert.SerializeObject(this, Program.JsonSettings));
         }
 
         public void CreateBackup(bool overwrite = false)
@@ -160,18 +160,20 @@ namespace Stx.ThreeSixtyfyer
     [Serializable]
     public class BeatMapGeneratorConfig
     {
+        [JsonProperty("_configVersion")]
+        public int configVersion = 1;
         [JsonProperty("_settings")]
-        public object settings;
-        [JsonProperty("_version")]
-        public int version;
+        public IBeatMapGeneratorSettings generatorSettings;
+        [JsonProperty("_generatorVersion")]
+        public int generatorVersion;
         [JsonProperty("_difficulties")]
         public HashSet<BeatMapDifficultyLevel> difficulties;
 
-        public bool ShouldRegenerate(object newSettings, int newVersion)
+        public bool ShouldRegenerate(IBeatMapGeneratorSettings newSettings, int newVersion)
         {
-            if (newVersion > version)
+            if (newVersion > generatorVersion)
                 return true;
-            if (!settings.Equals(newSettings)) // Settings must override GetHashCode() and Equals()!
+            if (!generatorSettings.Equals(newSettings))
                 return true;
             return false;
         }
@@ -185,15 +187,15 @@ namespace Stx.ThreeSixtyfyer
         {
             return new BeatMapGeneratorConfig()
             {
-                settings = generator.Settings,
-                version = generator.Version,
+                generatorSettings = generator.Settings,
+                generatorVersion = generator.Version,
                 difficulties = difficulties
             };
         }
 
         public void SaveToFile(string file)
         {
-            File.WriteAllText(file, JsonConvert.SerializeObject(this));
+            File.WriteAllText(file, JsonConvert.SerializeObject(this, Program.JsonSettings));
         }
 
         public bool HasDifficulties(IReadOnlyCollection<BeatMapDifficultyLevel> all)
@@ -208,7 +210,7 @@ namespace Stx.ThreeSixtyfyer
 
         public static BeatMapGeneratorConfig FromFile(string file)
         {
-            return JsonConvert.DeserializeObject<BeatMapGeneratorConfig>(File.ReadAllText(file));
+            return JsonConvert.DeserializeObject<BeatMapGeneratorConfig>(File.ReadAllText(file), Program.JsonSettings);
         }
     }
 
@@ -253,13 +255,13 @@ namespace Stx.ThreeSixtyfyer
         public BeatMap LoadBeatMap(string mapDirectory)
         {
             string fullPath = Path.Combine(mapDirectory, beatmapFilename);
-            return JsonConvert.DeserializeObject<BeatMap>(File.ReadAllText(fullPath));
+            return JsonConvert.DeserializeObject<BeatMap>(File.ReadAllText(fullPath), Program.JsonSettings);
         }
 
         public void SaveBeatMap(string mapDirectory, BeatMap map)
         {
             string fullPath = Path.Combine(mapDirectory, beatmapFilename);
-            File.WriteAllText(fullPath, JsonConvert.SerializeObject(map));
+            File.WriteAllText(fullPath, JsonConvert.SerializeObject(map, Program.JsonSettings));
         }
 
         public static BeatMapDifficulty Create(BeatMapDifficultyLevel difficulty, string gameMode)

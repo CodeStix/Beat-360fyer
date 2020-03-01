@@ -6,11 +6,19 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace Stx.ThreeSixtyfyer
 {
     static class Program
     {
+        public static JsonSerializerSettings JsonSettings => new JsonSerializerSettings()
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            Formatting = Formatting.Indented
+        };
+
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
