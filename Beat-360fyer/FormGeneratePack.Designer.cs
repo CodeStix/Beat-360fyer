@@ -47,7 +47,14 @@
             this.checkBoxForceGenerate = new System.Windows.Forms.CheckBox();
             this.textBoxPackName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.listDifficulties = new System.Windows.Forms.CheckedListBox();
+            this.radioButtonMusicPack = new System.Windows.Forms.RadioButton();
+            this.radioButtonExport = new System.Windows.Forms.RadioButton();
+            this.radioButtonModify = new System.Windows.Forms.RadioButton();
+            this.label5 = new System.Windows.Forms.Label();
+            this.panelMusicPack = new System.Windows.Forms.Panel();
             this.statusStrip1.SuspendLayout();
+            this.panelMusicPack.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonSelectBeatSaber
@@ -89,9 +96,9 @@
             // 
             // buttonGeneratorSettings
             // 
-            this.buttonGeneratorSettings.Location = new System.Drawing.Point(386, 503);
+            this.buttonGeneratorSettings.Location = new System.Drawing.Point(367, 503);
             this.buttonGeneratorSettings.Name = "buttonGeneratorSettings";
-            this.buttonGeneratorSettings.Size = new System.Drawing.Size(122, 23);
+            this.buttonGeneratorSettings.Size = new System.Drawing.Size(141, 23);
             this.buttonGeneratorSettings.TabIndex = 3;
             this.buttonGeneratorSettings.Text = "Generator settings...";
             this.buttonGeneratorSettings.UseVisualStyleBackColor = true;
@@ -145,7 +152,7 @@
             this.label3.ForeColor = System.Drawing.Color.Gray;
             this.label3.Location = new System.Drawing.Point(9, 461);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(352, 65);
+            this.label3.Size = new System.Drawing.Size(352, 47);
             this.label3.TabIndex = 7;
             this.label3.Text = "Tip: use shift to select multiple items, then use space to check or uncheck them." +
     "\r\nUse (Ctrl+A) to select all songs and (Ctrl+D) to deselect all songs.";
@@ -155,7 +162,7 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 566);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 675);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(521, 22);
             this.statusStrip1.TabIndex = 14;
@@ -188,7 +195,7 @@
             // checkBoxForceGenerate
             // 
             this.checkBoxForceGenerate.AutoSize = true;
-            this.checkBoxForceGenerate.Location = new System.Drawing.Point(12, 529);
+            this.checkBoxForceGenerate.Location = new System.Drawing.Point(342, 632);
             this.checkBoxForceGenerate.Name = "checkBoxForceGenerate";
             this.checkBoxForceGenerate.Size = new System.Drawing.Size(167, 30);
             this.checkBoxForceGenerate.TabIndex = 19;
@@ -197,7 +204,7 @@
             // 
             // textBoxPackName
             // 
-            this.textBoxPackName.Location = new System.Drawing.Point(82, 505);
+            this.textBoxPackName.Location = new System.Drawing.Point(67, 17);
             this.textBoxPackName.MaxLength = 32;
             this.textBoxPackName.Name = "textBoxPackName";
             this.textBoxPackName.Size = new System.Drawing.Size(138, 20);
@@ -207,19 +214,89 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 508);
+            this.label4.Location = new System.Drawing.Point(-3, 20);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(64, 13);
             this.label4.TabIndex = 21;
             this.label4.Text = "Pack name:";
             // 
+            // listDifficulties
+            // 
+            this.listDifficulties.FormattingEnabled = true;
+            this.listDifficulties.Location = new System.Drawing.Point(367, 532);
+            this.listDifficulties.Name = "listDifficulties";
+            this.listDifficulties.Size = new System.Drawing.Size(142, 94);
+            this.listDifficulties.TabIndex = 22;
+            // 
+            // radioButtonMusicPack
+            // 
+            this.radioButtonMusicPack.AutoSize = true;
+            this.radioButtonMusicPack.Location = new System.Drawing.Point(0, 0);
+            this.radioButtonMusicPack.Name = "radioButtonMusicPack";
+            this.radioButtonMusicPack.Size = new System.Drawing.Size(211, 17);
+            this.radioButtonMusicPack.TabIndex = 23;
+            this.radioButtonMusicPack.TabStop = true;
+            this.radioButtonMusicPack.Text = "Create Music Pack (requires SongCore)";
+            this.radioButtonMusicPack.UseVisualStyleBackColor = true;
+            this.radioButtonMusicPack.CheckedChanged += new System.EventHandler(this.radioButtonMusicPack_CheckedChanged);
+            // 
+            // radioButtonExport
+            // 
+            this.radioButtonExport.AutoSize = true;
+            this.radioButtonExport.Location = new System.Drawing.Point(12, 583);
+            this.radioButtonExport.Name = "radioButtonExport";
+            this.radioButtonExport.Size = new System.Drawing.Size(294, 30);
+            this.radioButtonExport.TabIndex = 24;
+            this.radioButtonExport.TabStop = true;
+            this.radioButtonExport.Text = "Export the generated modes to a specified location. \r\nThe location will be asked " +
+    "when you start the generation.";
+            this.radioButtonExport.UseVisualStyleBackColor = true;
+            this.radioButtonExport.CheckedChanged += new System.EventHandler(this.radioButtonExport_CheckedChanged);
+            // 
+            // radioButtonModify
+            // 
+            this.radioButtonModify.AutoSize = true;
+            this.radioButtonModify.Location = new System.Drawing.Point(12, 621);
+            this.radioButtonModify.Name = "radioButtonModify";
+            this.radioButtonModify.Size = new System.Drawing.Size(294, 43);
+            this.radioButtonModify.TabIndex = 25;
+            this.radioButtonModify.TabStop = true;
+            this.radioButtonModify.Text = "Modify maps directly, this will place the new difficulty files \r\nin the original " +
+    "map\'s directory and modify the info.dat file.\r\n(A backup of info.dat is created," +
+    " named info.dat.bak)";
+            this.radioButtonModify.UseVisualStyleBackColor = true;
+            this.radioButtonModify.CheckedChanged += new System.EventHandler(this.radioButtonModify_CheckedChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(9, 513);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(77, 13);
+            this.label5.TabIndex = 26;
+            this.label5.Text = "Export mode";
+            // 
+            // panelMusicPack
+            // 
+            this.panelMusicPack.Controls.Add(this.radioButtonMusicPack);
+            this.panelMusicPack.Controls.Add(this.label4);
+            this.panelMusicPack.Controls.Add(this.textBoxPackName);
+            this.panelMusicPack.Location = new System.Drawing.Point(12, 535);
+            this.panelMusicPack.Name = "panelMusicPack";
+            this.panelMusicPack.Size = new System.Drawing.Size(218, 42);
+            this.panelMusicPack.TabIndex = 27;
+            // 
             // FormGeneratePack
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(521, 588);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.textBoxPackName);
+            this.ClientSize = new System.Drawing.Size(521, 697);
+            this.Controls.Add(this.panelMusicPack);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.radioButtonModify);
+            this.Controls.Add(this.radioButtonExport);
+            this.Controls.Add(this.listDifficulties);
             this.Controls.Add(this.checkBoxForceGenerate);
             this.Controls.Add(this.buttonUpdatePack);
             this.Controls.Add(this.buttonGeneratorSettings);
@@ -240,6 +317,8 @@
             this.Load += new System.EventHandler(this.FormGenerate_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.panelMusicPack.ResumeLayout(false);
+            this.panelMusicPack.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -264,5 +343,11 @@
         private System.Windows.Forms.CheckBox checkBoxForceGenerate;
         private System.Windows.Forms.TextBox textBoxPackName;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckedListBox listDifficulties;
+        private System.Windows.Forms.RadioButton radioButtonMusicPack;
+        private System.Windows.Forms.RadioButton radioButtonExport;
+        private System.Windows.Forms.RadioButton radioButtonModify;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Panel panelMusicPack;
     }
 }
