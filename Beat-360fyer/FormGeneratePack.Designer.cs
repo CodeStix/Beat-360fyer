@@ -55,6 +55,9 @@
             this.panelMusicPack = new System.Windows.Forms.Panel();
             this.labelBeatSaberStatus = new System.Windows.Forms.Label();
             this.comboBoxGenerator = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.panelMusicPack.SuspendLayout();
             this.SuspendLayout();
@@ -74,7 +77,7 @@
             this.textBoxBeatSaberPath.Location = new System.Drawing.Point(144, 79);
             this.textBoxBeatSaberPath.Name = "textBoxBeatSaberPath";
             this.textBoxBeatSaberPath.ReadOnly = true;
-            this.textBoxBeatSaberPath.Size = new System.Drawing.Size(364, 20);
+            this.textBoxBeatSaberPath.Size = new System.Drawing.Size(666, 20);
             this.textBoxBeatSaberPath.TabIndex = 2;
             // 
             // label1
@@ -90,7 +93,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 24);
+            this.label2.Location = new System.Drawing.Point(9, 28);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(455, 39);
             this.label2.TabIndex = 4;
@@ -100,13 +103,13 @@
             // 
             // buttonGeneratorSettings
             // 
-            this.buttonGeneratorSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.buttonGeneratorSettings.BackColor = System.Drawing.Color.White;
             this.buttonGeneratorSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonGeneratorSettings.Location = new System.Drawing.Point(330, 503);
+            this.buttonGeneratorSettings.Location = new System.Drawing.Point(520, 484);
             this.buttonGeneratorSettings.Name = "buttonGeneratorSettings";
-            this.buttonGeneratorSettings.Size = new System.Drawing.Size(178, 23);
+            this.buttonGeneratorSettings.Size = new System.Drawing.Size(278, 23);
             this.buttonGeneratorSettings.TabIndex = 3;
-            this.buttonGeneratorSettings.Text = "Generator settings...";
+            this.buttonGeneratorSettings.Text = "Advanced generator settings...";
             this.buttonGeneratorSettings.UseVisualStyleBackColor = false;
             this.buttonGeneratorSettings.Click += new System.EventHandler(this.buttonGeneratorSettings_Click);
             // 
@@ -114,9 +117,10 @@
             // 
             this.buttonGenerate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.buttonGenerate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonGenerate.Location = new System.Drawing.Point(330, 464);
+            this.buttonGenerate.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonGenerate.Location = new System.Drawing.Point(514, 582);
             this.buttonGenerate.Name = "buttonGenerate";
-            this.buttonGenerate.Size = new System.Drawing.Size(178, 33);
+            this.buttonGenerate.Size = new System.Drawing.Size(297, 51);
             this.buttonGenerate.TabIndex = 2;
             this.buttonGenerate.Text = "Generate Music Pack\r\n";
             this.buttonGenerate.UseVisualStyleBackColor = false;
@@ -136,7 +140,7 @@
             this.listSongs.HideSelection = false;
             this.listSongs.Location = new System.Drawing.Point(12, 116);
             this.listSongs.Name = "listSongs";
-            this.listSongs.Size = new System.Drawing.Size(496, 342);
+            this.listSongs.Size = new System.Drawing.Size(496, 517);
             this.listSongs.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listSongs.TabIndex = 6;
             this.listSongs.UseCompatibleStateImageBehavior = false;
@@ -156,21 +160,22 @@
             // label3
             // 
             this.label3.ForeColor = System.Drawing.Color.Gray;
-            this.label3.Location = new System.Drawing.Point(9, 461);
+            this.label3.Location = new System.Drawing.Point(9, 636);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(315, 47);
+            this.label3.Size = new System.Drawing.Size(499, 48);
             this.label3.TabIndex = 7;
             this.label3.Text = "Tip: use shift to select multiple items, then use space to check or uncheck them." +
-    "\r\nUse (Ctrl+A) to select all songs and (Ctrl+D) to deselect all songs.";
+    "\r\nUse (Ctrl+A) to select all songs and (Ctrl+D) to deselect all songs.\r\nJump to " +
+    "a song by pressing a letter.";
             // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 675);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 684);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(521, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(822, 22);
             this.statusStrip1.TabIndex = 14;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -190,7 +195,7 @@
             // 
             // buttonUpdatePack
             // 
-            this.buttonUpdatePack.Location = new System.Drawing.Point(330, 9);
+            this.buttonUpdatePack.Location = new System.Drawing.Point(632, 12);
             this.buttonUpdatePack.Name = "buttonUpdatePack";
             this.buttonUpdatePack.Size = new System.Drawing.Size(179, 23);
             this.buttonUpdatePack.TabIndex = 18;
@@ -201,7 +206,8 @@
             // checkBoxForceGenerate
             // 
             this.checkBoxForceGenerate.AutoSize = true;
-            this.checkBoxForceGenerate.Location = new System.Drawing.Point(354, 628);
+            this.checkBoxForceGenerate.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.checkBoxForceGenerate.Location = new System.Drawing.Point(520, 448);
             this.checkBoxForceGenerate.Name = "checkBoxForceGenerate";
             this.checkBoxForceGenerate.Size = new System.Drawing.Size(167, 30);
             this.checkBoxForceGenerate.TabIndex = 19;
@@ -229,16 +235,16 @@
             // listDifficulties
             // 
             this.listDifficulties.FormattingEnabled = true;
-            this.listDifficulties.Location = new System.Drawing.Point(354, 543);
+            this.listDifficulties.Location = new System.Drawing.Point(635, 363);
             this.listDifficulties.Name = "listDifficulties";
-            this.listDifficulties.Size = new System.Drawing.Size(154, 79);
+            this.listDifficulties.Size = new System.Drawing.Size(163, 79);
             this.listDifficulties.TabIndex = 22;
             // 
             // radioButtonMusicPack
             // 
             this.radioButtonMusicPack.AutoSize = true;
             this.radioButtonMusicPack.Checked = true;
-            this.radioButtonMusicPack.Location = new System.Drawing.Point(12, 532);
+            this.radioButtonMusicPack.Location = new System.Drawing.Point(517, 156);
             this.radioButtonMusicPack.Name = "radioButtonMusicPack";
             this.radioButtonMusicPack.Size = new System.Drawing.Size(211, 17);
             this.radioButtonMusicPack.TabIndex = 23;
@@ -250,7 +256,7 @@
             // radioButtonExport
             // 
             this.radioButtonExport.AutoSize = true;
-            this.radioButtonExport.Location = new System.Drawing.Point(12, 583);
+            this.radioButtonExport.Location = new System.Drawing.Point(517, 207);
             this.radioButtonExport.Name = "radioButtonExport";
             this.radioButtonExport.Size = new System.Drawing.Size(294, 30);
             this.radioButtonExport.TabIndex = 24;
@@ -262,7 +268,7 @@
             // radioButtonModify
             // 
             this.radioButtonModify.AutoSize = true;
-            this.radioButtonModify.Location = new System.Drawing.Point(12, 621);
+            this.radioButtonModify.Location = new System.Drawing.Point(517, 245);
             this.radioButtonModify.Name = "radioButtonModify";
             this.radioButtonModify.Size = new System.Drawing.Size(294, 43);
             this.radioButtonModify.TabIndex = 25;
@@ -276,7 +282,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(9, 513);
+            this.label5.Location = new System.Drawing.Point(514, 137);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(77, 13);
             this.label5.TabIndex = 26;
@@ -286,7 +292,7 @@
             // 
             this.panelMusicPack.Controls.Add(this.label4);
             this.panelMusicPack.Controls.Add(this.textBoxPackName);
-            this.panelMusicPack.Location = new System.Drawing.Point(12, 555);
+            this.panelMusicPack.Location = new System.Drawing.Point(517, 179);
             this.panelMusicPack.Name = "panelMusicPack";
             this.panelMusicPack.Size = new System.Drawing.Size(211, 22);
             this.panelMusicPack.TabIndex = 27;
@@ -294,36 +300,68 @@
             // labelBeatSaberStatus
             // 
             this.labelBeatSaberStatus.ForeColor = System.Drawing.Color.Red;
-            this.labelBeatSaberStatus.Location = new System.Drawing.Point(223, 534);
+            this.labelBeatSaberStatus.Location = new System.Drawing.Point(728, 137);
             this.labelBeatSaberStatus.Name = "labelBeatSaberStatus";
-            this.labelBeatSaberStatus.Size = new System.Drawing.Size(122, 30);
+            this.labelBeatSaberStatus.Size = new System.Drawing.Size(101, 30);
             this.labelBeatSaberStatus.TabIndex = 28;
             // 
             // comboBoxGenerator
             // 
             this.comboBoxGenerator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxGenerator.FormattingEnabled = true;
-            this.comboBoxGenerator.Location = new System.Drawing.Point(203, 505);
+            this.comboBoxGenerator.Location = new System.Drawing.Point(635, 339);
             this.comboBoxGenerator.Name = "comboBoxGenerator";
-            this.comboBoxGenerator.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxGenerator.Size = new System.Drawing.Size(163, 21);
             this.comboBoxGenerator.TabIndex = 29;
+            this.comboBoxGenerator.SelectedIndexChanged += new System.EventHandler(this.comboBoxGenerator_SelectedIndexChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(517, 339);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(89, 13);
+            this.label6.TabIndex = 23;
+            this.label6.Text = "Generator to use:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(517, 363);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(115, 13);
+            this.label7.TabIndex = 30;
+            this.label7.Text = "Difficulties to generate:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(514, 321);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(53, 13);
+            this.label8.TabIndex = 31;
+            this.label8.Text = "Settings";
             // 
             // FormGeneratePack
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(521, 697);
+            this.ClientSize = new System.Drawing.Size(822, 706);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.comboBoxGenerator);
+            this.Controls.Add(this.listDifficulties);
             this.Controls.Add(this.labelBeatSaberStatus);
+            this.Controls.Add(this.checkBoxForceGenerate);
             this.Controls.Add(this.radioButtonMusicPack);
+            this.Controls.Add(this.buttonGeneratorSettings);
             this.Controls.Add(this.panelMusicPack);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.radioButtonModify);
             this.Controls.Add(this.radioButtonExport);
-            this.Controls.Add(this.listDifficulties);
-            this.Controls.Add(this.checkBoxForceGenerate);
             this.Controls.Add(this.buttonUpdatePack);
-            this.Controls.Add(this.buttonGeneratorSettings);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.buttonGenerate);
@@ -375,5 +413,8 @@
         private System.Windows.Forms.Panel panelMusicPack;
         private System.Windows.Forms.Label labelBeatSaberStatus;
         private System.Windows.Forms.ComboBox comboBoxGenerator;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label8;
     }
 }

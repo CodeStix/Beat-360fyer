@@ -83,6 +83,6 @@ namespace Stx.ThreeSixtyfyer
         public string lastGeneratedMusicPackPath;
 
         public string generatorToUse = BeatMapGenerator.DEFAULT_GENERATOR;
-        public IBeatMapGeneratorSettings generatorSettings = new BeatMap360GeneratorSettings();
+        public Dictionary<string, IBeatMapGeneratorSettings> generatorSettings = new Dictionary<string, IBeatMapGeneratorSettings>();
     }
 }
