@@ -16,13 +16,13 @@ namespace Stx.ThreeSixtyfyer
         public const string DEFAULT_GENERATOR = "CodeStix's 360fyer";
         public const string GENERATOR_CONFIG_NAME = "Generator.dat";
 
-        private static IEnumerable<Type> generatorTypes = AppDomain.CurrentDomain.GetAssemblies()
+        public static IEnumerable<Type> GeneratorTypes => AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => typeof(IBeatMapGenerator).IsAssignableFrom(p) && !p.IsInterface);
 
         public static IBeatMapGenerator GetGeneratorWithName(string name)
         {
-            foreach(Type t in generatorTypes)
+            foreach(Type t in GeneratorTypes)
             {
                 IBeatMapGenerator generator = (IBeatMapGenerator)Activator.CreateInstance(t);
                 if (string.Compare(name, generator.Name) == 0)
@@ -32,8 +32,15 @@ namespace Stx.ThreeSixtyfyer
             return null;
         }
 
-        public static bool UseGeneratorAndOverwrite(IBeatMapGenerator generator, BeatMapInfo info, IReadOnlyCollection<BeatMapDifficultyLevel> difficultyLevels, bool forceGenerate = false)
+        public struct Result
         {
+            public byte generatedCount;
+            public bool alreadyUpToDate;
+        }
+
+        public static Result UseGeneratorAndOverwrite(IBeatMapGenerator generator, BeatMapInfo info, IReadOnlyCollection<BeatMapDifficultyLevel> difficultyLevels, bool forceGenerate = false)
+        {
+            Result result = new Result();
             HashSet<BeatMapDifficultyLevel> difficulties = new HashSet<BeatMapDifficultyLevel>(difficultyLevels);
             info.CreateBackup();
 
@@ -45,12 +52,14 @@ namespace Stx.ThreeSixtyfyer
 
                 saveNewInfo = generatorConfig.ShouldSaveInfo(difficulties);
                 if (!saveNewInfo && !forceGenerate && !generatorConfig.ShouldRegenerate(generator.Settings, generator.Version))
-                    return true; // Already up to date!
+                {
+                    result.alreadyUpToDate = true;
+                    return result; // Already up to date!
+                }
 
                 difficulties.AddRange(generatorConfig.difficulties);
             }
 
-            int ok = 0;
             foreach(BeatMapDifficultyLevel difficulty in difficulties)
             {
                 BeatMapDifficulty standardDiff = info.GetGameModeDifficulty(difficulty, "Standard");
@@ -62,10 +71,10 @@ namespace Stx.ThreeSixtyfyer
                     continue;
 
                 newDiff.SaveBeatMap(info.mapDirectoryPath, generator.FromStandard(standardDiff.LoadBeatMap(info.mapDirectoryPath), info.beatsPerMinute, info.songTimeOffset));
-                ok++;
+                result.generatedCount++;
             }
-            if (ok == 0)
-                return false;
+            if (result.generatedCount == 0)
+                return result;
 
             if (saveNewInfo)
             {
@@ -74,11 +83,12 @@ namespace Stx.ThreeSixtyfyer
             }
 
             BeatMapGeneratorConfig.FromGenerator(generator, difficulties).SaveToFile(Path.Combine(info.mapDirectoryPath, GENERATOR_CONFIG_NAME));
-            return true;
+            return result;
         }
 
-        public static bool UseGeneratorAndCopy(IBeatMapGenerator generator, BeatMapInfo info, IReadOnlyCollection<BeatMapDifficultyLevel> difficultyLevels, string destination, bool forceGenerate = false)
+        public static Result UseGeneratorAndCopy(IBeatMapGenerator generator, BeatMapInfo info, IReadOnlyCollection<BeatMapDifficultyLevel> difficultyLevels, string destination, bool forceGenerate = false)
         {
+            Result result = new Result();
             HashSet<BeatMapDifficultyLevel> difficulties = new HashSet<BeatMapDifficultyLevel>(difficultyLevels);
             string mapDestination = Path.Combine(destination, new DirectoryInfo(info.mapDirectoryPath).Name);
 
@@ -90,14 +100,16 @@ namespace Stx.ThreeSixtyfyer
 
                 saveNewInfo = generatorConfig.ShouldSaveInfo(difficulties);
                 if (!saveNewInfo && !forceGenerate && !generatorConfig.ShouldRegenerate(generator.Settings, generator.Version))
-                    return true; // Already up to date!
+                {
+                    result.alreadyUpToDate = true;
+                    return result; // Already up to date!
+                }
 
                 difficulties.AddRange(generatorConfig.difficulties);
             }
 
             Directory.CreateDirectory(mapDestination);
 
-            int ok = 0;
             foreach (BeatMapDifficultyLevel difficulty in difficulties)
             {
                 BeatMapDifficulty standardDiff = info.GetGameModeDifficulty(difficulty, "Standard");
@@ -109,10 +121,10 @@ namespace Stx.ThreeSixtyfyer
                     continue;
 
                 newDiff.SaveBeatMap(mapDestination, generator.FromStandard(standardDiff.LoadBeatMap(info.mapDirectoryPath), info.beatsPerMinute, info.songTimeOffset));
-                ok++;
+                result.generatedCount++;
             }
-            if (ok == 0)
-                return false;
+            if (result.generatedCount == 0)
+                return result;
 
             info.difficultyBeatmapSets.RemoveAll((diffSet) => diffSet.beatmapCharacteristicName != generator.GeneratedGameModeName);
 
@@ -127,59 +139,7 @@ namespace Stx.ThreeSixtyfyer
             }
 
             BeatMapGeneratorConfig.FromGenerator(generator, difficulties).SaveToFile(Path.Combine(mapDestination, GENERATOR_CONFIG_NAME));
-            return true;
+            return result;
         }
-
-
-
-
-
-        /*[Obsolete]
-        public static bool UpdateGenerated360Modes(string existingModeMapLocation)
-        {
-            string generatorConfigFile = Path.Combine(existingModeMapLocation, "Generator.dat");
-            if (!File.Exists(generatorConfigFile))
-                return false;
-
-            BeatMapGeneratorConfig generatorConfig = BeatMapGeneratorConfig.FromFile(generatorConfigFile);
-            BeatMap360Generator generator = new BeatMap360Generator()
-            {
-                Settings = generatorConfig.settings
-            };
-
-            if (generatorConfig.version >= generator.Version)
-                return true;
-
-            if (!Directory.Exists(generatorConfig.originalMapLocation))
-            {
-                File.Delete(generatorConfigFile);
-                return false;
-            }
-
-            string[] modeInfoFiles = Directory.GetFiles(existingModeMapLocation, "?nfo.dat");
-            if (modeInfoFiles.Length == 0)
-                return false;
-            BeatMapInfo modeMapInfo = BeatMapInfo.FromFile(modeInfoFiles[0]);
-
-            string[] standardInfoFiles = Directory.GetFiles(generatorConfig.originalMapLocation, "?nfo.dat");
-            if (standardInfoFiles.Length == 0)
-                return false;
-            BeatMapInfo originalMapInfo = BeatMapInfo.FromFile(standardInfoFiles[0]);
-
-            foreach (BeatMapDifficultyLevel diff in generatorConfig.difficulties)
-            {
-                BeatMapDifficulty difficulty = modeMapInfo.GetGameModeDifficulty(diff, "360Degree");
-                BeatMapDifficulty normalDifficulty = originalMapInfo.GetGameModeDifficulty(diff, "Standard");
-
-                if (difficulty == null || normalDifficulty == null)
-                    continue;
-
-                difficulty.SaveBeatMap(existingModeMapLocation, generator.FromStandard(normalDifficulty.LoadBeatMap(generatorConfig.originalMapLocation), originalMapInfo.beatsPerMinute, originalMapInfo.songTimeOffset));
-            }
-
-            generatorConfig.version = generator.Version;
-            generatorConfig.SaveToFile(generatorConfigFile);
-            return true;
-        }*/
     }
 }

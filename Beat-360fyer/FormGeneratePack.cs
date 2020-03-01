@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace Stx.ThreeSixtyfyer
             VistaFolderBrowserDialog folderBrowser = new VistaFolderBrowserDialog()
             {
                 SelectedPath = config.packPath,
-                Description = "Please select the directory containing 'Beat Saber.exe' to create a music pack. Or open any other directory to export or modify.",
+                Description = "Please select the directory containing 'Beat Saber.exe' to create a music pack. Or open any other directory that contains songs to export or modify.",
                 ShowNewFolderButton = false,
                 UseDescriptionForTitle = false
             };
@@ -53,17 +54,20 @@ namespace Stx.ThreeSixtyfyer
         private void SetBeatSaberPath(string path)
         {
             beatSaberAvailable = File.Exists(Path.Combine(path, "Beat Saber.exe"));
-            /*if (MessageBox.Show("The selected directory does not contain 'Beat Saber.exe', which is required.", "Not found",
-                    MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning) == DialogResult.Retry)
-                buttonSelectBeatSaber.PerformClick();*/
-            songCoreAvailable = File.Exists(Path.Combine(path, "UserData", "SongCore", "folders.xml"));
+            songCoreAvailable = beatSaberAvailable && File.Exists(Path.Combine(path, "UserData", "SongCore", "folders.xml"));
 
-            /*MessageBox.Show("You don't have SongCore installed, please use your mod installer of choice to install SongCore into BeatSaber, then come back here to generate a music pack.", "SongCore not found",
-                MessageBoxButtons.OK, MessageBoxIcon.Warning);*/
-
-            panelMusicPack.Enabled = beatSaberAvailable && songCoreAvailable;
-            if (!panelMusicPack.Enabled)
+            bool enablePack = beatSaberAvailable && songCoreAvailable;
+            radioButtonMusicPack.Enabled = enablePack;
+            panelMusicPack.Enabled = enablePack;
+            if (!enablePack)
                 radioButtonExport.PerformClick();
+
+            if (!beatSaberAvailable)
+                labelBeatSaberStatus.Text = "Beat Saber not found in specfied directory.";
+            else if (!songCoreAvailable)
+                labelBeatSaberStatus.Text = "SongCore is not installed (required).";
+            else
+                labelBeatSaberStatus.Text = "";
 
             config.packPath = path;
 
@@ -117,18 +121,7 @@ namespace Stx.ThreeSixtyfyer
 
         private void SetUI(bool enabled)
         {
-            buttonGenerate.Enabled = enabled;
-            buttonSelectBeatSaber.Enabled = enabled;
-            textBoxBeatSaberPath.Enabled = enabled;
-            listSongs.Enabled = enabled;
-            buttonGeneratorSettings.Enabled = enabled;
-            textBoxPackName.Enabled = enabled;
-            buttonUpdatePack.Enabled = enabled;
-            checkBoxForceGenerate.Enabled = enabled;
-            listDifficulties.Enabled = enabled;
-            radioButtonModify.Enabled = enabled;
-            radioButtonExport.Enabled = enabled;
-            radioButtonMusicPack.Enabled = enabled;
+            this.Enabled = enabled;
         }
 
         private void ListSongs_KeyDown(object sender, KeyEventArgs e)
@@ -155,6 +148,17 @@ namespace Stx.ThreeSixtyfyer
         {
             this.Height = 165;
 
+            GitHubBasedUpdateCheck updateChecker = new GitHubBasedUpdateCheck("CodeStix", "Beat-360fyer", "Build/latestVersion.txt");
+            updateChecker.CheckForUpdate(Assembly.GetExecutingAssembly().GetName().Version.ToString(3)).ContinueWith((update) => {
+
+                if (update.Result && MessageBox.Show("There is an update available for Beat-360fyer, please download the newest version " +
+                        "to receive new generator features and improvements. Go to the download page right now?", "An update!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                {
+                    Process.Start(@"https://github.com/CodeStix/Beat-360fyer/releases");
+                    Environment.Exit(0);
+                }
+            });
+
             if (!Config.TryLoad(out config))
             {
                 MessageBox.Show("Could not load the config file, no permission? Maybe run as administrator?", "Could not load config.", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -169,7 +173,7 @@ namespace Stx.ThreeSixtyfyer
             }
             generator.Settings = config.generatorSettings;
 
-            this.buttonUpdatePack.Visible = !string.IsNullOrEmpty(config.lastGeneratedMusicPackPath);
+            buttonUpdatePack.Visible = !string.IsNullOrEmpty(config.lastGeneratedMusicPackPath) && !string.IsNullOrEmpty(config.lastGeneratedMusicPackSourcePath);
 
             if (!string.IsNullOrEmpty(config.packPath))
                 SetBeatSaberPath(config.packPath);
@@ -199,10 +203,11 @@ namespace Stx.ThreeSixtyfyer
                     Properties.Resources.PackThumbnail.Save(imagePath);
                     BeatMapGenerator.ContributorImagePath = imagePath;
 
-                    config.lastGeneratedMusicPackPath = customGeneratedLevelsPath;
-
                     EnsureCustomPack(textBoxPackName.Text, customGeneratedLevelsPath, imagePath);
                     ConvertCheckedSongs(customGeneratedLevelsPath);
+
+                    config.lastGeneratedMusicPackSourcePath = CustomSongsPath;
+                    config.lastGeneratedMusicPackPath = customGeneratedLevelsPath;
                 }
                 else if (radioButtonExport.Checked)
                 {
@@ -212,6 +217,9 @@ namespace Stx.ThreeSixtyfyer
                     if (!(folderBrowser.ShowDialog() ?? false))
                         return;
                     ConvertCheckedSongs(folderBrowser.SelectedPath);
+
+                    config.lastGeneratedMusicPackSourcePath = CustomSongsPath;
+                    config.lastGeneratedMusicPackPath = folderBrowser.SelectedPath;
                 }
                 else if (radioButtonModify.Checked)
                 {
@@ -267,71 +275,111 @@ namespace Stx.ThreeSixtyfyer
 
             Jobs.GenerateMaps(options, (job) =>
             {
-                string message = "";
-                if (job.result.mapsChanged == 0)
-                {
-                    message = "No modes were added, this can be due to:\n" +
-                        " - All the maps are alreay up to date.\n" +
-                        " - The selected songs didn't have the standard mode, this is required for the conversion.\n";
-                }
-                else if (radioButtonMusicPack.Checked)
-                {
-                    message = $"Done. Navigate to custom levels in the game and a new music pack named {textBoxPackName.Text} should appear.\n\n" +
-                    $"!!! NOTE: Due to a bug in SongCore, the new music pack is merged with normal levels in the default 'Custom Levels' pack. " +
-                    $"Temporary fix: After all songs are loaded in the main menu, press Ctrl+R on your keyboard, this will hide the duplicates.";
-                }
-                else if (radioButtonExport.Checked)
-                {
-                    message = $"Done. The generated levels were exported to '{job.argument.destination}'.";
-                }
-                else if (radioButtonModify.Checked)
-                {
-                    message = $"Done. The selected levels were modified directly.";
-                }
-
-                TaskDialog dialog = new TaskDialog();
-                dialog.Buttons.Add(new TaskDialogButton(ButtonType.Ok));
-                dialog.Content = message;
-                dialog.Footer = $"Modes were generated for {job.result.mapsChanged} different levels for these difficulties: {string.Join(", ", job.argument.difficultyLevels)}.\n{job.exceptions.Count} problems occured.";
-                dialog.WindowTitle = "Completed!";
-                dialog.MainIcon = job.exceptions.Count > 0 ? TaskDialogIcon.Error : job.result.mapsChanged == 0 ? TaskDialogIcon.Warning : TaskDialogIcon.Information;
-                if (job.exceptions.Count > 0)
-                {
-                    dialog.Buttons.Add(new TaskDialogButton("Show problems"));
-                    dialog.ButtonClicked += (sender, e) =>
-                    {
-                        if (e.Item.Text == "Show problems")
-                        {
-                            StringBuilder str = new StringBuilder();
-                            for (int i = 0; i < job.exceptions.Count && i < 10; i++)
-                                str.AppendLine(job.exceptions[i].Message);
-                            if (job.exceptions.Count > 10)
-                                str.AppendLine($"\nAnd {job.exceptions.Count - 10} more...");
-
-                            MessageBox.Show(str.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    };
-                }
-                dialog.ShowDialog();
+                CreateResultTaskDialog(job, "Generation process complete!").ShowDialog();
 
                 BeginInvoke(new MethodInvoker(() => SetUI(true)));
             });
         }
 
-        private void Dialog_ButtonClicked(object sender, TaskDialogItemClickedEventArgs e)
+        private TaskDialog CreateResultTaskDialog(WorkerJob<Jobs.GenerateMapsOptions, Jobs.GeneratorMapsResult> job, string windowTitle)
         {
-            throw new NotImplementedException();
+            StringBuilder message = new StringBuilder();
+            StringBuilder footer = new StringBuilder();
+            TaskDialogIcon icon = TaskDialogIcon.Information;
+
+            if (job.result.mapsGenerated == 0)
+            {
+                if (job.result.mapsIterated == 0)
+                {
+                    message.AppendLine("No maps were selected.");
+                }
+                else if (job.result.mapsUpToDate > 0)
+                {
+                    message.AppendLine("All the selected maps are already up to date. If you want to force generate modes, please check 'Force Generate' in the menu.");
+                }
+                else
+                {
+                    message.AppendLine("No modes were added, this can be due to:");
+                    message.AppendLine(" - The selected songs didn't have the standard mode, this is required for the conversion.");
+                    message.AppendLine(" - Unknown reason...");
+                }
+                icon = TaskDialogIcon.Warning;
+            }
+            else if (radioButtonMusicPack.Checked)
+            {
+                message.AppendLine($"Done. Navigate to custom levels in the game and a new music pack named '{textBoxPackName.Text}' should appear.\n");
+                message.AppendLine($"!!! NOTE: Due to a bug in SongCore, the new music pack is merged with normal levels in the default 'Custom Levels' pack. ");
+                message.AppendLine($"Temporary fix: After all songs are loaded in the main menu, press Ctrl+R on your keyboard, this will hide the duplicates.");
+                icon = TaskDialogIcon.Information;
+            }
+            else if (radioButtonExport.Checked)
+            {
+                message.AppendLine($"Done. The generated levels were exported to '{job.argument.destination}'.");
+                icon = TaskDialogIcon.Information;
+            }
+            else if (radioButtonModify.Checked)
+            {
+                message.AppendLine($"Done. The selected levels were modified directly.");
+                icon = TaskDialogIcon.Information;
+            }
+            if (job.result.cancelled)
+            {
+                footer.Append("The operation was cancelled. ");
+                icon = TaskDialogIcon.Warning;
+            }
+            if (job.exceptions.Count > 0)
+            {
+                footer.Append($"{job.exceptions.Count} problems occured. ");
+                icon = TaskDialogIcon.Error;
+            }
+            else
+            {
+                footer.Append($"No problems occured. ");
+            }
+
+            message.AppendLine();
+            message.AppendLine($"{job.result.mapsIterated} maps iterated.");
+            message.AppendLine($"{job.result.mapsGenerated} maps generated.");
+            message.AppendLine($"{job.result.difficultiesGenerated} difficulties generated. ({string.Join(", ", job.argument.difficultyLevels)})");
+            if (job.result.mapsUpToDate > 0)
+                message.AppendLine($"{job.result.mapsUpToDate} maps were already up to date.");
+
+            TaskDialog dialog = new TaskDialog();
+            dialog.WindowTitle = windowTitle;
+            dialog.MainIcon = icon;
+            dialog.Content = message.ToString();
+            dialog.Footer = footer.ToString();
+            dialog.Buttons.Add(new TaskDialogButton(ButtonType.Ok));
+            if (job.exceptions.Count > 0)
+            {
+                dialog.Buttons.Add(new TaskDialogButton("Show problems"));
+                dialog.ButtonClicked += (sender, e) =>
+                {
+                    if (e.Item.Text == "Show problems")
+                    {
+                        StringBuilder str = new StringBuilder();
+                        for (int i = 0; i < job.exceptions.Count && i < 10; i++)
+                            str.AppendLine(job.exceptions[i].Message);
+                        if (job.exceptions.Count > 10)
+                            str.AppendLine($"\nAnd {job.exceptions.Count - 10} more...");
+
+                        MessageBox.Show(str.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                };
+            }
+
+            return dialog;
         }
 
         private void buttonUpdatePack_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(config.lastGeneratedMusicPackPath))
+            if (string.IsNullOrEmpty(config.lastGeneratedMusicPackPath) || string.IsNullOrEmpty(config.lastGeneratedMusicPackSourcePath))
             {
                 Console.WriteLine("Update pack button was pressed but nothing to update.");
                 return;
             }
 
-            Jobs.FindSongsUnderPath(CustomSongsPath, (findSongsJob) =>
+            Jobs.FindSongsUnderPath(config.lastGeneratedMusicPackSourcePath, (findSongsJob) =>
             {
                 Jobs.GenerateMaps(new Jobs.GenerateMapsOptions()
                 {
@@ -342,29 +390,7 @@ namespace Stx.ThreeSixtyfyer
                     generator = generator
                 }, (updateJob) =>
                 {
-                    if (updateJob.result.mapsChanged > 0)
-                    {
-                        MessageBox.Show($"{updateJob.result.mapsChanged} different levels are up to date with the latest generator version. (Will include newly imported songs)",
-                            "Completed!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        if (updateJob.exceptions.Count > 0)
-                        {
-                            StringBuilder str = new StringBuilder();
-                            for (int i = 0; i < updateJob.exceptions.Count && i < 10; i++)
-                                str.AppendLine(updateJob.exceptions[i].Message);
-                            if (updateJob.exceptions.Count > 10)
-                                str.AppendLine($"\nAnd {updateJob.exceptions.Count - 10} more...");
-
-                            MessageBox.Show(str.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        else
-                        {
-                            MessageBox.Show($"All levels are already up to date!",
-                                "Nothing happened", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        }
-                    }
+                    CreateResultTaskDialog(updateJob, "Updating maps complete!").ShowDialog();
 
                     BeginInvoke(new MethodInvoker(() => SetUI(true)));
                 });
@@ -378,7 +404,7 @@ namespace Stx.ThreeSixtyfyer
 
         private void buttonGeneratorSettings_Click(object sender, EventArgs e)
         {
-            new FormGeneratorSettings(generator).ShowDialog();
+            new FormGeneratorSettings(ref generator).ShowDialog();
             config.generatorToUse = generator.Name;
             config.generatorSettings = generator.Settings;
         }
@@ -401,6 +427,11 @@ namespace Stx.ThreeSixtyfyer
         private void radioButtonModify_CheckedChanged(object sender, EventArgs e)
         {
             buttonGenerate.Text = "Modify selected maps";
+        }
+
+        private void UpdateGeneratorSettingsButton()
+        {
+
         }
     }
 }

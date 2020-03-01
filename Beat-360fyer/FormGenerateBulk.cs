@@ -150,9 +150,9 @@ namespace Stx.ThreeSixtyfyer
 
             Jobs.GenerateMaps(options, (job) =>
             {
-                if (job.result.mapsChanged > 0)
+                if (job.result.mapsGenerated > 0)
                 {
-                    MessageBox.Show($"360 modes were added to {job.result.mapsChanged} different levels for these difficulties: " +
+                    MessageBox.Show($"360 modes were added to {job.result.mapsGenerated} different levels for these difficulties: " +
                         $"{string.Join(", ", job.argument.difficultyLevels)}\n\n" +
                         $"Just navigate to the level in the game and the 360 mode will appear.",
                         "Completed!", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -274,7 +274,7 @@ namespace Stx.ThreeSixtyfyer
 
         private void buttonGeneratorSettings_Click(object sender, EventArgs e)
         {
-            new FormGeneratorSettings(generator).ShowDialog();
+            new FormGeneratorSettings(ref generator).ShowDialog();
             config.generatorToUse = generator.Name;
             config.generatorSettings = generator.Settings;
         }

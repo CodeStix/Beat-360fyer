@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGeneratePack));
             System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Songs", System.Windows.Forms.HorizontalAlignment.Left);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGeneratePack));
             this.buttonSelectBeatSaber = new System.Windows.Forms.Button();
             this.textBoxBeatSaberPath = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -53,6 +53,7 @@
             this.radioButtonModify = new System.Windows.Forms.RadioButton();
             this.label5 = new System.Windows.Forms.Label();
             this.panelMusicPack = new System.Windows.Forms.Panel();
+            this.labelBeatSaberStatus = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.panelMusicPack.SuspendLayout();
             this.SuspendLayout();
@@ -61,18 +62,18 @@
             // 
             this.buttonSelectBeatSaber.Location = new System.Drawing.Point(12, 77);
             this.buttonSelectBeatSaber.Name = "buttonSelectBeatSaber";
-            this.buttonSelectBeatSaber.Size = new System.Drawing.Size(155, 23);
+            this.buttonSelectBeatSaber.Size = new System.Drawing.Size(126, 23);
             this.buttonSelectBeatSaber.TabIndex = 0;
-            this.buttonSelectBeatSaber.Text = "Select Beat Saber directory...\r\n";
+            this.buttonSelectBeatSaber.Text = "Select directory...\r\n";
             this.buttonSelectBeatSaber.UseVisualStyleBackColor = true;
             this.buttonSelectBeatSaber.Click += new System.EventHandler(this.ButtonSelectBeatSaber_Click);
             // 
             // textBoxBeatSaberPath
             // 
-            this.textBoxBeatSaberPath.Location = new System.Drawing.Point(173, 79);
+            this.textBoxBeatSaberPath.Location = new System.Drawing.Point(144, 79);
             this.textBoxBeatSaberPath.Name = "textBoxBeatSaberPath";
             this.textBoxBeatSaberPath.ReadOnly = true;
-            this.textBoxBeatSaberPath.Size = new System.Drawing.Size(335, 20);
+            this.textBoxBeatSaberPath.Size = new System.Drawing.Size(364, 20);
             this.textBoxBeatSaberPath.TabIndex = 2;
             // 
             // label1
@@ -81,18 +82,20 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(9, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(129, 13);
+            this.label1.Size = new System.Drawing.Size(94, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Generate Music Pack";
+            this.label1.Text = "Generate Mode";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(9, 24);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(458, 39);
+            this.label2.Size = new System.Drawing.Size(455, 39);
             this.label2.TabIndex = 4;
-            this.label2.Text = resources.GetString("label2.Text");
+            this.label2.Text = "First, select a directory containing songs, or select the Beat Saber\r\ninstallatio" +
+    "n location to create a custom Music Pack (recommended). Then, tweak some setting" +
+    "s\r\nand press the green button.";
             // 
             // buttonGeneratorSettings
             // 
@@ -171,8 +174,8 @@
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(190, 17);
-            this.toolStripStatusLabel1.Text = "by Stijn Rogiest (CodeStix) 2020 (c)";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(114, 17);
+            this.toolStripStatusLabel1.Text = "by CodeStix 2020 (c)";
             // 
             // toolStripStatusLabel2
             // 
@@ -184,9 +187,9 @@
             // 
             // buttonUpdatePack
             // 
-            this.buttonUpdatePack.Location = new System.Drawing.Point(321, 9);
+            this.buttonUpdatePack.Location = new System.Drawing.Point(330, 9);
             this.buttonUpdatePack.Name = "buttonUpdatePack";
-            this.buttonUpdatePack.Size = new System.Drawing.Size(188, 23);
+            this.buttonUpdatePack.Size = new System.Drawing.Size(179, 23);
             this.buttonUpdatePack.TabIndex = 18;
             this.buttonUpdatePack.Text = "Update previous generated pack";
             this.buttonUpdatePack.UseVisualStyleBackColor = true;
@@ -204,7 +207,7 @@
             // 
             // textBoxPackName
             // 
-            this.textBoxPackName.Location = new System.Drawing.Point(67, 17);
+            this.textBoxPackName.Location = new System.Drawing.Point(67, 0);
             this.textBoxPackName.MaxLength = 32;
             this.textBoxPackName.Name = "textBoxPackName";
             this.textBoxPackName.Size = new System.Drawing.Size(138, 20);
@@ -214,7 +217,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(-3, 20);
+            this.label4.Location = new System.Drawing.Point(0, 3);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(64, 13);
             this.label4.TabIndex = 21;
@@ -231,7 +234,8 @@
             // radioButtonMusicPack
             // 
             this.radioButtonMusicPack.AutoSize = true;
-            this.radioButtonMusicPack.Location = new System.Drawing.Point(0, 0);
+            this.radioButtonMusicPack.Checked = true;
+            this.radioButtonMusicPack.Location = new System.Drawing.Point(12, 532);
             this.radioButtonMusicPack.Name = "radioButtonMusicPack";
             this.radioButtonMusicPack.Size = new System.Drawing.Size(211, 17);
             this.radioButtonMusicPack.TabIndex = 23;
@@ -247,7 +251,6 @@
             this.radioButtonExport.Name = "radioButtonExport";
             this.radioButtonExport.Size = new System.Drawing.Size(294, 30);
             this.radioButtonExport.TabIndex = 24;
-            this.radioButtonExport.TabStop = true;
             this.radioButtonExport.Text = "Export the generated modes to a specified location. \r\nThe location will be asked " +
     "when you start the generation.";
             this.radioButtonExport.UseVisualStyleBackColor = true;
@@ -260,7 +263,6 @@
             this.radioButtonModify.Name = "radioButtonModify";
             this.radioButtonModify.Size = new System.Drawing.Size(294, 43);
             this.radioButtonModify.TabIndex = 25;
-            this.radioButtonModify.TabStop = true;
             this.radioButtonModify.Text = "Modify maps directly, this will place the new difficulty files \r\nin the original " +
     "map\'s directory and modify the info.dat file.\r\n(A backup of info.dat is created," +
     " named info.dat.bak)";
@@ -279,19 +281,28 @@
             // 
             // panelMusicPack
             // 
-            this.panelMusicPack.Controls.Add(this.radioButtonMusicPack);
             this.panelMusicPack.Controls.Add(this.label4);
             this.panelMusicPack.Controls.Add(this.textBoxPackName);
-            this.panelMusicPack.Location = new System.Drawing.Point(12, 535);
+            this.panelMusicPack.Location = new System.Drawing.Point(12, 555);
             this.panelMusicPack.Name = "panelMusicPack";
-            this.panelMusicPack.Size = new System.Drawing.Size(218, 42);
+            this.panelMusicPack.Size = new System.Drawing.Size(211, 22);
             this.panelMusicPack.TabIndex = 27;
+            // 
+            // labelBeatSaberStatus
+            // 
+            this.labelBeatSaberStatus.ForeColor = System.Drawing.Color.Red;
+            this.labelBeatSaberStatus.Location = new System.Drawing.Point(223, 534);
+            this.labelBeatSaberStatus.Name = "labelBeatSaberStatus";
+            this.labelBeatSaberStatus.Size = new System.Drawing.Size(122, 30);
+            this.labelBeatSaberStatus.TabIndex = 28;
             // 
             // FormGeneratePack
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(521, 697);
+            this.Controls.Add(this.labelBeatSaberStatus);
+            this.Controls.Add(this.radioButtonMusicPack);
             this.Controls.Add(this.panelMusicPack);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.radioButtonModify);
@@ -349,5 +360,6 @@
         private System.Windows.Forms.RadioButton radioButtonModify;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Panel panelMusicPack;
+        private System.Windows.Forms.Label labelBeatSaberStatus;
     }
 }

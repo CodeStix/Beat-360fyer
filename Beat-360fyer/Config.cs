@@ -9,27 +9,34 @@ using System.Threading.Tasks;
 
 namespace Stx.ThreeSixtyfyer
 {
-    public class Config
+    public abstract class Config
     {
         public const string CONFIG_FILENAME = "config.json";
+
+        [JsonProperty("version")]
+        public abstract int Version { get; }
 
         protected Config() { }
 
         public static TConfig Load<TConfig>() where TConfig : Config, new()
         {
+            TConfig n = new TConfig();
             if (!File.Exists(CONFIG_FILENAME))
             {
-                return new TConfig();
+                return n;
             }
             else
             {
-                return JsonConvert.DeserializeObject<TConfig>(File.ReadAllText(CONFIG_FILENAME));
+                TConfig c = JsonConvert.DeserializeObject<TConfig>(File.ReadAllText(CONFIG_FILENAME), Program.JsonSettings);
+                if (c.Version < n.Version)
+                    c = (TConfig)n.Upgrade(c, c.Version);
+                return c;
             }
         }
 
         public void Save()
         {
-            File.WriteAllText(CONFIG_FILENAME, JsonConvert.SerializeObject(this));
+            File.WriteAllText(CONFIG_FILENAME, JsonConvert.SerializeObject(this, Program.JsonSettings));
         }
 
         public static bool TryLoad<TConfig>(out TConfig config) where TConfig : Config, new()
@@ -58,16 +65,24 @@ namespace Stx.ThreeSixtyfyer
                 return false;
             }
         }
+
+        public virtual Config Upgrade(dynamic oldConfig, int oldConfigVersion)
+        {
+            return oldConfig;
+        }
     }
 
     public class ThreeSixtyfyerConfig : Config 
     {
+        public override int Version => 1;
+
         public string packPath;
         public string bulkPath;
         public string exportPath;
+        public string lastGeneratedMusicPackSourcePath;
         public string lastGeneratedMusicPackPath;
 
         public string generatorToUse = BeatMapGenerator.DEFAULT_GENERATOR;
-        public object generatorSettings = new BeatMap360GeneratorSettings();
+        public IBeatMapGeneratorSettings generatorSettings = new BeatMap360GeneratorSettings();
     }
 }

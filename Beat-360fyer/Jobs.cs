@@ -82,8 +82,10 @@ namespace Stx.ThreeSixtyfyer
 
         public struct GeneratorMapsResult
         {
-            public int mapsChanged;
+            public int mapsGenerated;
             public int mapsIterated;
+            public int difficultiesGenerated;
+            public int mapsUpToDate;
             public bool cancelled;
         }
 
@@ -115,17 +117,17 @@ namespace Stx.ThreeSixtyfyer
                 lock (job.argument.toGenerateFor)
                     info = job.argument.toGenerateFor[i];
 
+                BeatMapGenerator.Result r;
                 if (string.IsNullOrEmpty(job.argument.destination))
-                {
-                    if (BeatMapGenerator.UseGeneratorAndOverwrite(job.argument.generator, info, job.argument.difficultyLevels, job.argument.forceGenerate))
-                        job.result.mapsChanged++;
-                }
+                    r = BeatMapGenerator.UseGeneratorAndOverwrite(job.argument.generator, info, job.argument.difficultyLevels, job.argument.forceGenerate);
                 else
-                {
-                    if (BeatMapGenerator.UseGeneratorAndCopy(job.argument.generator, info, job.argument.difficultyLevels, job.argument.destination, job.argument.forceGenerate))
-                        job.result.mapsChanged++;
-                }
+                    r = BeatMapGenerator.UseGeneratorAndCopy(job.argument.generator, info, job.argument.difficultyLevels, job.argument.destination, job.argument.forceGenerate);
 
+                job.result.difficultiesGenerated += r.generatedCount;
+                if (r.generatedCount != 0)
+                    job.result.mapsGenerated++;
+                if (r.alreadyUpToDate)
+                    job.result.mapsUpToDate++;
                 job.result.mapsIterated++;
                 job.Report((int)((float)job.result.mapsIterated / job.argument.toGenerateFor.Count * 100f), info.ToString(), info.mapDirectoryPath);
             });
