@@ -171,7 +171,7 @@ namespace Stx.ThreeSixtyfyer
         {
             if (newVersion > version)
                 return true;
-            if (JsonConvert.SerializeObject(newSettings) != JsonConvert.SerializeObject(settings)) // Slow should fix!
+            if (!settings.Equals(newSettings)) // Settings must override GetHashCode() and Equals()!
                 return true;
             return false;
         }

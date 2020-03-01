@@ -35,6 +35,42 @@ namespace Stx.ThreeSixtyfyer.Generators
         public bool enableSpin = false;                    // enable spin effect
         public RemoveOriginalWallsMode originalWallsMode = RemoveOriginalWallsMode.RemoveNotFun;
         public WallGeneratorMode wallGenerator = WallGeneratorMode.Enabled;
+
+        public override bool Equals(object obj)
+        {
+            if (obj is BeatMap360GeneratorSettings s)
+            {
+                return s.frameLength == frameLength
+                    && beatLength == s.beatLength
+                    && obstableBackCutoffSeconds == s.obstableBackCutoffSeconds
+                    && obstacleFrontCutoffSeconds == s.obstacleFrontCutoffSeconds
+                    && activeWallMaySpinPercentage == s.activeWallMaySpinPercentage
+                    && enableSpin == s.enableSpin
+                    && originalWallsMode == s.originalWallsMode
+                    && wallGenerator == s.wallGenerator;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 13;
+            unchecked
+            {
+                hash = (hash * 7) + frameLength.GetHashCode();
+                hash = (hash * 7) + beatLength.GetHashCode();
+                hash = (hash * 7) + obstableBackCutoffSeconds.GetHashCode();
+                hash = (hash * 7) + obstacleFrontCutoffSeconds.GetHashCode();
+                hash = (hash * 7) + activeWallMaySpinPercentage.GetHashCode();
+                hash = (hash * 7) + enableSpin.GetHashCode();
+                hash = (hash * 7) + originalWallsMode.GetHashCode();
+                hash = (hash * 7) + wallGenerator.GetHashCode();
+            }
+            return hash;
+        }
     }
 
     // [/ ] [ \] [\/] [  ] [/\] [\|] [\-] [|/] [-/]
