@@ -20,6 +20,8 @@ namespace Stx.ThreeSixtyfyer
         public List<BeatMapObstacle> obstacles;
         [JsonProperty("_customData", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public object customData;
+        /*[JsonProperty("_generatorVersion", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int generatorVersion;*/
 
         public BeatMap() { }
         
@@ -72,7 +74,7 @@ namespace Stx.ThreeSixtyfyer
     }
 
     [Serializable]
-    public struct BeatMapEvent
+    public class BeatMapEvent
     {
         [JsonProperty("_time")]
         public float time;
@@ -83,7 +85,7 @@ namespace Stx.ThreeSixtyfyer
     }
 
     [Serializable]
-    public struct BeatMapNote
+    public class BeatMapNote
     {
         [JsonProperty("_time")]
         public float time;
@@ -103,7 +105,7 @@ namespace Stx.ThreeSixtyfyer
     }
 
     [Serializable]
-    public struct BeatMapObstacle
+    public class BeatMapObstacle
     {
         [JsonProperty("_time")]
         public float time;
