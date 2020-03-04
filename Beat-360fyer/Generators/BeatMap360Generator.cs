@@ -76,7 +76,10 @@ namespace Stx.ThreeSixtyfyer.Generators
     // [/ ] [ \] [\/] [  ] [/\] [\|] [\-] [|/] [-/]
     // [\ ] [ /] [  ] [/\] [\/] [-\] [|\] [/-] [/|]
 
-    [BeatMapGenerator("CodeStix's 360fyer", 10)]
+    [BeatMapGenerator("360 Degree Generator", 10, "CodeStix", "This generator generates 360 Degree gamemodes from the Standard ones.\n" +
+        "It makes sure it does not rotate too much and walls will be cut off at\n" +
+        "the right moment so they don't block your vision when rotating.\n" +
+        "Wall generation is supported, check the generator settings.")]
     public class BeatMap360Generator : IBeatMapGenerator
     {
         public string GeneratedGameModeName => "360Degree";

@@ -36,7 +36,9 @@ namespace Stx.ThreeSixtyfyer.Generators
         }
     }
 
-    [BeatMapGenerator("Example 90Degree Generator", 3)]
+    [BeatMapGenerator("Example 90Degree Generator", 3, "CodeStix", "This simple generator just swings to the left and to the right each x seconds.\n" +
+        "This is to showcase how a generator is made.\n" +
+        "Want to create your own? Check the GitHub page for instructions.")]
     public class ExampleGenerator : IBeatMapGenerator
     {
         public string GeneratedGameModeName => "90Degree";

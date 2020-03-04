@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Songs", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGeneratePack));
             this.buttonSelectBeatSaber = new System.Windows.Forms.Button();
@@ -59,6 +60,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.linkCreateGenerator = new System.Windows.Forms.LinkLabel();
+            this.toolTipGeneratorDescription = new System.Windows.Forms.ToolTip(this.components);
             this.statusStrip1.SuspendLayout();
             this.panelMusicPack.SuspendLayout();
             this.SuspendLayout();
@@ -106,7 +108,7 @@
             // 
             this.buttonGeneratorSettings.BackColor = System.Drawing.Color.White;
             this.buttonGeneratorSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonGeneratorSettings.Location = new System.Drawing.Point(520, 502);
+            this.buttonGeneratorSettings.Location = new System.Drawing.Point(519, 492);
             this.buttonGeneratorSettings.Name = "buttonGeneratorSettings";
             this.buttonGeneratorSettings.Size = new System.Drawing.Size(278, 23);
             this.buttonGeneratorSettings.TabIndex = 3;
@@ -119,7 +121,7 @@
             this.buttonGenerate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.buttonGenerate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonGenerate.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonGenerate.Location = new System.Drawing.Point(514, 582);
+            this.buttonGenerate.Location = new System.Drawing.Point(513, 582);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(297, 51);
             this.buttonGenerate.TabIndex = 2;
@@ -208,7 +210,7 @@
             // 
             this.checkBoxForceGenerate.AutoSize = true;
             this.checkBoxForceGenerate.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkBoxForceGenerate.Location = new System.Drawing.Point(520, 466);
+            this.checkBoxForceGenerate.Location = new System.Drawing.Point(519, 456);
             this.checkBoxForceGenerate.Name = "checkBoxForceGenerate";
             this.checkBoxForceGenerate.Size = new System.Drawing.Size(167, 30);
             this.checkBoxForceGenerate.TabIndex = 19;
@@ -236,16 +238,16 @@
             // listDifficulties
             // 
             this.listDifficulties.FormattingEnabled = true;
-            this.listDifficulties.Location = new System.Drawing.Point(635, 381);
+            this.listDifficulties.Location = new System.Drawing.Point(611, 371);
             this.listDifficulties.Name = "listDifficulties";
-            this.listDifficulties.Size = new System.Drawing.Size(163, 79);
+            this.listDifficulties.Size = new System.Drawing.Size(186, 79);
             this.listDifficulties.TabIndex = 22;
             // 
             // radioButtonMusicPack
             // 
             this.radioButtonMusicPack.AutoSize = true;
             this.radioButtonMusicPack.Checked = true;
-            this.radioButtonMusicPack.Location = new System.Drawing.Point(517, 156);
+            this.radioButtonMusicPack.Location = new System.Drawing.Point(517, 135);
             this.radioButtonMusicPack.Name = "radioButtonMusicPack";
             this.radioButtonMusicPack.Size = new System.Drawing.Size(211, 17);
             this.radioButtonMusicPack.TabIndex = 23;
@@ -257,7 +259,7 @@
             // radioButtonExport
             // 
             this.radioButtonExport.AutoSize = true;
-            this.radioButtonExport.Location = new System.Drawing.Point(517, 207);
+            this.radioButtonExport.Location = new System.Drawing.Point(517, 186);
             this.radioButtonExport.Name = "radioButtonExport";
             this.radioButtonExport.Size = new System.Drawing.Size(294, 30);
             this.radioButtonExport.TabIndex = 24;
@@ -269,7 +271,7 @@
             // radioButtonModify
             // 
             this.radioButtonModify.AutoSize = true;
-            this.radioButtonModify.Location = new System.Drawing.Point(517, 245);
+            this.radioButtonModify.Location = new System.Drawing.Point(517, 224);
             this.radioButtonModify.Name = "radioButtonModify";
             this.radioButtonModify.Size = new System.Drawing.Size(294, 43);
             this.radioButtonModify.TabIndex = 25;
@@ -283,7 +285,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(514, 137);
+            this.label5.Location = new System.Drawing.Point(514, 116);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(77, 13);
             this.label5.TabIndex = 26;
@@ -293,7 +295,7 @@
             // 
             this.panelMusicPack.Controls.Add(this.label4);
             this.panelMusicPack.Controls.Add(this.textBoxPackName);
-            this.panelMusicPack.Location = new System.Drawing.Point(517, 179);
+            this.panelMusicPack.Location = new System.Drawing.Point(517, 158);
             this.panelMusicPack.Name = "panelMusicPack";
             this.panelMusicPack.Size = new System.Drawing.Size(211, 22);
             this.panelMusicPack.TabIndex = 27;
@@ -310,16 +312,17 @@
             // 
             this.comboBoxGenerator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxGenerator.FormattingEnabled = true;
-            this.comboBoxGenerator.Location = new System.Drawing.Point(635, 339);
+            this.comboBoxGenerator.Location = new System.Drawing.Point(611, 331);
             this.comboBoxGenerator.Name = "comboBoxGenerator";
-            this.comboBoxGenerator.Size = new System.Drawing.Size(163, 21);
+            this.comboBoxGenerator.Size = new System.Drawing.Size(186, 21);
             this.comboBoxGenerator.TabIndex = 29;
+            this.toolTipGeneratorDescription.SetToolTip(this.comboBoxGenerator, "yes");
             this.comboBoxGenerator.SelectedIndexChanged += new System.EventHandler(this.comboBoxGenerator_SelectedIndexChanged);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(517, 339);
+            this.label6.Location = new System.Drawing.Point(516, 334);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(89, 13);
             this.label6.TabIndex = 23;
@@ -328,17 +331,17 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(517, 381);
+            this.label7.Location = new System.Drawing.Point(516, 371);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(115, 13);
+            this.label7.Size = new System.Drawing.Size(70, 26);
             this.label7.TabIndex = 30;
-            this.label7.Text = "Difficulties to generate:";
+            this.label7.Text = "Difficulties to \r\ngenerate:";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(514, 321);
+            this.label8.Location = new System.Drawing.Point(513, 313);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(53, 13);
             this.label8.TabIndex = 31;
@@ -347,13 +350,23 @@
             // linkCreateGenerator
             // 
             this.linkCreateGenerator.AutoSize = true;
-            this.linkCreateGenerator.Location = new System.Drawing.Point(632, 362);
+            this.linkCreateGenerator.Location = new System.Drawing.Point(713, 355);
             this.linkCreateGenerator.Name = "linkCreateGenerator";
             this.linkCreateGenerator.Size = new System.Drawing.Size(84, 13);
             this.linkCreateGenerator.TabIndex = 32;
             this.linkCreateGenerator.TabStop = true;
             this.linkCreateGenerator.Text = "Create your own";
             this.linkCreateGenerator.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkCreateGenerator_LinkClicked);
+            // 
+            // toolTipGeneratorDescription
+            // 
+            this.toolTipGeneratorDescription.AutomaticDelay = 10;
+            this.toolTipGeneratorDescription.AutoPopDelay = 32767;
+            this.toolTipGeneratorDescription.InitialDelay = 100;
+            this.toolTipGeneratorDescription.IsBalloon = true;
+            this.toolTipGeneratorDescription.ReshowDelay = 500;
+            this.toolTipGeneratorDescription.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.toolTipGeneratorDescription.UseAnimation = false;
             // 
             // FormGeneratePack
             // 
@@ -430,5 +443,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.LinkLabel linkCreateGenerator;
+        private System.Windows.Forms.ToolTip toolTipGeneratorDescription;
     }
 }

@@ -29,6 +29,8 @@ namespace Stx.ThreeSixtyfyer
         private void buttonSave_Click(object sender, EventArgs e)
         {
             SaveSettings();
+            if (saved)
+                this.Close();
         }
 
         private void LoadSettings()

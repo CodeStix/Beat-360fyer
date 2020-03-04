@@ -257,9 +257,9 @@ namespace Stx.ThreeSixtyfyer
             generator = BeatMapGenerator.GetGeneratorWithName(config.generatorToUse);
             if (generator == null)
             {
-                config.generatorToUse = BeatMapGenerator.DEFAULT_GENERATOR;
-                MessageBox.Show($"Generator with name {config.generatorToUse} not found. Setting to default generator {config.generatorToUse}.");
-                generator = BeatMapGenerator.GetGeneratorWithName(config.generatorToUse);
+                MessageBox.Show($"Generator with name {config.generatorToUse} not found. Setting to default generator.");
+                generator = BeatMapGenerator.DefaultGenerator;
+                config.generatorToUse = generator.GetInformation().Name;
             }
             if (!config.generatorSettings.ContainsKey(config.generatorToUse))
                 config.generatorSettings.Add(config.generatorToUse, generator.Settings);

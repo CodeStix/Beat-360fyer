@@ -167,9 +167,9 @@ namespace Stx.ThreeSixtyfyer
             generator = BeatMapGenerator.GetGeneratorWithName(config.generatorToUse);
             if (generator == null)
             {
-                MessageBox.Show($"Generator with name {config.generatorToUse} not found (found in config file). Setting to default generator {BeatMapGenerator.DEFAULT_GENERATOR}.", "Unknown generator.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                config.generatorToUse = BeatMapGenerator.DEFAULT_GENERATOR;
-                generator = BeatMapGenerator.GetGeneratorWithName(config.generatorToUse);
+                MessageBox.Show($"Generator with name {config.generatorToUse} not found (found in config file). Setting to default generator.", "Unknown generator.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                generator = BeatMapGenerator.DefaultGenerator;
+                config.generatorToUse = generator.GetInformation().Name;
             }
             if (config.generatorSettings.ContainsKey(config.generatorToUse))
                 generator.Settings = config.generatorSettings[config.generatorToUse];
@@ -464,6 +464,11 @@ namespace Stx.ThreeSixtyfyer
 #endif
             if (config.generatorSettings.ContainsKey(generatorName))
                 generator.Settings = config.generatorSettings[generatorName];
+            config.generatorToUse = generatorName;
+
+            var info = generator.GetInformation();
+            toolTipGeneratorDescription.ToolTipTitle = $"{info.Name} by {info.Author}";
+            toolTipGeneratorDescription.SetToolTip(comboBoxGenerator, $"{info.Description} (version {info.Version} by {info.Author})");
 
             UpdateGeneratorSettingsButton();
         }

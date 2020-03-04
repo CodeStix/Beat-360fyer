@@ -13,8 +13,9 @@ namespace Stx.ThreeSixtyfyer
     public static class BeatMapGenerator
     {
         public static string ContributorImagePath { get; set; } = null;
-        public const string DEFAULT_GENERATOR = "CodeStix's 360fyer";
         public const string GENERATOR_CONFIG_NAME = "Generator.dat";
+
+        public static IBeatMapGenerator DefaultGenerator => new BeatMap360Generator();
 
         public static IEnumerable<Type> GeneratorTypes => AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())

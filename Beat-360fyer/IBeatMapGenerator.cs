@@ -11,11 +11,15 @@ namespace Stx.ThreeSixtyfyer
     {
         public int Version { get; }
         public string Name { get; }
+        public string Author { get; }
+        public string Description { get; }
 
-        public BeatMapGeneratorAttribute(string generatorName, int generatorVersion)
+        public BeatMapGeneratorAttribute(string generatorName, int generatorVersion, string author, string description)
         {
-            this.Version = generatorVersion;
-            this.Name = generatorName;
+            Version = generatorVersion;
+            Name = generatorName;
+            Author = author;
+            Description = description;
         }
     }
 
