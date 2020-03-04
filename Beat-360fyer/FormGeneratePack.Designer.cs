@@ -58,6 +58,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.linkCreateGenerator = new System.Windows.Forms.LinkLabel();
             this.statusStrip1.SuspendLayout();
             this.panelMusicPack.SuspendLayout();
             this.SuspendLayout();
@@ -105,7 +106,7 @@
             // 
             this.buttonGeneratorSettings.BackColor = System.Drawing.Color.White;
             this.buttonGeneratorSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonGeneratorSettings.Location = new System.Drawing.Point(520, 484);
+            this.buttonGeneratorSettings.Location = new System.Drawing.Point(520, 502);
             this.buttonGeneratorSettings.Name = "buttonGeneratorSettings";
             this.buttonGeneratorSettings.Size = new System.Drawing.Size(278, 23);
             this.buttonGeneratorSettings.TabIndex = 3;
@@ -207,7 +208,7 @@
             // 
             this.checkBoxForceGenerate.AutoSize = true;
             this.checkBoxForceGenerate.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkBoxForceGenerate.Location = new System.Drawing.Point(520, 448);
+            this.checkBoxForceGenerate.Location = new System.Drawing.Point(520, 466);
             this.checkBoxForceGenerate.Name = "checkBoxForceGenerate";
             this.checkBoxForceGenerate.Size = new System.Drawing.Size(167, 30);
             this.checkBoxForceGenerate.TabIndex = 19;
@@ -235,7 +236,7 @@
             // listDifficulties
             // 
             this.listDifficulties.FormattingEnabled = true;
-            this.listDifficulties.Location = new System.Drawing.Point(635, 363);
+            this.listDifficulties.Location = new System.Drawing.Point(635, 381);
             this.listDifficulties.Name = "listDifficulties";
             this.listDifficulties.Size = new System.Drawing.Size(163, 79);
             this.listDifficulties.TabIndex = 22;
@@ -327,7 +328,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(517, 363);
+            this.label7.Location = new System.Drawing.Point(517, 381);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(115, 13);
             this.label7.TabIndex = 30;
@@ -343,11 +344,23 @@
             this.label8.TabIndex = 31;
             this.label8.Text = "Settings";
             // 
+            // linkCreateGenerator
+            // 
+            this.linkCreateGenerator.AutoSize = true;
+            this.linkCreateGenerator.Location = new System.Drawing.Point(632, 362);
+            this.linkCreateGenerator.Name = "linkCreateGenerator";
+            this.linkCreateGenerator.Size = new System.Drawing.Size(84, 13);
+            this.linkCreateGenerator.TabIndex = 32;
+            this.linkCreateGenerator.TabStop = true;
+            this.linkCreateGenerator.Text = "Create your own";
+            this.linkCreateGenerator.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkCreateGenerator_LinkClicked);
+            // 
             // FormGeneratePack
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(822, 706);
+            this.Controls.Add(this.linkCreateGenerator);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label6);
@@ -416,5 +429,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.LinkLabel linkCreateGenerator;
     }
 }

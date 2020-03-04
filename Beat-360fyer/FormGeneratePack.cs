@@ -467,5 +467,10 @@ namespace Stx.ThreeSixtyfyer
 
             UpdateGeneratorSettingsButton();
         }
+
+        private void linkCreateGenerator_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://github.com/CodeStix/Beat-360fyer");
+        }
     }
 }
