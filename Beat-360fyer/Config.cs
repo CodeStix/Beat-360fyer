@@ -1,11 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Stx.ThreeSixtyfyer.Generators;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Stx.ThreeSixtyfyer
 {
@@ -72,17 +66,5 @@ namespace Stx.ThreeSixtyfyer
         }
     }
 
-    public class ThreeSixtyfyerConfig : Config 
-    {
-        public override int Version => 1;
-
-        public string packPath;
-        public string bulkPath;
-        public string exportPath;
-        public string lastGeneratedMusicPackSourcePath;
-        public string lastGeneratedMusicPackPath;
-
-        public string generatorToUse = BeatMapGenerator.DefaultGenerator.GetInformation().Name;
-        public Dictionary<string, IBeatMapGeneratorSettings> generatorSettings = new Dictionary<string, IBeatMapGeneratorSettings>();
-    }
+    
 }

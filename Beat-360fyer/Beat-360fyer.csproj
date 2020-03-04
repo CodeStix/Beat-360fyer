@@ -61,6 +61,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BeatMap.cs" />
+    <Compile Include="BeatMapGeneratorAttribute.cs" />
+    <Compile Include="BeatMapGeneratorConfig.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Generators\BeatMap360Generator.cs" />
     <Compile Include="BeatMapInfo.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="BeatMapGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ThreeSixtyfyerConfig.cs" />
     <Compile Include="WorkerJob.cs" />
     <EmbeddedResource Include="FormGeneratePack.resx">
       <DependentUpon>FormGeneratePack.cs</DependentUpon>
