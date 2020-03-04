@@ -427,9 +427,9 @@ namespace Stx.ThreeSixtyfyer.Generators
                 }
             }
 
-            int i = map.obstacles.RemoveAll((obst) => obst.duration <= 0); // remove all walls with a negative duration, can happen when cutting off
-            map.events = map.events.OrderBy((e) => e.time).ToList();
-
+            map.obstacles.RemoveAll((obst) => obst.duration <= 0); // remove all walls with a negative duration, can happen when cutting off
+            
+            map.Sort();
             return map;
         }
     }

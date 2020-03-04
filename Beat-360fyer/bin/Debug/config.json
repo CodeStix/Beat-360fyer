@@ -3,13 +3,13 @@
   "bulkPath": null,
   "exportPath": null,
   "lastGeneratedMusicPackSourcePath": "C:\\FastGames\\steamapps\\common\\Beat Saber\\Beat Saber_Data\\CustomLevels",
-  "lastGeneratedMusicPackPath": "C:\\FastGames\\steamapps\\common\\Songs\\Export7 90degree",
-  "generatorToUse": "CodeStix's 360fyer",
+  "lastGeneratedMusicPackPath": "C:\\FastGames\\steamapps\\common\\Beat Saber\\Beat Saber_Data\\CustomGenerated90Levels2",
+  "generatorToUse": "Example 90Degree Generator",
   "generatorSettings": {
     "Example 90Degree Generator": {
       "$type": "Stx.ThreeSixtyfyer.Generators.ExampleGeneratorSettings, Beat-360fyer",
       "rotateEachNoteCount": 2,
-      "rotateCountPerDirectionSwitch": 4
+      "rotateCountPerDirectionSwitch": 6
     },
     "CodeStix's 360fyer": {
       "$type": "Stx.ThreeSixtyfyer.Generators.BeatMap360GeneratorSettings, Beat-360fyer",
@@ -18,7 +18,7 @@
       "obstableBackCutoffSeconds": 0.38,
       "obstacleFrontCutoffSeconds": 0.18,
       "activeWallMaySpinPercentage": 0.6,
-      "enableSpin": false,
+      "enableSpin": true,
       "originalWallsMode": "RemoveNotFun",
       "wallGenerator": "Enabled"
     }

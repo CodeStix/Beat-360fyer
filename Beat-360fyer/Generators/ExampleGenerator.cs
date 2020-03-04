@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Stx.ThreeSixtyfyer.Generators
 {
@@ -35,7 +36,7 @@ namespace Stx.ThreeSixtyfyer.Generators
         }
     }
 
-    [BeatMapGenerator("Example 90Degree Generator", 1)]
+    [BeatMapGenerator("Example 90Degree Generator", 3)]
     public class ExampleGenerator : IBeatMapGenerator
     {
         public string GeneratedGameModeName => "90Degree";
@@ -59,6 +60,9 @@ namespace Stx.ThreeSixtyfyer.Generators
                         modified.AddGoRightEvent(currentNote.time, 1);
                 }
             }
+
+            // Sort the BeatMap so that the inserted rotation events are in the right spot and not appended at the end of the events list
+            modified.Sort();
 
             // Return the modfied BeatMap
             return modified;

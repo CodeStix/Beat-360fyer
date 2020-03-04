@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace Stx.ThreeSixtyfyer
 {
+    public enum RotationEvent
+    {
+        Event15 = 15,
+        Event14 = 14
+    }
+
     [Serializable]
     public class BeatMap
     {
@@ -20,8 +26,6 @@ namespace Stx.ThreeSixtyfyer
         public List<BeatMapObstacle> obstacles;
         [JsonProperty("_customData", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public object customData;
-        /*[JsonProperty("_generatorVersion", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int generatorVersion;*/
 
         public BeatMap() { }
         
@@ -34,7 +38,7 @@ namespace Stx.ThreeSixtyfyer
             customData = other.customData;
         }
 
-        public void AddGoLeftEvent(float time, int steps)
+        public void AddGoLeftEvent(float time, int steps, RotationEvent mode = RotationEvent.Event15)
         {
             if (steps == 0)
                 return;
@@ -42,12 +46,12 @@ namespace Stx.ThreeSixtyfyer
             events.Add(new BeatMapEvent()
             {
                 time = time,
-                type = 15,
+                type = (int)mode,
                 value = 4 - steps
             });
         }
 
-        public void AddGoRightEvent(float time, int steps)
+        public void AddGoRightEvent(float time, int steps, RotationEvent mode = RotationEvent.Event15)
         {
             if (steps == 0)
                 return;
@@ -55,7 +59,7 @@ namespace Stx.ThreeSixtyfyer
             events.Add(new BeatMapEvent()
             {
                 time = time,
-                type = 15,
+                type = (int)mode,
                 value = 3 + steps
             });
         }
@@ -70,6 +74,13 @@ namespace Stx.ThreeSixtyfyer
                 type = 0,
                 width = width
             });
+        }
+
+        public void Sort()
+        {
+            events = events.OrderBy((e) => e.time).ToList();
+            notes = notes.OrderBy((e) => e.time).ToList();
+            obstacles = obstacles.OrderBy((e) => e.time).ToList();
         }
     }
 
