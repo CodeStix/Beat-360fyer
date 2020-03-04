@@ -464,6 +464,8 @@ namespace Stx.ThreeSixtyfyer
 #endif
             if (config.generatorSettings.ContainsKey(generatorName))
                 generator.Settings = config.generatorSettings[generatorName];
+
+            UpdateGeneratorSettingsButton();
         }
     }
 }
