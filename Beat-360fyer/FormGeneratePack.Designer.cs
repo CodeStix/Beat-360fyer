@@ -165,18 +165,18 @@
             this.label3.ForeColor = System.Drawing.Color.Gray;
             this.label3.Location = new System.Drawing.Point(9, 636);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(499, 48);
+            this.label3.Size = new System.Drawing.Size(499, 44);
             this.label3.TabIndex = 7;
             this.label3.Text = "Tip: use shift to select multiple items, then use space to check or uncheck them." +
-    "\r\nUse (Ctrl+A) to select all songs and (Ctrl+D) to deselect all songs.\r\nJump to " +
-    "a song by pressing a letter.";
+    "\r\nUse Ctrl+A to select all songs and Ctrl+D to deselect all songs.\r\nJump to a so" +
+    "ng by pressing a letter.";
             // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 684);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 680);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(822, 22);
             this.statusStrip1.TabIndex = 14;
@@ -305,7 +305,7 @@
             this.labelBeatSaberStatus.ForeColor = System.Drawing.Color.Red;
             this.labelBeatSaberStatus.Location = new System.Drawing.Point(728, 137);
             this.labelBeatSaberStatus.Name = "labelBeatSaberStatus";
-            this.labelBeatSaberStatus.Size = new System.Drawing.Size(101, 30);
+            this.labelBeatSaberStatus.Size = new System.Drawing.Size(91, 46);
             this.labelBeatSaberStatus.TabIndex = 28;
             // 
             // comboBoxGenerator
@@ -372,7 +372,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(822, 706);
+            this.ClientSize = new System.Drawing.Size(822, 702);
             this.Controls.Add(this.linkCreateGenerator);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label8);

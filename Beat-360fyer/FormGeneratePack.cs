@@ -72,7 +72,7 @@ namespace Stx.ThreeSixtyfyer
             config.packPath = path;
 
             textBoxBeatSaberPath.Text = path;
-            this.Height = 736;
+            this.Height = 741;
 
             RefreshSongs();
         }
@@ -199,8 +199,8 @@ namespace Stx.ThreeSixtyfyer
                 {
                     if (textBoxPackName.Text.Length < 1)
                         throw new Exception($"The pack name '{textBoxPackName.Text}' is too short.");
-                    if (!Regex.IsMatch(textBoxPackName.Text, "^[a-zA-Z0-9 ]+$"))
-                        throw new Exception($"The pack name '{textBoxPackName.Text}' contains illegal characters, it should only contain A-Z and spaces.");
+                    if (!Regex.IsMatch(textBoxPackName.Text, "^[a-zA-Z0-9-_ ]+$"))
+                        throw new Exception($"The pack name '{textBoxPackName.Text}' contains illegal characters, it should only contain A-Z 0-9 - _ and spaces.");
 
                     string customGeneratedLevelsPath = Path.Combine(textBoxBeatSaberPath.Text, "Beat Saber_Data", "Custom" + textBoxPackName.Text.Replace(" ", ""));
 
