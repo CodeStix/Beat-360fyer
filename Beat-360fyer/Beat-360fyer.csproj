@@ -73,12 +73,6 @@
     <Compile Include="FormGeneratePack.Designer.cs">
       <DependentUpon>FormGeneratePack.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormGenerateBulk.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormGenerateBulk.Designer.cs">
-      <DependentUpon>FormGenerateBulk.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormGeneratorSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -98,9 +92,6 @@
     <Compile Include="WorkerJob.cs" />
     <EmbeddedResource Include="FormGeneratePack.resx">
       <DependentUpon>FormGeneratePack.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormGenerateBulk.resx">
-      <DependentUpon>FormGenerateBulk.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormGeneratorSettings.resx">
       <DependentUpon>FormGeneratorSettings.cs</DependentUpon>
