@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Songs", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Songs", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGeneratePack));
             this.buttonSelectBeatSaber = new System.Windows.Forms.Button();
             this.textBoxBeatSaberPath = new System.Windows.Forms.TextBox();
@@ -136,10 +136,10 @@
             this.columnHeaderSongName,
             this.columnHeaderAuthor});
             this.listSongs.FullRowSelect = true;
-            listViewGroup5.Header = "Songs";
-            listViewGroup5.Name = "listViewGroup1";
+            listViewGroup6.Header = "Songs";
+            listViewGroup6.Name = "listViewGroup1";
             this.listSongs.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup5});
+            listViewGroup6});
             this.listSongs.HideSelection = false;
             this.listSongs.Location = new System.Drawing.Point(12, 116);
             this.listSongs.Name = "listSongs";
@@ -382,7 +382,6 @@
             this.Controls.Add(this.radioButtonMusicPack);
             this.Controls.Add(this.buttonGeneratorSettings);
             this.Controls.Add(this.panelMusicPack);
-            this.Controls.Add(this.label5);
             this.Controls.Add(this.radioButtonModify);
             this.Controls.Add(this.radioButtonExport);
             this.Controls.Add(this.buttonUpdatePack);
@@ -394,6 +393,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxBeatSaberPath);
             this.Controls.Add(this.buttonSelectBeatSaber);
+            this.Controls.Add(this.label5);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;

@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Beat-360fyer")]
 [assembly: AssemblyDescription("Tool to convert a normal Beat Saber level into a 360 one!")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("CodeStix; Stijn Rogiest")]
+[assembly: AssemblyCompany("Stijn Rogiest")]
 [assembly: AssemblyProduct("Beat-360fyer")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyVersion("2.1.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
