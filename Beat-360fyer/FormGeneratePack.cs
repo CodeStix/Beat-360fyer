@@ -89,6 +89,12 @@ namespace Stx.ThreeSixtyfyer
                         Group = listSongs.Groups[0],
                         Tag = bm
                 }).ToArray());
+
+                foreach (ListViewItem item in listSongs.Items)
+                {
+                    item.Checked = true;
+                    item.Selected = true;
+                }
             });
         }
         
