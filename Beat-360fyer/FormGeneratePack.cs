@@ -245,7 +245,7 @@ namespace Stx.ThreeSixtyfyer
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Cannot start generator: {ex.Message}", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Cannot start generator: {ex.Message}.\nPlease open a GitHub issue if this is a bug.", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
         }
@@ -254,7 +254,7 @@ namespace Stx.ThreeSixtyfyer
         {
             if (listSongs.CheckedItems.Count == 0)
             {
-                MessageBox.Show("You have nothing checked!\n" +
+                MessageBox.Show("You have nothing selected!\n" +
                     "First, select the songs you want to add the new mode to, then click the generate button.",
                     "Oops", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
@@ -319,8 +319,6 @@ namespace Stx.ThreeSixtyfyer
             else if (radioButtonMusicPack.Checked)
             {
                 message.AppendLine($"Done. Navigate to custom levels in the game and a new music pack named '{textBoxPackName.Text}' should appear.\n");
-                message.AppendLine($"!!! NOTE: Due to a bug in SongCore, the new music pack is merged with normal levels in the default 'Custom Levels' pack. ");
-                message.AppendLine($"Temporary fix: After all songs are loaded in the main menu, press Ctrl+R on your keyboard, this will hide the duplicates.");
                 icon = TaskDialogIcon.Information;
             }
             else if (radioButtonExport.Checked)

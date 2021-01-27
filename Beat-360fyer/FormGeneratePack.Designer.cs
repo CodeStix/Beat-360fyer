@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Songs", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Songs", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGeneratePack));
             this.buttonSelectBeatSaber = new System.Windows.Forms.Button();
             this.textBoxBeatSaberPath = new System.Windows.Forms.TextBox();
@@ -89,20 +89,20 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(9, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(94, 13);
+            this.label1.Size = new System.Drawing.Size(93, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Generate Mode";
+            this.label1.Text = "Generate Maps";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(9, 28);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(455, 39);
+            this.label2.Size = new System.Drawing.Size(370, 39);
             this.label2.TabIndex = 4;
-            this.label2.Text = "First, select a directory containing songs, or select the Beat Saber\r\ninstallatio" +
-    "n location to create a custom Music Pack (recommended). Then, tweak some setting" +
-    "s\r\nand press the green button.";
+            this.label2.Text = "First, select a directory containing songs, or select the Beat Saber installation" +
+    " \r\nlocation to create a custom Music Pack (recommended). \r\nThen, tweak some sett" +
+    "ings and press the green button.";
             // 
             // buttonGeneratorSettings
             // 
@@ -136,10 +136,10 @@
             this.columnHeaderSongName,
             this.columnHeaderAuthor});
             this.listSongs.FullRowSelect = true;
-            listViewGroup1.Header = "Songs";
-            listViewGroup1.Name = "listViewGroup1";
+            listViewGroup5.Header = "Songs";
+            listViewGroup5.Name = "listViewGroup1";
             this.listSongs.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1});
+            listViewGroup5});
             this.listSongs.HideSelection = false;
             this.listSongs.Location = new System.Drawing.Point(12, 116);
             this.listSongs.Name = "listSongs";
@@ -198,11 +198,11 @@
             // 
             // buttonUpdatePack
             // 
-            this.buttonUpdatePack.Location = new System.Drawing.Point(632, 12);
+            this.buttonUpdatePack.Location = new System.Drawing.Point(611, 9);
             this.buttonUpdatePack.Name = "buttonUpdatePack";
-            this.buttonUpdatePack.Size = new System.Drawing.Size(179, 23);
+            this.buttonUpdatePack.Size = new System.Drawing.Size(200, 39);
             this.buttonUpdatePack.TabIndex = 18;
-            this.buttonUpdatePack.Text = "Update previous generated pack";
+            this.buttonUpdatePack.Text = "Update previous generated pack\r\n(convert new imported songs)";
             this.buttonUpdatePack.UseVisualStyleBackColor = true;
             this.buttonUpdatePack.Click += new System.EventHandler(this.buttonUpdatePack_Click);
             // 
@@ -249,17 +249,17 @@
             this.radioButtonMusicPack.Checked = true;
             this.radioButtonMusicPack.Location = new System.Drawing.Point(517, 135);
             this.radioButtonMusicPack.Name = "radioButtonMusicPack";
-            this.radioButtonMusicPack.Size = new System.Drawing.Size(211, 17);
+            this.radioButtonMusicPack.Size = new System.Drawing.Size(211, 30);
             this.radioButtonMusicPack.TabIndex = 23;
             this.radioButtonMusicPack.TabStop = true;
-            this.radioButtonMusicPack.Text = "Create Music Pack (requires SongCore)";
+            this.radioButtonMusicPack.Text = "Create Music Pack (requires SongCore)\r\n(recommended)";
             this.radioButtonMusicPack.UseVisualStyleBackColor = true;
             this.radioButtonMusicPack.CheckedChanged += new System.EventHandler(this.radioButtonMusicPack_CheckedChanged);
             // 
             // radioButtonExport
             // 
             this.radioButtonExport.AutoSize = true;
-            this.radioButtonExport.Location = new System.Drawing.Point(517, 186);
+            this.radioButtonExport.Location = new System.Drawing.Point(517, 195);
             this.radioButtonExport.Name = "radioButtonExport";
             this.radioButtonExport.Size = new System.Drawing.Size(294, 30);
             this.radioButtonExport.TabIndex = 24;
@@ -271,13 +271,11 @@
             // radioButtonModify
             // 
             this.radioButtonModify.AutoSize = true;
-            this.radioButtonModify.Location = new System.Drawing.Point(517, 224);
+            this.radioButtonModify.Location = new System.Drawing.Point(517, 233);
             this.radioButtonModify.Name = "radioButtonModify";
-            this.radioButtonModify.Size = new System.Drawing.Size(294, 43);
+            this.radioButtonModify.Size = new System.Drawing.Size(294, 56);
             this.radioButtonModify.TabIndex = 25;
-            this.radioButtonModify.Text = "Modify maps directly, this will place the new difficulty files \r\nin the original " +
-    "map\'s directory and modify the info.dat file.\r\n(A backup of info.dat is created," +
-    " named info.dat.bak)";
+            this.radioButtonModify.Text = resources.GetString("radioButtonModify.Text");
             this.radioButtonModify.UseVisualStyleBackColor = true;
             this.radioButtonModify.CheckedChanged += new System.EventHandler(this.radioButtonModify_CheckedChanged);
             // 
@@ -295,7 +293,7 @@
             // 
             this.panelMusicPack.Controls.Add(this.label4);
             this.panelMusicPack.Controls.Add(this.textBoxPackName);
-            this.panelMusicPack.Location = new System.Drawing.Point(517, 158);
+            this.panelMusicPack.Location = new System.Drawing.Point(517, 167);
             this.panelMusicPack.Name = "panelMusicPack";
             this.panelMusicPack.Size = new System.Drawing.Size(211, 22);
             this.panelMusicPack.TabIndex = 27;
