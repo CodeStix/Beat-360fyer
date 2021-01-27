@@ -43,7 +43,7 @@ namespace Stx.ThreeSixtyfyer
         {
             try
             {
-                generator.Settings = (IBeatMapGeneratorSettings)JsonConvert.DeserializeObject(textBoxJson.Text, generator.Settings.GetType(), Program.JsonSettings);
+                generator.Settings = JsonConvert.DeserializeObject(textBoxJson.Text, generator.Settings.GetType(), Program.JsonSettings);
                 Message("Saved!", Color.Green);
                 saved = true;
             }
@@ -83,7 +83,7 @@ namespace Stx.ThreeSixtyfyer
 
         private void buttonDefaults_Click(object sender, EventArgs e)
         {
-            generator.Settings = (IBeatMapGeneratorSettings)Activator.CreateInstance(generator.Settings.GetType());
+            generator.Settings = Activator.CreateInstance(generator.Settings.GetType());
             LoadSettings();
             Message("Restored settings to default! (not saved yet)", Color.Green);
         }

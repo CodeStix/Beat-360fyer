@@ -9,70 +9,6 @@ using System.Threading.Tasks;
 
 namespace Stx.ThreeSixtyfyer.Generators
 {
-    [Serializable]
-    public class BeatMap360GeneratorSettings : IBeatMapGeneratorSettings
-    {
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum WallGeneratorMode
-        {
-            Disabled = 0,   // disable the builtin wall generator
-            Enabled = 1     // enable the builtin wall generator
-        }
-
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum RemoveOriginalWallsMode
-        {
-            RemoveNotFun,   // remove the walls that are not fun in 360 mode, like walls thicker than 1 lane (default)
-            RemoveAll,      // remove all the walls from the original map, the wall generator is the only thing that should cause a wall in the 360 level
-            Keep            // do not remove any walls from the original map
-        }
-
-        public float frameLength = 1f / 16f;               // in beats (default 1f/16f), the length of each generator loop cycle in beats, per this of a beat, a single spin rotation is possible
-        public float beatLength = 1f;                      // in beats (default 1f), how the generator should interpret each beats length
-        public float obstableBackCutoffSeconds = 0.38f;    // x seconds will be cut off a wall's back if it is in activeWallMaySpinPercentage
-        public float obstacleFrontCutoffSeconds = 0.18f;   // x seconds will be cut off a wall's front if it is in activeWallMaySpinPercentage
-        public float activeWallMaySpinPercentage = 0.6f;   // the percentage (0f - 1f) of an obstacles duration from which rotation is enabled again (0.4f), and wall cutoff will be used
-        public bool enableSpin = false;                    // enable spin effect
-        public RemoveOriginalWallsMode originalWallsMode = RemoveOriginalWallsMode.RemoveNotFun;
-        public WallGeneratorMode wallGenerator = WallGeneratorMode.Enabled;
-
-        public override bool Equals(object obj)
-        {
-            if (obj is BeatMap360GeneratorSettings s)
-            {
-                return s.frameLength == frameLength
-                    && beatLength == s.beatLength
-                    && obstableBackCutoffSeconds == s.obstableBackCutoffSeconds
-                    && obstacleFrontCutoffSeconds == s.obstacleFrontCutoffSeconds
-                    && activeWallMaySpinPercentage == s.activeWallMaySpinPercentage
-                    && enableSpin == s.enableSpin
-                    && originalWallsMode == s.originalWallsMode
-                    && wallGenerator == s.wallGenerator;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public override int GetHashCode()
-        {
-            int hash = 13;
-            unchecked
-            {
-                hash = (hash * 7) + frameLength.GetHashCode();
-                hash = (hash * 7) + beatLength.GetHashCode();
-                hash = (hash * 7) + obstableBackCutoffSeconds.GetHashCode();
-                hash = (hash * 7) + obstacleFrontCutoffSeconds.GetHashCode();
-                hash = (hash * 7) + activeWallMaySpinPercentage.GetHashCode();
-                hash = (hash * 7) + enableSpin.GetHashCode();
-                hash = (hash * 7) + originalWallsMode.GetHashCode();
-                hash = (hash * 7) + wallGenerator.GetHashCode();
-            }
-            return hash;
-        }
-    }
-
     // [/ ] [ \] [\/] [  ] [/\] [\|] [\-] [|/] [-/]
     // [\ ] [ /] [  ] [/\] [\/] [-\] [|\] [/-] [/|]
 
@@ -83,7 +19,7 @@ namespace Stx.ThreeSixtyfyer.Generators
     public class BeatMap360Generator : IBeatMapGenerator
     {
         public string GeneratedGameModeName => "360Degree";
-        public IBeatMapGeneratorSettings Settings { get; set; } = new BeatMap360GeneratorSettings();
+        public object Settings { get; set; } = new BeatMap360GeneratorSettings();
 
         public BeatMap FromStandard(BeatMap standardMap, float bpm, float timeOffset)
         {
@@ -437,4 +373,67 @@ namespace Stx.ThreeSixtyfyer.Generators
         }
     }
 
+    [Serializable]
+    public class BeatMap360GeneratorSettings
+    {
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum WallGeneratorMode
+        {
+            Disabled = 0,   // disable the builtin wall generator
+            Enabled = 1     // enable the builtin wall generator
+        }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum RemoveOriginalWallsMode
+        {
+            RemoveNotFun,   // remove the walls that are not fun in 360 mode, like walls thicker than 1 lane (default)
+            RemoveAll,      // remove all the walls from the original map, the wall generator is the only thing that should cause a wall in the 360 level
+            Keep            // do not remove any walls from the original map
+        }
+
+        public float frameLength = 1f / 16f;               // in beats (default 1f/16f), the length of each generator loop cycle in beats, per this of a beat, a single spin rotation is possible
+        public float beatLength = 1f;                      // in beats (default 1f), how the generator should interpret each beats length
+        public float obstableBackCutoffSeconds = 0.38f;    // x seconds will be cut off a wall's back if it is in activeWallMaySpinPercentage
+        public float obstacleFrontCutoffSeconds = 0.18f;   // x seconds will be cut off a wall's front if it is in activeWallMaySpinPercentage
+        public float activeWallMaySpinPercentage = 0.6f;   // the percentage (0f - 1f) of an obstacles duration from which rotation is enabled again (0.4f), and wall cutoff will be used
+        public bool enableSpin = false;                    // enable spin effect
+        public RemoveOriginalWallsMode originalWallsMode = RemoveOriginalWallsMode.RemoveNotFun;
+        public WallGeneratorMode wallGenerator = WallGeneratorMode.Enabled;
+
+        public override bool Equals(object obj)
+        {
+            if (obj is BeatMap360GeneratorSettings s)
+            {
+                return s.frameLength == frameLength
+                    && beatLength == s.beatLength
+                    && obstableBackCutoffSeconds == s.obstableBackCutoffSeconds
+                    && obstacleFrontCutoffSeconds == s.obstacleFrontCutoffSeconds
+                    && activeWallMaySpinPercentage == s.activeWallMaySpinPercentage
+                    && enableSpin == s.enableSpin
+                    && originalWallsMode == s.originalWallsMode
+                    && wallGenerator == s.wallGenerator;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 13;
+            unchecked
+            {
+                hash = (hash * 7) + frameLength.GetHashCode();
+                hash = (hash * 7) + beatLength.GetHashCode();
+                hash = (hash * 7) + obstableBackCutoffSeconds.GetHashCode();
+                hash = (hash * 7) + obstacleFrontCutoffSeconds.GetHashCode();
+                hash = (hash * 7) + activeWallMaySpinPercentage.GetHashCode();
+                hash = (hash * 7) + enableSpin.GetHashCode();
+                hash = (hash * 7) + originalWallsMode.GetHashCode();
+                hash = (hash * 7) + wallGenerator.GetHashCode();
+            }
+            return hash;
+        }
+    }
 }

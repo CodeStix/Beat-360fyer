@@ -453,7 +453,7 @@ namespace Stx.ThreeSixtyfyer
 
         private void UpdateGeneratorSettingsButton()
         {
-            bool isDefault = generator.Settings.IsDefault();
+            bool isDefault = BeatMapGenerator.IsDefaultSettings(generator.Settings);
 
             buttonGeneratorSettings.BackColor = isDefault ? Color.White : Color.Yellow;
             buttonGeneratorSettings.Text = isDefault ? "Generator settings... (default)" : "Generator settings... (modified!)";

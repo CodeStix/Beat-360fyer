@@ -5,9 +5,6 @@ namespace Stx.ThreeSixtyfyer
     {
         string GeneratedGameModeName { get; }
         BeatMap FromStandard(BeatMap standard, float bpm, float timeOffset);
-        IBeatMapGeneratorSettings Settings { get; set; }
+        object Settings { get; set; }
     }
-
-    public interface IBeatMapGeneratorSettings
-    { }
 }

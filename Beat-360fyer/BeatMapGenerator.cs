@@ -156,18 +156,18 @@ namespace Stx.ThreeSixtyfyer
             BeatMapGeneratorConfig.FromGenerator(generator, difficulties).SaveToFile(Path.Combine(mapDestination, GENERATOR_CONFIG_NAME));
             return result;
         }
-    }
 
-    public static class BeatMapGeneratorExtensions
-    {
-        public static bool IsDefault(this IBeatMapGeneratorSettings settings)
+        public static bool IsDefaultSettings(object settings)
         {
             if (settings == null)
                 return false;
 
             return Activator.CreateInstance(settings.GetType()).Equals(settings);
         }
+    }
 
+    public static class BeatMapGeneratorExtensions
+    {
         public static BeatMapGeneratorAttribute GetInformation(this IBeatMapGenerator generator)
         {
             return BeatMapGenerator.GetGeneratorInfo(generator.GetType());
