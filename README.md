@@ -1,6 +1,8 @@
 # Beat-360fyer
 
-This tool is used to generate 360 levels from standard Beat Saber levels.
+**⚠️ There is now a Beat Saber plugin that makes this much easier. You can find it [here](https://github.com/CodeStix/Beat-360fyer-Plugin).**
+
+This desktop application is used to generate 360 levels from standard Beat Saber levels.
 
 ![Jaroslav Beck - Beat Saber, converted on the right, standard on the left](https://github.com/CodeStix/Beat-360fyer/raw/master/Build/Demos/beatsaber.gif)
 
